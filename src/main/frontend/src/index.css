@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css2?family=Chonburi&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    margin: 0;
+    background-color: #F1F1F1;
+    font-family: Poppins, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+h1 {
+    font-family: Chonburi, sans-serif;
+}
+
+/* CSS for input boxes */
+input {
+    box-sizing: border-box; /* for input boxes to match size of buttons */
+    border: 1px solid #D9D9D9;
+    border-radius: 40px;
+    font-family: Poppins, sans-serif;
+    background-color: white;
+    padding: 20px;
+}
+
+input:focus {
+    outline: none;
+    border: 1px solid black;
+}
+
+/* CSS for button */
+button {
+    border: 1px solid #D9D9D9;
+    border-radius: 40px;
+    font-family: Poppins;
+    background-color: white;
+}
+
+button:hover {
+    background-color: #D9D9D9;
+}
+
+button:active {
+    background-color: white;
+}
+
+table {
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.css-login {
+    width: 450px;
+    height: 55px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 30px;
+}
+
+#login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.css-create-student {
+    width: 400px;
+    height: 55px
+}
+
+.create-student-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 24px;
+}
+
+.navbar {
+    display: flex;
+    flex-direction: column;
+    background-color: grey;
+    height: 100%;
+}
+
+.navbar-page {
+    display: flex;
+    flex-direction: row;
+}
+
+.student-list-cards {
+    display: flex;
+    gap: 30px;
+    margin: 10px;
+}
+
+.student-table {
+    background-color: white;
+    border-radius: 20px;
+    width: 600px;
+    height: 100%;
+    padding: 0px 20px 50px;
+}
+
+.student-table-wrapper {
+    max-height: 300px;
+    overflow-y: auto;
+    border-top: solid #D9D9D9;
+}
+
+.attendance-table-wrapper {
+    height: 375px;
+    border-top: solid #D9D9D9;
+}
+
+.scrollable-table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.scrollable-table th,
+.scrollable-table td {
+    padding: 5px;
+    text-align: left;
+    border: solid; /* need to fix columns */
+}
+
+.table-row:hover {
+    background-color: #D9D9D9;
+}
+
+.attendance-list-cards {
+    background-color: white;
+    border-radius: 20px;
+    width: 1200px;
+    padding: 0px 20px;
+}
+
+.check-out-list-card {
+    background-color: white;
+    margin: 10px;
+    border-radius: 20px;
+    padding: 0px 20px 50px;
+}
+
+/* css for popup */
+.dialog-container {
+    position: relative;
+    z-index: 50;
+}
+
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.dialog-panel {
+    max-width: 32rem;
+    background-color: white;
+    padding: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dialog-title {
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.css-student-input {
+    width: 100px;
+    height: 10px;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.firstNlastN-form {
+    display: flex;
+
+}
+
+.css-student-info {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.indiv-info {
+    background-color: white;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.header {
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 0px 20px;
+}

@@ -1,0 +1,56 @@
+plugins {
+	id("java")
+	id("org.springframework.boot") version "3.5.3"
+	id("io.spring.dependency-management") version "1.1.7"
+}
+
+group = "com.project"
+version = "0.0.1-SNAPSHOT"
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.flywaydb:flyway-core")
+	implementation("org.flywaydb:flyway-database-postgresql")
+	runtimeOnly("org.postgresql:postgresql")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.named("test") {
+	useJUnitPlatform()
+}
+
+tasks.named<Jar>("bootJar") {
+    archiveFileName.set("artLog.jar") // Change to your desired name
+}
+
+// Task to build React
+tasks.register<Exec>("buildReact") {
+    workingDir = file("src/main/frontend") // Set React working directory
+    commandLine("/usr/local/bin/npm", "install") // Install React app dependencies, explicitly state path
+    commandLine("/usr/local/bin/npm", "run", "build") // Build the React app
+}
+
+// Task to copy React build to Spring Boot static folder
+tasks.register<Copy>("copyReactBuild") {
+    dependsOn("buildReact") // Ensure buildReact runs first
+    from("src/main/frontend/build") // Source React build output
+    into("src/main/resources/static") // Destination folder in Spring Boot
+}
+
+tasks.named("processResources") {
+    dependsOn("copyReactBuild") // Ensure copyReactBuild runs during processResources
+}

@@ -1,0 +1,72 @@
+.filters-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 2% auto 2% auto;
+}
+
+.filters {
+    border: 1px solid #cccccc;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: black;
+    transition: background-color 0.3s;
+}
+
+.filters:hover {
+    background-color: #cccccc;
+    border: 1px solid #cccccc;
+}
+
+.filters:active {
+    background-color: #E56565;
+    border: 1px solid #E56565;
+}
+
+.filters.active {
+    background-color: #E56565;
+    color: white;
+    border: 1px solid #E56565;
+}
+
+.filters.active:hover {
+    background-color: #c04848;
+    border: 1px solid #c04848;
+}
+
+.student-table {
+    text-align: left;
+    padding: 3%;
+    width: 100%;
+}
+
+.student-headers {
+    margin: 3%;
+}
+
+.rectangle {
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0px 5px 5px grey;
+    margin: 2% 5% 5%;
+    padding: 1%;
+}
+
+.student-input {
+    width: 75%;
+}
+
+.linkIcon {
+    fill: #E56565;
+    width: 20px;
+    height: 20px;
+}
+
+.linkIcon:hover {
+    fill: #c04848;
+    cursor: pointer; 
+}
