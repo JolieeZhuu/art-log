@@ -1,6 +1,5 @@
 // external imports
 import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react';
-import { useState } from 'react';
 
 // internal imports
 import Form from "./Form.js";

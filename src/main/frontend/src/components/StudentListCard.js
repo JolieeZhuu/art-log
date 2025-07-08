@@ -117,7 +117,6 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
                 setTimeExpected("");
             })
             setIsOpen(false);
-            console.log("submitted"); // DEBUG
         }
     }
 

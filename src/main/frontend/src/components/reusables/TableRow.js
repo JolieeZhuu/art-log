@@ -43,7 +43,7 @@ export default function TableRow({ index, row, handleSave, handleEdit, inputFiel
                 editMode ? (
                     <>
                         { /* "element" stores a line of JSX */
-                            inputFieldProps[0].map((element, index) => {
+                            inputFieldProps[0].map((_, index) => {
                                 return (
                                     <td key={index}>
                                         <InputField
