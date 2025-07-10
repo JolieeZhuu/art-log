@@ -4,23 +4,22 @@ import { useEffect, useRef, useState } from "react";
 // internal imports
 import InputField from "./InputField.js";
 
-export default function TableRow({ index, row, handleSave, handleEdit, inputFieldProps, cssName }) {
+export default function TableRow({ index, row, elementId, handleSave, handleEdit, editStates, editData, cssName }) {
 
     // inputFieldProps: [0]=inputs, [1]=types, [2]=vars, [3]=funcs
 
     // initializations
-    const [editMode, setEditMode] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
     const rowRef = useRef(null); // tracks a DOM element
 
     useEffect(() => {
         function handleClickOutside(event) {
             if (
-                editMode && 
+                editStates[0] && 
                 rowRef.current && // rowRef is not null (null === false)
                 !rowRef.current.contains(event.target) // curser outside of row (DOM element)
             ) {
-                setEditMode(false);
+                editStates[1](false);
             }
         }
         document.addEventListener("mousedown", handleClickOutside); // add eventListener called "mousedown" containing function handleClickOutside
@@ -40,25 +39,11 @@ export default function TableRow({ index, row, handleSave, handleEdit, inputFiel
     return (
         <tr ref={rowRef} className="table-row" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             {
-                editMode ? (
+                editStates[0] ? (
                     <>
-                        { /* "element" stores a line of JSX */
-                            inputFieldProps[0].map((_, index) => {
-                                return (
-                                    <td key={index}>
-                                        <InputField
-                                            type={inputFieldProps[1][index]} 
-                                            placeholder={row[index]} 
-                                            value={inputFieldProps[2][index]} 
-                                            setter={inputFieldProps[3][index]} 
-                                            cssName={cssName}
-                                        />
-                                    </td>
-                                )
-                            })
-                        }
+                        { editData }
                         <td>
-                            <button onClick={(e) => handleSave(e, setEditMode)}>Save</button>
+                            <button onClick={(e) => handleSave(e, elementId)}>Save</button>
                         </td>
                     </>
                 ) : (
@@ -75,7 +60,7 @@ export default function TableRow({ index, row, handleSave, handleEdit, inputFiel
                         <td>
                             {
                                 isHovering ? (
-                                    <button onClick={() => handleEdit(index, setEditMode)
+                                    <button onClick={() => handleEdit(index)
                                     }>Edit</button>
                                 ) : (
                                     <></>

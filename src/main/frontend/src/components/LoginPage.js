@@ -21,6 +21,7 @@ export default function LoginPage() {
     const types = ["text", "password"]; // parallel array with INPUTS
     const vars = [username, password];
     const funcs = [setUsername, setPassword]; // parallel array with VARS
+    const placeholders = ["ex: emmawatson", "ex: watsonemma"]
 
     async function handleSubmit(e) {
         const admins = new Map();
@@ -57,10 +58,7 @@ export default function LoginPage() {
         <div id="login-page">
             <h1>ART.LOG</h1>
             <Form
-                inputs={inputs}
-                types={types}
-                vars={vars}
-                funcs={funcs}
+                inputFieldProps={[inputs, types, vars, funcs, placeholders]}
                 onSubmit={handleSubmit}
                 buttonName="Login"
                 cssName="css-login"

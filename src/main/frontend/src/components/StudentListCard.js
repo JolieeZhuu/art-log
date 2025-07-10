@@ -1,11 +1,12 @@
 // external imports
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // internal imports
 import Table from "./reusables/Table.js";
 import { Controller, StudentController } from "../restAPI/entities.js";
 import Popup from "./reusables/Popup.js";
+import InputField from "./reusables/InputField.js";
 
 export default function StudentListCard({ timeOfDay, dayOfWeek }) {
     // initializations
@@ -16,6 +17,7 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
     const [day, setDay] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [timeExpected, setTimeExpected] = useState("");
+    const [elementIds, setElementIds] = useState([]);
 
     // variables for input fields (edit form to edit student)
     const [newFirstName, setNewFirstName] = useState("");
@@ -30,20 +32,40 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
     const [data, setData] = useState([]);
     const navigate = useNavigate();
     const [isValid, setIsValid] = useState(true);
+    const [editData, setEditData] = useState([]);
+    const [editMode, setEditMode] = useState(false);
 
     // variables for props passing
-    const headers = ["Name", <button>Search</button>, "Pymnt. Notes", "Notes", ""];
+    const headers = ["Name", <button>Search</button>, "Payment Notes", "Notes", ""];
 
-    const inputs1 = ["First Name", "Last Name", "Class ID", "Day", "Phone Number", "Time Expected [# AM/PM]"];
+    const inputs1 = ["First Name", "Last Name", "Class ID", "Day", "Phone Number", "Time Expected"];
     const types1 = ["text", "text", "text", "text", "text", "text"];
     const vars1 = [firstName, lastName, classId, day, phoneNumber, timeExpected];
     const funcs1 = [setFirstName, setLastName, setClassId, setDay, setPhoneNumber, setTimeExpected];
+    const placeholders = ["ex: Emma", "ex: Stone", "ex: LV1", "ex: Monday", "ex: 6471234567", "ex: 4 PM"];
 
     const inputs2 = ["First Name", "Last Name", "Payment Notes", "Notes"];
     const types2 = ["text", "text", "text", "text"];
     const vars2 = [newFirstName, newLastName, newPymtNotes, newNotes];
     const [studentValuesList, setStudentValuesList] = useState([]);
     const funcs2 = [setNewFirstName, setNewLastName, setNewPymtNotes, setNewNotes];
+
+    useEffect(() => {
+        if (editMode) {
+            const jsxInputs = inputs2.map((element, ind) => (
+                <td key={ind}>
+                    <label className="css-label">{element}</label>
+                    <InputField
+                        type={types2[ind]}
+                        value={vars2[ind]}
+                        setter={funcs2[ind]}
+                        cssName="css-student-input"
+                    />
+                </td>
+            ));
+            setEditData(jsxInputs);
+        }
+    }, [editMode, newFirstName, newLastName, newPymtNotes, newNotes]); // runs AFTER all these are updated
 
     // callback async function to be used in Table (for Students)
     const refreshStudents = useCallback(async () => {
@@ -67,6 +89,13 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
             return [first_name, last_name, payment_notes, notes];
         })
         setStudentValuesList(studentValuesList);
+
+        const elementIdList = studentList.map(({ student_id }) => {
+            return [
+                student_id
+            ];
+        })
+        setElementIds(elementIdList);
 
         // reduced list that will act as the display in JSX
         const reducedStudentList = studentList.map(({ student_id, first_name, last_name, day, payment_notes, notes }) => {
@@ -120,18 +149,41 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
         }
     }
 
-    function handleEdit(index, setEditMode) {
+    function handleEdit(index) {
         const [first, last, pymt, notes] = studentValuesList[index];
         setNewFirstName(first);
         setNewLastName(last);
-        setNewPymtNotes(pymt !== null ? pymt : "Pymt. Notes");
-        setNewNotes(notes !== null ? notes : "Notes");
+        setNewPymtNotes(pymt !== null ? pymt : "");
+        setNewNotes(notes !== null ? notes : "");
 
-        setEditMode(true)
+        setEditMode(true);
     }
 
     // handleSave function for editing student
-    function handleSave(e, setEditMode) {
+    async function handleSave(e, studentId) {
+        // prevents browser from reloading page
+        e.preventDefault();
+
+        const student = await requests.getById(studentUrl, studentId[0]);
+
+        const data = {
+            student_id: studentId[0],
+            first_name: newFirstName,
+            last_name: newLastName,
+            class_id: student.class_id,
+            day: student.day,
+            phone_number: student.phone_number,
+            payment_notes: newPymtNotes,
+            notes: newNotes,
+            payment_number: student.payment_number,
+            class_number: student.class_number,
+            time_expected: student.time_expected
+        };
+
+        console.log(data);
+
+        await requests.edit(studentUrl, data);
+
         console.log("save clicked");
         setEditMode(false);
     }
@@ -140,13 +192,12 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
         <div className="student-table">
             <p>{timeOfDay}</p>
             <Popup
+                setGetOpen={[isOpen, setIsOpen]}
+                setGetValid={[isValid, setIsValid]}
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 buttonName="Create Student"
-                inputs={inputs1}
-                types={types1}
-                vars={vars1}
-                funcs={funcs1}
+                inputFieldProps={[inputs1, types1, vars1, funcs1, placeholders]}
                 onSubmit={handleSubmit}
                 submitButtonName="Create Student"
                 cssName="css-create-student"
@@ -158,11 +209,13 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
             />
             <Table
                 data={data}
+                elementIds={elementIds}
                 refreshFunc={refreshStudents}
                 headers={headers}
                 handleSave={handleSave}
                 handleEdit={handleEdit}
-                inputFieldProps={[inputs2, types2, vars2, funcs2]}
+                editStates={[editMode, setEditMode]}
+                editData={editData}
                 cssName="css-student-input"
             />
         </div>

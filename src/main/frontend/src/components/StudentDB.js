@@ -25,6 +25,7 @@ export default function StudentDB() {
     const types = ["date"];
     const vars = [date];
     const funcs = [setDate];
+    const placeholders = [""];
 
     useEffect(() => {
         async function loadAttendanceCards() {
@@ -74,21 +75,16 @@ export default function StudentDB() {
             <div>
                 <StudentDBInfo id={id} cssIDName={cssIDName} day={day}/>
                 <Popup
-                    isOpen={isOpen}
-                    setIsOpen={setIsOpen}
+                    setGetOpen={[isOpen, setIsOpen]}
+                    setGetValid={[isValid, setIsValid]}
                     buttonName="New Payment"
-                    inputs={inputs}
-                    types={types}
-                    vars={vars}
-                    funcs={funcs}
+                    inputFieldProps={[inputs, types, vars, funcs, placeholders]}
                     onSubmit={handleSubmit}
                     submitButtonName="Create Payment Table"
                     cssName="css-create-student"
                     formName="create-student-form"
                     popupTitle="Add Payment Table Form"
                     popupDes="Please fill in the field for the expected first class of the art student."
-                    validVar = {isValid}
-                    validFunc = {setIsValid}
                 />
                 {cardList}
             </div>

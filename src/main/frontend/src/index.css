@@ -73,15 +73,13 @@ table {
 
 .css-create-student {
     width: 400px;
-    height: 55px
+    height: 50px
 }
 
 .create-student-form {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 24px;
+    gap: 20px;
 }
 
 .navbar {
@@ -167,14 +165,13 @@ table {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
     background: rgba(0, 0, 0, 0.5);
 }
 
 .dialog-panel {
     max-width: 32rem;
     background-color: white;
-    padding: 3rem;
+    padding: 50px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -214,4 +211,15 @@ table {
     flex-direction: row;
     gap: 20px;
     padding: 0px 20px;
+}
+
+.css-label {
+    font-size: 12px;
+    text-align: left;
+}
+
+.label-input {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
 }

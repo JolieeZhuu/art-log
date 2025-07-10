@@ -4,32 +4,29 @@ import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@
 // internal imports
 import Form from "./Form.js";
 
-export default function Popup({ isOpen, setIsOpen, buttonName, inputs, types, vars, funcs, onSubmit, submitButtonName, cssName, formName, popupTitle, popupDes, validVar, validFunc }) {
+export default function Popup({ setGetOpen, setGetValid, buttonName, inputFieldProps, onSubmit, submitButtonName, cssName, formName, popupTitle, popupDes }) {
     function handleOnClose() {
-        setIsOpen(false);
-        validFunc(true);
+        setGetOpen[1](false);
+        setGetValid[1](true);
     }
     return (
         <div>
-            <button onClick={() => setIsOpen(true)}>{buttonName}</button>
-            <Dialog open={isOpen} onClose={handleOnClose} className="dialog-container">
+            <button onClick={() => setGetOpen[1](true)}>{buttonName}</button>
+            <Dialog open={setGetOpen[0]} onClose={handleOnClose} className="dialog-container">
                 <DialogBackdrop className="panel-bg"/>
                 <div className="dialog-overlay">
                     <DialogPanel className="dialog-panel">
                         <DialogTitle className="dialog-title">{popupTitle}</DialogTitle>
                         <Description>{popupDes}</Description>
                         <Form
-                            inputs={inputs}
-                            types={types}
-                            vars={vars}
-                            funcs={funcs}
+                            inputFieldProps={inputFieldProps}
                             onSubmit={onSubmit}
                             buttonName={submitButtonName}
                             cssName={cssName}
                             formName={formName}
                         />
                         {
-                            !validVar && (
+                            !setGetValid[0] && (
                                 <p>Invalid response. Please complete all fields.</p>
                             )
                         }

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 // internal imports
 import TableRow from "./TableRow.js";
 
-export default function Table({ data, refreshFunc, headers, handleSave, handleEdit, inputFieldProps, cssName}) {
+export default function Table({ data, elementIds, refreshFunc, headers, handleSave, handleEdit, editStates, editData, cssName}) {
 
     useEffect(() => {
         refreshFunc();
@@ -30,15 +30,16 @@ export default function Table({ data, refreshFunc, headers, handleSave, handleEd
                     <tbody>
                         {
                             data.map((row, index) => {
-                                console.log(row);
                                 return (
                                     <TableRow
                                         key={index}
                                         index={index}
                                         row={row}
+                                        elementId={elementIds[index]}
                                         handleSave={handleSave}
                                         handleEdit={handleEdit}
-                                        inputFieldProps={inputFieldProps}
+                                        editStates={editStates}
+                                        editData={editData}
                                         cssName={cssName}
                                     />
                                 )

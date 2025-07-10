@@ -2,21 +2,26 @@
 import SubmitButton from "./SubmitButton.js";
 import InputField from "./InputField.js";
 
-export default function Form({ inputs, types, vars, funcs, onSubmit, buttonName, cssName, formName }) {
-
+export default function Form({ inputFieldProps, onSubmit, buttonName, cssName, formName }) {
+    console.log(inputFieldProps) // DEBUG
     return (
         <form className={formName} onSubmit={onSubmit}>
             {
-                inputs.map((element, index) => {
+                
+                inputFieldProps[0].map((element, index) => {
                     return (
-                        <InputField 
-                            key={index} 
-                            type={types[index]} 
-                            placeholder={element} 
-                            value={vars[index]} 
-                            setter={funcs[index]}
-                            cssName={cssName}
-                        />
+                        <div className="label-input" key={index}>
+                            <label className="css-label">
+                                {element}
+                            </label>
+                            <InputField
+                                type={inputFieldProps[1][index]}
+                                value={inputFieldProps[2][index]} 
+                                setter={inputFieldProps[3][index]}
+                                placeholder={inputFieldProps[4][index]}
+                                cssName={cssName}
+                            />
+                        </div>
                     )
                 })
             }
