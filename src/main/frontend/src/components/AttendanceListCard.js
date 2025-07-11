@@ -12,7 +12,7 @@ export default function AttendanceListCard({ studentId, paymentNumber}) {
     const attendanceUrl = "http://localhost:8080/attendance/";
     const [elementIds, setElementIds] = useState([]);
     const [editData, setEditData] = useState([]);
-    const [editMode, setEditMode] = useState(false);
+    const [editIndex, setEditIndex] = useState(null);
 
     // variables for input fields
     const [attendanceValuesList, setAttendanceValuesList] = useState([]);
@@ -34,7 +34,7 @@ export default function AttendanceListCard({ studentId, paymentNumber}) {
     const funcs = [setDateExpected, setAttendanceCheck, setDateAttended, setCheckIn, setMakeupMins, setCheckOut, setNotes];
 
     useEffect(() => {
-        if (editMode) {
+        if (editIndex !== null) {
             const jsxInputs = inputs.map((element, ind) => (
                 <td key={ind}>
                     <label className="css-label">{element}</label>
@@ -48,7 +48,7 @@ export default function AttendanceListCard({ studentId, paymentNumber}) {
             ));
             setEditData(jsxInputs);
         }
-    }, [editMode, dateExpected, attendanceCheck, dateAttended, checkIn, makeupMins, checkOut, notes]); // runs AFTER all these are updated
+    }, [editIndex, dateExpected, attendanceCheck, dateAttended, checkIn, makeupMins, checkOut, notes]); // runs AFTER all these are updated
 
     const refreshAttendanceList = useCallback(async () => {
         const requests = new AttendanceController();
@@ -83,19 +83,19 @@ export default function AttendanceListCard({ studentId, paymentNumber}) {
     function handleEdit(index) {
         const [classDate, attdCheck, attdDate, inC, outC] = attendanceValuesList[index];
         setDateExpected(classDate);
-        setAttendanceCheck(attdCheck);
-        setDateAttended(attdDate);
-        setCheckIn(inC);
+        setAttendanceCheck(attdCheck !== null ? attdCheck : "");
+        setDateAttended(attdDate !== null ? attdDate : "");
+        setCheckIn(inC !== null ? inC : "");
         setMakeupMins("Makeup Mins");
-        setCheckOut(outC);
+        setCheckOut(outC !== null ? outC : "");
         setNotes("Notes");
 
-        setEditMode(true);
+        setEditIndex(index);
     }
 
     function handleSave(e) {
         console.log("save clicked");
-        setEditMode(false);
+        setEditIndex(null);
     }
 
     return (
@@ -108,7 +108,7 @@ export default function AttendanceListCard({ studentId, paymentNumber}) {
                 headers={headers}
                 handleSave={handleSave}
                 handleEdit={handleEdit}
-                editStates={[editMode, setEditMode]}
+                editStates={[editIndex, setEditIndex]}
                 editData={editData}
                 inputFieldProps={[inputs, types, vars, funcs]}
                 cssName="css-student-input"

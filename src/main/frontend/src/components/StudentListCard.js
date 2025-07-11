@@ -33,7 +33,7 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
     const navigate = useNavigate();
     const [isValid, setIsValid] = useState(true);
     const [editData, setEditData] = useState([]);
-    const [editMode, setEditMode] = useState(false);
+    const [editIndex, setEditIndex] = useState(null);
 
     // variables for props passing
     const headers = ["Name", <button>Search</button>, "Payment Notes", "Notes", ""];
@@ -51,7 +51,7 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
     const funcs2 = [setNewFirstName, setNewLastName, setNewPymtNotes, setNewNotes];
 
     useEffect(() => {
-        if (editMode) {
+        if (editIndex !== null) {
             const jsxInputs = inputs2.map((element, ind) => (
                 <td key={ind}>
                     <label className="css-label">{element}</label>
@@ -65,7 +65,7 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
             ));
             setEditData(jsxInputs);
         }
-    }, [editMode, newFirstName, newLastName, newPymtNotes, newNotes]); // runs AFTER all these are updated
+    }, [editIndex, newFirstName, newLastName, newPymtNotes, newNotes]); // runs AFTER all these are updated
 
     // callback async function to be used in Table (for Students)
     const refreshStudents = useCallback(async () => {
@@ -156,7 +156,7 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
         setNewPymtNotes(pymt !== null ? pymt : "");
         setNewNotes(notes !== null ? notes : "");
 
-        setEditMode(true);
+        setEditIndex(index);
     }
 
     // handleSave function for editing student
@@ -185,7 +185,7 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
         await requests.edit(studentUrl, data);
 
         console.log("save clicked");
-        setEditMode(false);
+        setEditIndex(null);
     }
 
     return (
@@ -214,7 +214,7 @@ export default function StudentListCard({ timeOfDay, dayOfWeek }) {
                 headers={headers}
                 handleSave={handleSave}
                 handleEdit={handleEdit}
-                editStates={[editMode, setEditMode]}
+                editStates={[editIndex, setEditIndex]}
                 editData={editData}
                 cssName="css-student-input"
             />

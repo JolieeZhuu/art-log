@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 // internal imports
 import InputField from "./InputField.js";
 
-export default function TableRow({ index, row, elementId, handleSave, handleEdit, editStates, editData, cssName }) {
+export default function TableRow({ index, row, elementId, handleSave, handleEdit, isEditing, setEditIndex, editData }) {
 
     // inputFieldProps: [0]=inputs, [1]=types, [2]=vars, [3]=funcs
 
@@ -15,11 +15,11 @@ export default function TableRow({ index, row, elementId, handleSave, handleEdit
     useEffect(() => {
         function handleClickOutside(event) {
             if (
-                editStates[0] && 
+                isEditing && 
                 rowRef.current && // rowRef is not null (null === false)
                 !rowRef.current.contains(event.target) // curser outside of row (DOM element)
             ) {
-                editStates[1](false);
+                setEditIndex(null);
             }
         }
         document.addEventListener("mousedown", handleClickOutside); // add eventListener called "mousedown" containing function handleClickOutside
@@ -39,7 +39,7 @@ export default function TableRow({ index, row, elementId, handleSave, handleEdit
     return (
         <tr ref={rowRef} className="table-row" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             {
-                editStates[0] ? (
+                isEditing ? (
                     <>
                         { editData }
                         <td>

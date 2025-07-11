@@ -38,7 +38,8 @@ export default function Table({ data, elementIds, refreshFunc, headers, handleSa
                                         elementId={elementIds[index]}
                                         handleSave={handleSave}
                                         handleEdit={handleEdit}
-                                        editStates={editStates}
+                                        isEditing={index === editStates[0]}
+                                        setEditIndex={editStates[1]}
                                         editData={editData}
                                         cssName={cssName}
                                     />
