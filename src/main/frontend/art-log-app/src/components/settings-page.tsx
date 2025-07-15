@@ -1,11 +1,11 @@
 import Layout from "@/components/layout"
 
-export function SummaryPage() {
+export function Settings() {
     return (
         <Layout
             children={(
                 <div className="flex">
-                    <p>summary</p>
+                    <p>settings</p>
                 </div>
             )}
         />

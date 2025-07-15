@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { CalendarDays, Home, LogOut, Moon, Settings } from "lucide-react"
 
 import {
   Sidebar,
@@ -10,6 +10,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+
+import { ModeToggle } from "@/components/mode-toggle"
 
 // sidebar items
 const dashboard = [
@@ -23,38 +25,45 @@ const dashboard = [
 const files = [
     {
         title: "Monday",
-        url: "#/monday",
-        icon: Inbox,
+        day: "monday",
+        url: "#/day/monday",
+        icon: CalendarDays,
     },
     {
         title: "Tuesday",
-        url: "#/tuesday",
-        icon: Inbox,
+        day: "tuesday",
+        url: "#/day/tuesday",
+        icon: CalendarDays,
     },
     {
         title: "Wednesday",
-        url: "#/wednesday",
-        icon: Inbox,
+        day: "wednesday",
+        url: "#/day/wednesday",
+        icon: CalendarDays,
     },
     {
         title: "Thursday",
-        url: "#/thursday",
-        icon: Inbox,
+        day: "thursday",
+        url: "#/day/thursday",
+        icon: CalendarDays,
     },
     {
         title: "Friday",
-        url: "#/friday",
-        icon: Inbox,
+        day: "friday",
+        url: "#/day/friday",
+        icon: CalendarDays,
     },
     {
         title: "Saturday",
-        url: "#/saturday",
-        icon: Inbox,
+        day: "saturday",
+        url: "#/day/saturday",
+        icon: CalendarDays,
     },
     {
         title: "Sunday",
-        url: "#/sunday",
-        icon: Inbox,
+        day: "sunday",
+        url: "#/day/sunday",
+        icon: CalendarDays,
     },
 ]
 
@@ -63,16 +72,19 @@ const system = [
         title: "Settings",
         url: "#/settings",
         icon: Settings,
+        toggle: "",
     },
     {
         title: "Dark Mode",
         url: "#/dark-mode",
-        icon: Inbox,
+        icon: Moon,
+        toggle: <ModeToggle/>,
     },
     {
         title: "Log Out",
         url: "#/log-out",
-        icon: Inbox,
+        icon: LogOut,
+        toggle: "",
     },
 ]
 
@@ -88,7 +100,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
-                      <item.icon />
+                      <item.icon/>
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
@@ -99,16 +111,16 @@ export function AppSidebar() {
           <SidebarGroupLabel>Files</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {files.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                {files.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton asChild>
+                            <a href={item.url}>
+                                <item.icon/>
+                                <span>{item.title}</span>
+                            </a>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
           <SidebarGroupLabel>System</SidebarGroupLabel>
@@ -118,8 +130,9 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
-                      <item.icon />
+                      <item.icon/>
                       <span>{item.title}</span>
+                      {item.toggle}
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

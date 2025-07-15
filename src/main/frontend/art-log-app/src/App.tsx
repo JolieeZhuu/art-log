@@ -2,11 +2,10 @@ import './App.css'
 
 // component imports
 import { ThemeProvider } from '@/components/theme-provider'
-import { ModeToggle } from '@/components/mode-toggle'
 import { LoginPage } from '@/components/login-page'
 import { SummaryPage } from '@/components/summary-page'
-import { Monday } from '@/components/monday'
-import Layout from '@/components/layout'
+import { DayPage } from '@/components/day-page'
+import { Settings } from '@/components/settings-page'
 
 // routing
 import {
@@ -18,19 +17,17 @@ import {
 
 function App() {
     return (
-        <>
-            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                <Router>
-                    <Routes>
-                        <Route path="/" element={<LoginPage/>}/>
-                        <Route path="/summary" element={<SummaryPage/>}/>
-                        <Route path="/monday" element={<Monday/>}/>
-                        <Route path="*" element={<Navigate to="/"/>}/>
-                    </Routes>
-                </Router>
-                <ModeToggle/>
-            </ThemeProvider>
-        </>
+        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <Router>
+                <Routes>
+                    <Route path="/" element={<LoginPage/>}/>
+                    <Route path="/summary" element={<SummaryPage/>}/>
+                    <Route path="/day/:day" element={<DayPage/>}/>
+                    <Route path="/settings" element={<Settings/>}/>
+                    <Route path="*" element={<Navigate to="/"/>}/>
+                </Routes>
+            </Router>
+        </ThemeProvider>
     )
   {
     /*
