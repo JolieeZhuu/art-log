@@ -15,6 +15,7 @@ import Friday from "./components/days/Friday.js";
 import Saturday from "./components/days/Saturday.js";
 import Sunday from "./components/days/Sunday.js";
 import StudentDB from "./components/StudentDB.js";
+import AllPaymentTables from "./components/AllPaymentTables.js";
 
 export default function App() {
     return (
@@ -30,6 +31,7 @@ export default function App() {
                 <Route path="/saturday" element={<Saturday/>}/>
                 <Route path="/sunday" element={<Sunday/>}/>
                 <Route path="/:day/student-database/:id" element={<StudentDB/>}/>
+                <Route path="/:day/student-database/:id/tables" element={<AllPaymentTables/>}/>
                 <Route path="*" element={<Navigate to="/"/>}/>
             </Routes>
         </Router>

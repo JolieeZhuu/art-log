@@ -46,8 +46,10 @@ export default function AttendanceListCard({ studentId, paymentNumber}) {
                     />
                 </td>
             ));
+            jsxInputs.unshift(<td>{editIndex+1}</td>);
             setEditData(jsxInputs);
         }
+        // eslint-disable-next-line
     }, [editIndex, dateExpected, attendanceCheck, dateAttended, checkIn, makeupMins, checkOut, notes]); // runs AFTER all these are updated
 
     const refreshAttendanceList = useCallback(async () => {

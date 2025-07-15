@@ -8,7 +8,7 @@ export default function Sunday(params) {
         <div id="sunday" className="navbar-page">
             <Navigation/>
             <div>
-                <h2>Sunday</h2>
+                <h2 className="header">Sunday</h2>
                 <div className="student-list-cards">
                     <StudentListCard timeOfDay="Morning" dayOfWeek="Sunday"/>
                     <StudentListCard timeOfDay="Afternoon" dayOfWeek="Sunday"/>

@@ -1,6 +1,6 @@
 // external imports
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import dayjs from 'dayjs';
 
 // internal imports
@@ -14,6 +14,7 @@ export default function StudentDB() {
     // initializations
     const { id, day } = useParams(); // deconstruct object to separate id
     const cssIDName = "#" + day.toLowerCase();
+    const navigate = useNavigate();
 
     const [date, setDate] = useState("");
     const [isOpen, setIsOpen] = useState(false);
@@ -69,11 +70,16 @@ export default function StudentDB() {
         }
     }    
 
+    function seeAllPaymentTables() {
+        navigate(`/${day}/student-database/${id}/tables`);
+    }
+
     return (
         <div className="navbar-page">
             <Navigation/>
             <div>
                 <StudentDBInfo id={id} cssIDName={cssIDName} day={day}/>
+                <button onClick={seeAllPaymentTables}>See all payment tables</button>
                 <Popup
                     setGetOpen={[isOpen, setIsOpen]}
                     setGetValid={[isValid, setIsValid]}

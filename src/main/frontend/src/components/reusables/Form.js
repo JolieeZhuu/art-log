@@ -3,7 +3,6 @@ import SubmitButton from "./SubmitButton.js";
 import InputField from "./InputField.js";
 
 export default function Form({ inputFieldProps, onSubmit, buttonName, cssName, formName }) {
-    console.log(inputFieldProps) // DEBUG
     return (
         <form className={formName} onSubmit={onSubmit}>
             {
