@@ -1,14 +1,12 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 // component imports
 import { ThemeProvider } from '@/components/theme-provider'
-import { ModeToggle } from './components/mode-toggle'
-import { LoginPage } from './components/login-page'
-import { SummaryPage } from './components/summary-page'
-import { Monday } from './components/monday'
+import { ModeToggle } from '@/components/mode-toggle'
+import { LoginPage } from '@/components/login-page'
+import { SummaryPage } from '@/components/summary-page'
+import { Monday } from '@/components/monday'
+import Layout from '@/components/layout'
 
 // routing
 import {
@@ -19,24 +17,20 @@ import {
 } from 'react-router-dom'
 
 function App() {
-    //const [count, setCount] = useState(0)
-
     return (
         <>
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-            <Router>
-                <Routes>
-                    <Route path="/" element={<LoginPage/>}/>
-                    <Route path="/summary" element={<SummaryPage/>}/>
-                    <Route path="/monday" element={<Monday/>}/>
-                    <Route path="*" element={<Navigate to="/"/>}/>
-                </Routes>
-            </Router>
-            <ModeToggle/>
-        </ThemeProvider>
-            
+            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<LoginPage/>}/>
+                        <Route path="/summary" element={<SummaryPage/>}/>
+                        <Route path="/monday" element={<Monday/>}/>
+                        <Route path="*" element={<Navigate to="/"/>}/>
+                    </Routes>
+                </Router>
+                <ModeToggle/>
+            </ThemeProvider>
         </>
-        
     )
   {
     /*

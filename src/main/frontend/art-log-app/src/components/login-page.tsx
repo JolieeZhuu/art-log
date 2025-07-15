@@ -1,30 +1,28 @@
+// shadcn imports
 import { Button } from "@/components/ui/button"
 import {
     Card,
-    CardAction,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
 
+// external imports
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod" // zod is used for input validation
 
+// internal imports
 import { Controller } from "@/restAPI/entities"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
@@ -84,15 +82,15 @@ export function LoginPage() {
     }
 
     return (
-        <>
-            <Card>
+        <div className="w-[500px] flex justify-center">
+            <Card className="w-full max-w-sm">
                 <CardHeader>
                     <CardTitle>Login to ART.LOG</CardTitle>
                     <CardDescription>Enter your username and password to access our student database.</CardDescription>
                 </CardHeader>
-                <CardContent>                    
+                <CardContent className="break-words">                    
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                             <FormField
                                 control={form.control}
                                 name="username"
@@ -100,7 +98,7 @@ export function LoginPage() {
                                     <FormItem>
                                         <FormLabel>Username</FormLabel>
                                         <FormControl>
-                                            <Input {...field} placeholder="ex: art"/>
+                                            <Input {...field} className="w-full" placeholder="ex: art"/>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -113,7 +111,7 @@ export function LoginPage() {
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
-                                            <Input {...field} placeholder="ex: log"/>
+                                            <Input {...field} className="w-full" placeholder="ex: log" type="password"/>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -126,12 +124,12 @@ export function LoginPage() {
                                     <FormMessage>Username or password is incorrect.</FormMessage>
                                 )
                             }
-                            <Button type="submit">Submit</Button>
+                            <Button type="submit" variant="outline">Submit</Button>
                         </form>
                     </Form>
                     
                 </CardContent>
             </Card>
-        </>
+        </div>
     )
 }

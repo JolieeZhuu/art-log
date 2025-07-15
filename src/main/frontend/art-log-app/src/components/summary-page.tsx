@@ -1,7 +1,13 @@
+import Layout from "@/components/layout"
+
 export function SummaryPage() {
     return (
-        <>
-            <p>Hello this is summary page</p>
-        </>
+        <Layout
+            children={(
+                <>
+                    <p>Hello this is summary page</p>
+                </>
+            )}
+        />
     )
 }
