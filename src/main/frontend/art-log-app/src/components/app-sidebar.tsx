@@ -1,4 +1,4 @@
-import { CalendarDays, Home, LogOut, Moon, Settings } from "lucide-react"
+import { CalendarDays, Home, LogOut, Settings } from "lucide-react"
 
 import {
   Sidebar,
@@ -9,9 +9,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarProvider,
+  SidebarRail,
 } from "@/components/ui/sidebar"
-
-import { ModeToggle } from "@/components/mode-toggle"
 
 // sidebar items
 const dashboard = [
@@ -72,13 +72,6 @@ const system = [
         title: "Settings",
         url: "#/settings",
         icon: Settings,
-        toggle: "",
-    },
-    {
-        title: "Dark Mode",
-        url: "#/dark-mode",
-        icon: Moon,
-        toggle: <ModeToggle/>,
     },
     {
         title: "Log Out",
@@ -90,7 +83,7 @@ const system = [
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar variant="floating">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
@@ -101,7 +94,7 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
                       <item.icon/>
-                      <span>{item.title}</span>
+                      <span className="dark:text-white text-black">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -116,7 +109,7 @@ export function AppSidebar() {
                         <SidebarMenuButton asChild>
                             <a href={item.url}>
                                 <item.icon/>
-                                <span>{item.title}</span>
+                                <span className="dark:text-white text-black">{item.title}</span>
                             </a>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -131,8 +124,7 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
                       <item.icon/>
-                      <span>{item.title}</span>
-                      {item.toggle}
+                      <span className="dark:text-white text-black">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
