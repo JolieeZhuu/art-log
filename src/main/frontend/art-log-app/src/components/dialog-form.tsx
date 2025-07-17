@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/form"
 import type { FieldPath } from "react-hook-form"
 import { ComboboxOptions } from "@/components/combobox-options"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { toast } from "sonner"
 
 // external imports
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -261,6 +261,7 @@ export function DialogForm() {
 
         await requests.add(studentUrl, data)
         setOpen(false);
+        toast(`${values.firstName} ${values.lastName} has been added.`)
     }
 
     return (
@@ -307,7 +308,7 @@ export function DialogForm() {
                                 <DialogClose asChild>
                                     <Button variant="outline">Cancel</Button>
                                 </DialogClose>
-                                <Button type="submit" variant="outline">Create Student</Button>
+                                <Button type="submit">Create Student</Button>
                             </DialogFooter>
                         </form>
                     </Form>

@@ -1,5 +1,7 @@
 import * as React from "react"
 
+import { ScrollArea } from "@/components/ui/scroll-area"
+
 import { columns, type Student } from "@/components/students/columns"
 import { DataTable } from "@/components/students/data-table"
 
@@ -34,8 +36,8 @@ export default function DemoPage({ dayOfWeek, substring} : { dayOfWeek: string; 
     })
 
     return (
-        <div className="container mx-auto py-10">
+        <ScrollArea className=" h-[300px] w-full container mx-auto">
             <DataTable columns={columns} data={data} />
-        </div>
+        </ScrollArea>
     )
 }

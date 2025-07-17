@@ -14,14 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-// edit student handler
-function editStudent() {
-    console.log("edit clicked")
-}
-
-function deleteStudent() {
-    console.log("delete clicked")
-}
+import { Checkbox } from "@/components/ui/checkbox";
 
 export type Student = {
     id: number
@@ -32,26 +25,63 @@ export type Student = {
 
 export const columns: ColumnDef<Student>[] = [
     {
+        id: "select",
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Select row"
+            />
+        ),
+
+        enableSorting: false,
+        enableHiding: false,
+    },
+    {
         accessorKey: "name",
         header: "Student Name",
         cell: ({ row }) => {
             const name = row.getValue("name") as string
             const student = row.original
-            return <a href="#/students">{name}</a>
+            return <a href={`#/students/${student.id}`}>{name}</a>
         }
     },
     {
         accessorKey: "paymentNotes",
         header: "Payment Notes",
+        cell: ({ row }) => {
+            const phrase = row.getValue("paymentNotes") as string
+            if (phrase.length > 20) {
+                const formatted = phrase.substring(0, 17) + "..."
+                return <div>{formatted}</div>
+            } return <div>{phrase}</div>
+        }
     },
     {
         accessorKey: "notes",
         header: "Notes",
+        cell: ({ row }) => {
+            const phrase = row.getValue("notes") as string
+            if (phrase.length > 15) {
+                const formatted = phrase.substring(0, 12) + "..."
+                return <div>{formatted}</div>
+            } return <div>{phrase}</div>
+        }
     },
     {
         id: "actions",
         cell: ({ row }) => {
             const student = row.original
+
+            // edit student handler
+            function editStudent() {
+                console.log("edit clicked")
+                console.log(student)
+            }
+
+            function deleteStudent() {
+                console.log("delete clicked")
+            }
         
             return (
                 <DropdownMenu>

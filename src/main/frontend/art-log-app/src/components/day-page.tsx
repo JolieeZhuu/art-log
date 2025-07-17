@@ -9,6 +9,9 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { Toaster } from "@/components/ui/sonner"
+
+
 import { SiteHeader } from "@/components/site-header"
 import { DialogForm } from "@/components/dialog-form"
 import DemoPage from "@/components/students/page"
@@ -23,9 +26,9 @@ export function DayPage() {
             children={(
                 <div>
                     <SiteHeader heading={day[0].toUpperCase() + day.substring(1)} />
-                    <div className="w-[73rem]">
-                        <div className="flex flex-wrap gap-4 max-w-screen pt-4">
-                            <Card className="w-full max-w-xl">
+                    <div className="flex flex-wrap gap-4 pt-4">
+                        <div className="w-full max-w-xl">
+                            <Card>
                                 <CardHeader className="justify-items-start">
                                     <CardTitle>Morning</CardTitle>
                                     <CardAction>
@@ -36,7 +39,9 @@ export function DayPage() {
                                     <DemoPage dayOfWeek={day} substring="AM"/>
                                 </CardContent>
                             </Card>
-                            <Card className="w-full max-w-xl">
+                        </div>
+                        <div className="w-full max-w-xl">
+                            <Card>
                                 <CardHeader className="justify-items-start">
                                     <CardTitle>Afternoon</CardTitle>
                                     <CardAction>
@@ -48,13 +53,12 @@ export function DayPage() {
                                 </CardContent>
                             </Card>
                         </div>
-                        
                         <div className="absolute top-4 right-4">
                             <ModeToggle/>
                         </div>
                     </div>
+                    <Toaster/>
                 </div>
-                
             )}
         />
     )
