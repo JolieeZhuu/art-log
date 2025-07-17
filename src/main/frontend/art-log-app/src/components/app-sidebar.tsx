@@ -1,4 +1,4 @@
-import { CalendarDays, Home, LogOut, Settings } from "lucide-react"
+import { CalendarDays, Home, LogOut, Settings, Table } from "lucide-react"
 
 import {
   Sidebar,
@@ -9,8 +9,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
-  SidebarRail,
 } from "@/components/ui/sidebar"
 
 // sidebar items
@@ -19,7 +17,12 @@ const dashboard = [
         title: "Summary",
         url: "#/summary",
         icon: Home,
-    }
+    },
+    {
+        title: "Students",
+        url: "#/students",
+        icon: Table,
+    },
 ]
 
 const files = [
@@ -84,55 +87,61 @@ const system = [
 export function AppSidebar() {
   return (
     <Sidebar variant="floating">
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {dashboard.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon/>
-                      <span className="dark:text-white text-black">{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-          <SidebarGroupLabel>Files</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-                {files.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild>
-                            <a href={item.url}>
+        <SidebarContent>
+            <SidebarGroup>
+                <div>
+                    <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+                        <SidebarGroupContent>
+                            <SidebarMenu>
+                            {dashboard.map((item) => (
+                                <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton asChild>
+                                    <a href={item.url}>
+                                    <item.icon/>
+                                    <span className="dark:text-white text-black">{item.title}</span>
+                                    </a>
+                                </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                </div>
+                <div className="mt-4">
+                    <SidebarGroupLabel>Files</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {files.map((item) => (
+                                <SidebarMenuItem key={item.title}>
+                                    <SidebarMenuButton asChild>
+                                        <a href={item.url}>
+                                            <item.icon/>
+                                            <span className="dark:text-white text-black">{item.title}</span>
+                                        </a>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </div>
+                <div className="mt-4">
+                    <SidebarGroupLabel>System</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                        {system.map((item) => (
+                            <SidebarMenuItem key={item.title}>
+                            <SidebarMenuButton asChild>
+                                <a href={item.url}>
                                 <item.icon/>
                                 <span className="dark:text-white text-black">{item.title}</span>
-                            </a>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-          <SidebarGroupLabel>System</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {system.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon/>
-                      <span className="dark:text-white text-black">{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
+                                </a>
+                            </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </div>
+            </SidebarGroup>
+        </SidebarContent>
     </Sidebar>
   )
 }

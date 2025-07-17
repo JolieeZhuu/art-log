@@ -6,14 +6,12 @@ import {
     Card,
     CardAction,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
 import { SiteHeader } from "@/components/site-header"
-import { Button } from "@/components/ui/button"
 import { DialogForm } from "@/components/dialog-form"
+import DemoPage from "@/components/students/page"
 
 export function DayPage() {
     const { day } = useParams<{ day?: string }>()
@@ -35,7 +33,7 @@ export function DayPage() {
                                     </CardAction>
                                 </CardHeader>
                                 <CardContent>
-                                    <p>Card Content</p>
+                                    <DemoPage dayOfWeek={day} substring="AM"/>
                                 </CardContent>
                             </Card>
                             <Card className="w-full max-w-xl">
@@ -46,7 +44,7 @@ export function DayPage() {
                                     </CardAction>
                                 </CardHeader>
                                 <CardContent>
-                                    <p>Card Content</p>
+                                    <DemoPage dayOfWeek={day} substring="PM"/>
                                 </CardContent>
                             </Card>
                         </div>

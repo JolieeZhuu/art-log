@@ -1,3 +1,5 @@
+import * as React from "react"
+
 // component ui imports
 import { Button } from "@/components/ui/button"
 import {
@@ -11,7 +13,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
     Form,
     FormControl,
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/form"
 import type { FieldPath } from "react-hook-form"
 import { ComboboxOptions } from "@/components/combobox-options"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 // external imports
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -29,6 +31,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // zod is used for input validation
 
 import { Controller } from "@/restAPI/entities"
+import { Terminal } from "lucide-react"
 
 const studentSchema = z.object({
     firstName: z.string().min(1, {
@@ -38,7 +41,7 @@ const studentSchema = z.object({
         message: "Last name is required.",
     }),
     day: z.string().min(1, {
-        message: "Class ID is required.",
+        message: "Day is required.",
     }),
     classId: z.string().min(1, {
         message: "Class ID is required.",
@@ -82,6 +85,8 @@ const dayOptions = [
   },
 ]
 
+// LATER FEATURES: HAVE A FUNCTION THAT LETS USER ADD THEIR OWN OPTIONS
+// also fix scrollable area?
 const classIdOptions = [
   {
     value: "LV1",
@@ -91,9 +96,57 @@ const classIdOptions = [
     value: "LV2",
     label: "LV2",
   },
+  {
+    value: "LV3",
+    label: "LV3",
+  },
+  {
+    value: "LV4",
+    label: "LV4",
+  },
+  {
+    value: "INTE1",
+    label: "INTE1",
+  },
+  {
+    value: "INTE2",
+    label: "INTE2",
+  },
+  {
+    value: "WT",
+    label: "WT",
+  },
+  {
+    value: "P",
+    label: "P",
+  },
+  {
+    value: "PRE-U",
+    label: "PRE-U",
+  },
+  {
+    value: "U",
+    label: "U",
+  },
 ]
 
 const timeExpectedOptions = [
+  {
+    value: "9 AM",
+    label: "9 AM",
+  },
+  {
+    value: "10 AM",
+    label: "10 AM",
+  },
+  {
+    value: "11 AM",
+    label: "11 AM",
+  },
+  {
+    value: "12 AM",
+    label: "12 AM",
+  },
   {
     value: "1 PM",
     label: "1 PM",
@@ -103,11 +156,25 @@ const timeExpectedOptions = [
     label: "2 PM",
   },
   {
-    value: "10 AM",
-    label: "10 AM",
+    value: "3 PM",
+    label: "3 PM",
+  },
+  {
+    value: "4 PM",
+    label: "4 PM",
+  },
+  {
+    value: "5 PM",
+    label: "5 PM",
+  },
+  {
+    value: "6 PM",
+    label: "6 PM",
   },
 ]
 
+
+// shortcut to defining an array of maps in TS
 const formFieldOptions: {
     name: FieldPath<z.infer<typeof studentSchema>>
     label: string
@@ -155,8 +222,11 @@ const formFieldOptions: {
 export function DialogForm() {
 
     // variable initializations
-    const requests = new Controller();
-    const studentUrl = "http://localhost:8080/student/";
+    const requests = new Controller()
+    const studentUrl = "http://localhost:8080/student/"
+
+    const [open, setOpen] = React.useState(false)
+    //const [submitted, setSubmitted] = React.useState(false)
     
     // define form
     const form = useForm<z.infer<typeof studentSchema>>({
@@ -164,6 +234,7 @@ export function DialogForm() {
         defaultValues: {
             firstName: "",
             lastName: "",
+            day:"",
             classId: "",
             phoneNumber: "",
             timeExpected: "",
@@ -189,19 +260,21 @@ export function DialogForm() {
         }
 
         await requests.add(studentUrl, data)
+        setOpen(false);
     }
 
     return (
         <div>
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <Button variant="outline">Open Form</Button>
                 </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
+                    <DialogContent className="sm:max-w-[450px]">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                             <DialogHeader>
                                 <DialogTitle>Create Student Form</DialogTitle>
+                                <DialogDescription></DialogDescription>
                             </DialogHeader>
                             {formFieldOptions.map((item) => (
                                 <FormField
@@ -234,7 +307,7 @@ export function DialogForm() {
                                 <DialogClose asChild>
                                     <Button variant="outline">Cancel</Button>
                                 </DialogClose>
-                                <Button type="submit">Create Student</Button>
+                                <Button type="submit" variant="outline">Create Student</Button>
                             </DialogFooter>
                         </form>
                     </Form>

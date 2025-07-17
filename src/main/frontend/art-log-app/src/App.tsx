@@ -3,9 +3,10 @@ import './App.css'
 // component imports
 import { ThemeProvider } from '@/components/theme-provider'
 import { LoginPage } from '@/components/login-page'
-import { SummaryPage } from '@/components/summary-page'
+import { Summary } from '@/components/summary-page'
 import { DayPage } from '@/components/day-page'
 import { Settings } from '@/components/settings-page'
+import { Students } from '@/components/students-page'
 
 // routing
 import {
@@ -21,9 +22,10 @@ function App() {
             <Router>
                 <Routes>
                     <Route path="/" element={<LoginPage/>}/>
-                    <Route path="/summary" element={<SummaryPage/>}/>
+                    <Route path="/summary" element={<Summary/>}/>
                     <Route path="/day/:day" element={<DayPage/>}/>
                     <Route path="/settings" element={<Settings/>}/>
+                    <Route path="/students" element={<Students/>}/>
                     <Route path="*" element={<Navigate to="/"/>}/>
                 </Routes>
             </Router>
