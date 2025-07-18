@@ -78,7 +78,7 @@ export class StudentController extends Controller {
 
 
 export class AttendanceController extends Controller {
-    async getByStudentIdAndPaymentNumber(url: string, studentId: number, paymentNumber: string) {
+    async getByStudentIdAndPaymentNumber(url: string, studentId: number, paymentNumber: number) {
 		try {
 			const data = await this.httpGet.get(url + "student/" + studentId + "/" + paymentNumber);
 			return data;

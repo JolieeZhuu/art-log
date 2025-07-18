@@ -31,7 +31,6 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // zod is used for input validation
 
 import { Controller } from "@/restAPI/entities"
-import { Terminal } from "lucide-react"
 
 const studentSchema = z.object({
     firstName: z.string().min(1, {
@@ -219,7 +218,7 @@ const formFieldOptions: {
     },
 ]
 
-export function DialogForm() {
+export function DialogStudentForm() {
 
     // variable initializations
     const requests = new Controller()
@@ -234,7 +233,7 @@ export function DialogForm() {
         defaultValues: {
             firstName: "",
             lastName: "",
-            day:"",
+            day: "",
             classId: "",
             phoneNumber: "",
             timeExpected: "",

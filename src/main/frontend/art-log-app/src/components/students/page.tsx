@@ -7,7 +7,7 @@ import { DataTable } from "@/components/students/data-table"
 
 import { StudentController } from "@/restAPI/entities"
 
-export default function DemoPage({ dayOfWeek, substring} : { dayOfWeek: string; substring: string}) {
+export default function StudentTable({ dayOfWeek, substring} : { dayOfWeek: string; substring: string}) {
 
     // variable initializations
     const requests = new StudentController()
@@ -19,7 +19,7 @@ export default function DemoPage({ dayOfWeek, substring} : { dayOfWeek: string; 
         const studentList = await requests.getByDayAndExpectedTimeEnding(studentUrl, dayOfWeek, substring)
 
         // store values to be used during editMode
-        const studentValuesList: Student[] = studentList.map(({ student_id, first_name, last_name, payment_notes, notes } : { student_id: number; first_name: string; last_name: string; payment_notes: string; notes: string}) => {
+        const studentValuesList: Student[] = studentList.map(({ student_id, first_name, last_name, payment_notes, notes } : { student_id: number, first_name: string, last_name: string, payment_notes: string, notes: string}) => {
             return {
                 id: student_id,
                 name: `${first_name} ${last_name}`,
@@ -27,6 +27,7 @@ export default function DemoPage({ dayOfWeek, substring} : { dayOfWeek: string; 
                 notes: notes,
             }
         })
+        
 
         return studentValuesList
     }

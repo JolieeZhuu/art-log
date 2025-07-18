@@ -13,8 +13,8 @@ import { Toaster } from "@/components/ui/sonner"
 
 
 import { SiteHeader } from "@/components/site-header"
-import { DialogForm } from "@/components/dialog-form"
-import DemoPage from "@/components/students/page"
+import { DialogStudentForm } from "@/components/dialog-student-form"
+import StudentTable from "@/components/students/page"
 
 export function DayPage() {
     const { day } = useParams<{ day?: string }>()
@@ -32,11 +32,11 @@ export function DayPage() {
                                 <CardHeader className="justify-items-start">
                                     <CardTitle>Morning</CardTitle>
                                     <CardAction>
-                                        <DialogForm/>
+                                        <DialogStudentForm/>
                                     </CardAction>
                                 </CardHeader>
                                 <CardContent>
-                                    <DemoPage dayOfWeek={day} substring="AM"/>
+                                    <StudentTable dayOfWeek={day} substring="AM"/>
                                 </CardContent>
                             </Card>
                         </div>
@@ -45,11 +45,11 @@ export function DayPage() {
                                 <CardHeader className="justify-items-start">
                                     <CardTitle>Afternoon</CardTitle>
                                     <CardAction>
-                                        <DialogForm/>
+                                        <DialogStudentForm/>
                                     </CardAction>
                                 </CardHeader>
                                 <CardContent>
-                                    <DemoPage dayOfWeek={day} substring="PM"/>
+                                    <StudentTable dayOfWeek={day} substring="PM"/>
                                 </CardContent>
                             </Card>
                         </div>
