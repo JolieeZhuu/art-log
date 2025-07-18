@@ -34,7 +34,7 @@ export default function StudentTable({ dayOfWeek, substring} : { dayOfWeek: stri
 
     React.useEffect(() => {
         getData().then((data) => setData(data))
-    })
+    }, [dayOfWeek, substring])
 
     return (
         <ScrollArea className=" h-[300px] w-full container mx-auto">

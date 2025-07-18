@@ -75,20 +75,23 @@ export const columns: ColumnDef<Attendance>[] = [
             }
         
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={editClass}>Edit Class</DropdownMenuItem>
-                        <DropdownMenuItem onClick={deleteClass}>Delete Class</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={editClass}>Edit Class</DropdownMenuItem>
+                            <DropdownMenuItem onClick={deleteClass}>Delete Class</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <h1></h1>
+                </div>
             )
         },
     },

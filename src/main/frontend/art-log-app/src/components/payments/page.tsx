@@ -38,10 +38,10 @@ export default function PaymentTable({ studentId, paymentNumber }: { studentId: 
 
     React.useEffect(() => {
         getData().then((data) => setData(data))
-    })
+    }, [studentId, paymentNumber])
 
     return (
-        <ScrollArea className=" h-[300px] w-full container mx-auto">
+        <ScrollArea className=" h-[550px] w-full container mx-auto">
             <DataTable columns={columns} data={data} />
         </ScrollArea>
     )

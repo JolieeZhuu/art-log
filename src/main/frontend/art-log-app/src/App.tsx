@@ -8,6 +8,7 @@ import { DayPage } from '@/components/day-page'
 import { Settings } from '@/components/settings-page'
 import { Students } from '@/components/students-page'
 import { PaymentsPage } from './components/payments-page'
+import { Archives } from './components/archives-page'
 
 // routing
 import {
@@ -28,6 +29,7 @@ function App() {
                     <Route path="/settings" element={<Settings/>}/>
                     <Route path="/students" element={<Students/>}/>
                     <Route path="/students/:id" element={<PaymentsPage/>}/>
+                    <Route path="/students/:id/archives" element={<Archives/>}/>
                     <Route path="*" element={<Navigate to="/"/>}/>
                 </Routes>
             </Router>

@@ -49,7 +49,7 @@ const paymentSchema = z.object({
 })
 
 
-export function DialogPaymentForm({ id }: { id: number }) {
+export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymentAdded?: () => void }) {
 
     // variable initializations
     const requests = new Controller()
@@ -77,6 +77,7 @@ export function DialogPaymentForm({ id }: { id: number }) {
         await addNewPaymentTable(id, formattedDate, currentPaymentNum);
 
         setOpen(false);
+        onPaymentAdded?.() // trigger callback
         //const formattedDate = monthNames[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear()
         //console.log(typeof formattedDate)
     }

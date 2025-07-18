@@ -23,6 +23,16 @@ import PaymentTable from "@/components/payments/page"
 
 import { getPaymentNum } from "@/components/payments/paymentFuncs"
 
+import { Link } from "react-router-dom"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+
 type Student = {
     student_id: number
     first_name: string
@@ -40,18 +50,18 @@ export function PaymentsPage() {
     }
 
     const id = parseInt(idParam)
-    const [student, setStudent] = useState<Student | null>(null);
+    const [student, setStudent] = useState<Student | null>(null)
     const [cardList, setCardList] = useState<React.ReactElement[]>([])
 
     const requests = new Controller()
     const studentUrl = "http://localhost:8080/student/"
 
     useEffect(() => {
-        studentHeader()
+        getStudent()
         loadCards()
     }, [id])
 
-    async function studentHeader() {
+    async function getStudent() {
         const storeStudent = await requests.getById(studentUrl, id)
         setStudent(storeStudent)
     }
@@ -86,28 +96,44 @@ export function PaymentsPage() {
         <Layout
             children={(
                 <div className="max-w-screen">
-                    <SiteHeader heading={`${student?.first_name} ${student?.last_name}`}/>
-                    <div className="flex justify-between items-center gap-4 pt-4">
-                        <div className="flex gap-4">
-                            <Badge variant="secondary">{student?.day[0]}{student?.day.substring(1)}</Badge>
-                            <Badge variant="secondary">{student?.time_expected}</Badge>
-                            <Badge variant="secondary">{student?.class_id}</Badge>
-                            <Badge variant="secondary">{student?.phone_number}</Badge>
-                        </div>
-                        <DialogPaymentForm id={id}/>
+                    <div className="absolute top-4 right-4 z-50">
+                        <ModeToggle/>
                     </div>
-
-                    <div className="flex flex-wrap gap-4 pt-4">
-                        {cardList}
-                        <div className="absolute top-4 right-4">
-                            <ModeToggle/>
-                        </div>
-                    </div>
-                    <div className="fixed bottom-4 right-4">
-                        <Button variant="outline" size="icon">
-                            <Archive className="h-[1.2rem] w-[1.2rem]"/>
-                            <span className="sr-only">Payment table archives</span>
+                    <div className="fixed bottom-4 right-4 z-50">
+                        <Button variant="outline" size="icon" asChild>
+                            <a href={`#/students/${id}/archives`}>
+                                <Archive className="h-[1.2rem] w-[1.2rem]"/>
+                                <span className="sr-only">Payment table archives</span>
+                            </a>
                         </Button>
+                    </div>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
+                                <Link to="/students">Students</Link>
+                            </BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                            <BreadcrumbPage>{`${student?.first_name} ${student?.last_name}`}</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                    <div className="mt-4">
+                        <SiteHeader heading={`${student?.first_name} ${student?.last_name}`}/>
+                        <div className="flex justify-between items-center gap-4 pt-4">
+                            <div className="flex gap-4">
+                                <Badge variant="secondary">{student?.day[0]}{student?.day.substring(1)}</Badge>
+                                <Badge variant="secondary">{student?.time_expected}</Badge>
+                                <Badge variant="secondary">{student?.class_id}</Badge>
+                                <Badge variant="secondary">{student?.phone_number}</Badge>
+                            </div>
+                            <DialogPaymentForm id={id} onPaymentAdded={loadCards}/>
+                        </div>
+                        <div className="flex flex-wrap gap-4 pt-4">
+                            {cardList}
+                        </div>
                     </div>
                 </div>
             )}
