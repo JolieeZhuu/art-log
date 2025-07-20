@@ -1,13 +1,11 @@
 import * as React from "react"
 
-import { ScrollArea } from "@/components/ui/scroll-area"
-
-import { columns, type Student } from "@/components/students/columns"
-import { DataTable } from "@/components/students/data-table"
+import { columns, type Student } from "@/components/students/student-columns"
+import { DataTable } from "@/components/students/student-data-table"
 
 import { StudentController } from "@/restAPI/entities"
 
-export default function StudentTable({ dayOfWeek, substring} : { dayOfWeek: string; substring: string}) {
+export default function StudentTable({ dayOfWeek, substring } : { dayOfWeek: string; substring: string }) {
 
     // variable initializations
     const requests = new StudentController()
@@ -36,9 +34,15 @@ export default function StudentTable({ dayOfWeek, substring} : { dayOfWeek: stri
         getData().then((data) => setData(data))
     }, [dayOfWeek, substring])
 
+    function handleEditUpdates(updatedStudent: Student) {
+        setData((prev) =>
+            prev.map((student) =>
+                student.id === updatedStudent.id ? updatedStudent : student
+            )
+        )
+    }
+
     return (
-        <ScrollArea className=" h-[300px] w-full container mx-auto">
-            <DataTable columns={columns} data={data} />
-        </ScrollArea>
+        <DataTable columns={columns({ onUpdate: handleEditUpdates })} data={data} />
     )
 }

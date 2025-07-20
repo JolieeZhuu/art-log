@@ -39,7 +39,7 @@ import { z } from "zod" // zod is used for input validation
 
 import { Controller } from "@/restAPI/entities"
 
-import { getPaymentNum, addPaymentNum, addNewPaymentTable } from "@/components/payments/paymentFuncs"
+import { getPaymentNum, addPaymentNum, addNewPaymentTable } from "@/components/payments/payment-funcs"
 import dayjs from 'dayjs'
 
 const paymentSchema = z.object({

@@ -1,9 +1,7 @@
 import * as React from "react"
 
-import { ScrollArea } from "@/components/ui/scroll-area"
-
-import { columns, type Attendance } from "@/components/payments/columns"
-import { DataTable } from "@/components/payments/data-table"
+import { columns, type Attendance } from "@/components/payments/payments-columns"
+import { DataTable } from "@/components/payments/payments-data-table"
 
 import { AttendanceController } from "@/restAPI/entities"
 
@@ -41,8 +39,6 @@ export default function PaymentTable({ studentId, paymentNumber }: { studentId: 
     }, [studentId, paymentNumber])
 
     return (
-        <ScrollArea className=" h-[550px] w-full container mx-auto">
-            <DataTable columns={columns} data={data} />
-        </ScrollArea>
+        <DataTable columns={columns} data={data} />
     )
 }

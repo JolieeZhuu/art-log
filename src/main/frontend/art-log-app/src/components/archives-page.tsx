@@ -16,9 +16,9 @@ import { ModeToggle } from "@/components/mode-toggle"
 
 import { Controller } from "@/restAPI/entities"
 
-import PaymentTable from "@/components/payments/page"
+import PaymentTable from "@/components/payments/payments-table-page"
 
-import { getPaymentNum } from "@/components/payments/paymentFuncs"
+import { getPaymentNum } from "@/components/payments/payment-funcs"
 
 import { Link } from "react-router-dom"
 import {

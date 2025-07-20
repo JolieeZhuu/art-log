@@ -19,9 +19,9 @@ import { SiteHeader } from "@/components/site-header"
 
 import { Controller } from "@/restAPI/entities"
 import { DialogPaymentForm } from "@/components/dialog-payment-form"
-import PaymentTable from "@/components/payments/page"
+import PaymentTable from "@/components/payments/payments-table-page"
 
-import { getPaymentNum } from "@/components/payments/paymentFuncs"
+import { getPaymentNum } from "@/components/payments/payment-funcs"
 
 import { Link } from "react-router-dom"
 import {
@@ -81,6 +81,9 @@ export function PaymentsPage() {
                     <Card>
                         <CardHeader className="justify-items-start">
                             <CardTitle>Payment Table {num - index}</CardTitle>
+                            <CardAction>
+                                <Button variant="outline">Add Class</Button>
+                            </CardAction>
                         </CardHeader>
                         <CardContent>
                             <PaymentTable studentId={id} paymentNumber={num - index}/>
@@ -96,16 +99,8 @@ export function PaymentsPage() {
         <Layout
             children={(
                 <div className="max-w-screen">
-                    <div className="absolute top-4 right-4 z-50">
+                    <div className="absolute top-4 right-4">
                         <ModeToggle/>
-                    </div>
-                    <div className="fixed bottom-4 right-4 z-50">
-                        <Button variant="outline" size="icon" asChild>
-                            <a href={`#/students/${id}/archives`}>
-                                <Archive className="h-[1.2rem] w-[1.2rem]"/>
-                                <span className="sr-only">Payment table archives</span>
-                            </a>
-                        </Button>
                     </div>
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -129,7 +124,15 @@ export function PaymentsPage() {
                                 <Badge variant="secondary">{student?.class_id}</Badge>
                                 <Badge variant="secondary">{student?.phone_number}</Badge>
                             </div>
-                            <DialogPaymentForm id={id} onPaymentAdded={loadCards}/>
+                            <div className="flex gap-4">
+                                <DialogPaymentForm id={id} onPaymentAdded={loadCards}/>
+                                <Button variant="outline" size="icon" asChild>
+                                    <a href={`#/students/${id}/archives`}>
+                                        <Archive className="h-[1.2rem] w-[1.2rem]"/>
+                                        <span className="sr-only">Payment table archives</span>
+                                    </a>
+                                </Button>
+                            </div>
                         </div>
                         <div className="flex flex-wrap gap-4 pt-4">
                             {cardList}

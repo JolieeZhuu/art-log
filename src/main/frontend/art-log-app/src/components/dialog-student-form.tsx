@@ -259,7 +259,7 @@ export function DialogStudentForm() {
         }
 
         await requests.add(studentUrl, data)
-        setOpen(false);
+        setOpen(false)
         toast(`${values.firstName} ${values.lastName} has been added.`)
     }
 
@@ -286,7 +286,7 @@ export function DialogStudentForm() {
                                             <FormLabel>{item.label}</FormLabel>
                                             <FormControl>
                                                 {item.input === "input" ? (
-                                                     <Input {...field} className="w-full" placeholder={item.placeholder}/>
+                                                    <Input {...field} className="w-full" placeholder={item.placeholder}/>
                                                 ) : (
                                                     <ComboboxOptions
                                                         options={item.input}

@@ -1,4 +1,5 @@
 // defining the core and appearance of the table
+import * as React from "react"
 
 import type { ColumnDef } from "@tanstack/react-table";
 
@@ -13,6 +14,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
+
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
+
+// external imports
+import type { FieldPath } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod" // zod is used for input validation
 
 export type Attendance = {
     id: number
@@ -63,6 +89,9 @@ export const columns: ColumnDef<Attendance>[] = [
         id: "actions",
         cell: ({ row }) => {
             const student = row.original
+            
+            const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false)
+            const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false)
 
             // edit student handler
             function editClass() {
@@ -90,7 +119,13 @@ export const columns: ColumnDef<Attendance>[] = [
                             <DropdownMenuItem onClick={deleteClass}>Delete Class</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <h1></h1>
+
+                    { /* render display for editDialog */}
+
+                    { /* render display for deleteDialog */}
+                    <Dialog open={isDeleteDialogOpen} onOpenChange={isDeleteDialogOpen ? setIsDeleteDialogOpen : setIsEditDialogOpen}>
+                        <DialogContent>hello deleteDialog</DialogContent>
+                    </Dialog>
                 </div>
             )
         },
