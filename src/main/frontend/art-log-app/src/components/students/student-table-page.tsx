@@ -5,7 +5,7 @@ import { DataTable } from "@/components/students/student-data-table"
 
 import { StudentController } from "@/restAPI/entities"
 
-export default function StudentTable({ dayOfWeek, substring } : { dayOfWeek: string; substring: string }) {
+export default function StudentTable({ dayOfWeek, substring, setSelectedStudents } : { dayOfWeek: string; substring: string; setSelectedStudents: (selected: Student[]) => void }) {
 
     // variable initializations
     const requests = new StudentController()
@@ -43,6 +43,6 @@ export default function StudentTable({ dayOfWeek, substring } : { dayOfWeek: str
     }
 
     return (
-        <DataTable columns={columns({ onUpdate: handleEditUpdates })} data={data} />
+        <DataTable columns={columns({ onUpdate: handleEditUpdates })} data={data} onSelectionChange={setSelectedStudents}/>
     )
 }

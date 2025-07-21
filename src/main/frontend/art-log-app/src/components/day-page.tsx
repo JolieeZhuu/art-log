@@ -1,3 +1,5 @@
+import * as React from "react"
+
 import { useParams } from "react-router-dom"
 import { useState } from "react"
 
@@ -10,7 +12,9 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Toaster } from "@/components/ui/sonner"
-
+import { type Student } from "@/components/students/student-columns"
+import { type Checkout } from "@/components/checkout/checkout-columns"
+import CheckoutTable from "@/components/checkout/checkout-table-page"
 
 import { SiteHeader } from "@/components/site-header"
 import StudentTable from "@/components/students/student-table-page"
@@ -20,6 +24,25 @@ export function DayPage() {
     if (!day) {
         return <div>Invalid day parameter.</div>
     }
+    const [selectedMorningStudents, setSelectedMorningStudents] = React.useState<Student[]>([])
+    const [selectedAfternoonStudents, setSelectedAfternoonStudents] = React.useState<Student[]>([])
+    const [checkoutData, setCheckoutData] = React.useState<Checkout[]>([])
+
+    React.useEffect(() => {
+        const allSelectedStudents = selectedMorningStudents.concat(selectedAfternoonStudents)
+        const formatAsCheckout: Checkout[] = allSelectedStudents.map(({ id, name }) => {
+            return {
+                id: id,
+                name: name,
+                checkIn: "",
+                classId: "",
+                checkOut: "",
+                day: ""
+            }
+        })
+        console.log("formatascheckout", formatAsCheckout) // debug
+        setCheckoutData(formatAsCheckout)
+    }, [selectedMorningStudents, selectedAfternoonStudents])
 
     return (
         <Layout
@@ -37,7 +60,7 @@ export function DayPage() {
                                     <CardTitle>Morning</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <StudentTable dayOfWeek={day} substring="AM" />
+                                    <StudentTable dayOfWeek={day} substring="AM" setSelectedStudents={setSelectedMorningStudents}/>
                                 </CardContent>
                             </Card>
                         </div>
@@ -47,7 +70,7 @@ export function DayPage() {
                                     <CardTitle>Afternoon</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <StudentTable dayOfWeek={day} substring="PM" />
+                                    <StudentTable dayOfWeek={day} substring="PM" setSelectedStudents={setSelectedAfternoonStudents} />
                                 </CardContent>
                             </Card>
                         </div>
@@ -57,7 +80,7 @@ export function DayPage() {
                                     <CardTitle>{day[0].toUpperCase() + day.substring(1)} Checkout List</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <p>hello</p>
+                                    <CheckoutTable checkoutData={checkoutData}/>
                                 </CardContent>
                             </Card>
                         </div>

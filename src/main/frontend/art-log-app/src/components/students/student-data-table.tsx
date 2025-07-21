@@ -24,11 +24,13 @@ import { DialogStudentForm } from "@/components/dialog-student-form"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  onSelectionChange: (selected: TData[]) => void
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  onSelectionChange
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -43,6 +45,12 @@ export function DataTable<TData, TValue>({
             columnFilters,
         },
     })
+
+    // notify parent of selection changes
+    React.useEffect(() => {
+        const selected = table.getSelectedRowModel().rows.map((r) => r.original)
+        onSelectionChange?.(selected)
+    }, [table.getSelectedRowModel().rows, onSelectionChange])
 
     return (
         <div className="mb-4">

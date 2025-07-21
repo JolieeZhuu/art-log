@@ -12,7 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
 import {
     Form,
     FormControl,
@@ -21,30 +20,40 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import type { FieldPath } from "react-hook-form"
-import { toast } from "sonner"
 import { ChevronDownIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
-import { Label } from "@/components/ui/label"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { ComboboxOptions } from "@/components/combobox-options"
 
 // external imports
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod" // zod is used for input validation
 
-import { Controller } from "@/restAPI/entities"
-
-import { getPaymentNum, addPaymentNum, addNewPaymentTable } from "@/components/payments/payment-funcs"
+import { addPaymentNum, addNewPaymentTable } from "@/components/payments/payment-funcs"
 import dayjs from 'dayjs'
+
+const numOfClassOptions = [
+    {
+        value: "10 classes",
+        label: "10 classes",
+    },
+    {
+        value: "20 classes",
+        label: "20 classes",
+    },
+]
 
 const paymentSchema = z.object({
     dateExpected: z.date({
         message: "Expected date is required.",
+    }),
+    numOfClasses: z.string({
+        message: "Number of classes is required.",
     }),
 })
 
@@ -52,9 +61,7 @@ const paymentSchema = z.object({
 export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymentAdded?: () => void }) {
 
     // variable initializations
-    const requests = new Controller()
-    const studentUrl = "http://localhost:8080/student/"
-    const [openPopover, setOpenPopover] = React.useState(false) // for the calendar selection
+    const [openPopover, setOpenPopover] = React.useState(false) // for the calendar popover
 
     const [open, setOpen] = React.useState(false) // for the dialog
     //const [submitted, setSubmitted] = React.useState(false)
@@ -64,6 +71,7 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
         resolver: zodResolver(paymentSchema),
         defaultValues: {
             dateExpected: undefined,
+            numOfClasses: undefined,
         },
     })
 
@@ -73,8 +81,10 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
 
         const date = values.dateExpected
         const formattedDate = dayjs(date).format('MMM D, YYYY'); // Jan 1, 2025
+        const classes = Number(values.numOfClasses.split(" ")[0])
+
         const currentPaymentNum = await addPaymentNum(id);
-        await addNewPaymentTable(id, formattedDate, currentPaymentNum);
+        await addNewPaymentTable(id, formattedDate, currentPaymentNum, classes);
 
         setOpen(false);
         onPaymentAdded?.() // trigger callback
@@ -107,24 +117,43 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
                                                 <Button
                                                     variant="outline"
                                                     id="date"
-                                                    className="w-48 justify-between font-normal"
+                                                    className="w-full justify-between font-normal"
                                                 >
                                                     {field.value ? field.value.toLocaleDateString() : "Select date"}
                                                     <ChevronDownIcon />
                                                 </Button>
                                                 </PopoverTrigger>
                                                 <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-                                                <Calendar
-                                                    mode="single"
-                                                    selected={field.value}
-                                                    captionLayout="dropdown"
-                                                    onSelect={(selectedDate) => {
-                                                        field.onChange(selectedDate)
-                                                        setOpenPopover(false)
-                                                    }}
-                                                />
+                                                    <Calendar
+                                                        mode="single"
+                                                        selected={field.value}
+                                                        captionLayout="dropdown"
+                                                        onSelect={(selectedDate) => {
+                                                            field.onChange(selectedDate)
+                                                            setOpenPopover(false)
+                                                        }}
+                                                    />
                                                 </PopoverContent>
                                             </Popover>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="numOfClasses"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Number of Classes</FormLabel>
+                                        <FormControl>
+                                            <ComboboxOptions
+                                                options={numOfClassOptions}
+                                                value={field.value} 
+                                                onChange={field.onChange} 
+                                                selectPhrase="Select..."
+                                                commandEmpty="Selection not found."
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

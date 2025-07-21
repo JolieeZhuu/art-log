@@ -33,12 +33,66 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
+import { ChevronDownIcon } from "lucide-react"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { ComboboxOptions } from "@/components/combobox-options"
 
 // external imports
 import type { FieldPath } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod" // zod is used for input validation
+import { Input } from "@/components/ui/input";
+
+const editSchema = z.object({
+    dateExpected: z.date({
+        message: "Class date is required."
+    }),
+    attendanceCheck: z.string(),
+    dateAttended: z.optional(z.date()),
+    checkIn: z.optional(z.string()),
+    makeupMins: z.optional(z.string()),
+    checkOut: z.optional(z.string()),
+    notes: z.optional(z.string()),
+})
+
+const formFieldOptions: {
+    name: FieldPath<z.infer<typeof editSchema>>
+    label: string
+}[] = [
+    {
+        name: "checkIn",
+        label: "Check In Time",
+    },
+    {
+        name: "makeupMins",
+        label: "Makeup Mins",
+    },
+    {
+        name: "checkOut",
+        label: "Check Out Time",
+    },
+    {
+        name: "notes",
+        label: "Notes",
+    },
+]
+
+const attendanceCheckOptions = [
+    {
+        value: "yes",
+        label: "Yes",
+    },
+    {
+        value: "absent",
+        label: "Absent",
+    },
+]
 
 export type Attendance = {
     id: number
@@ -55,7 +109,7 @@ export type Attendance = {
 export const columns: ColumnDef<Attendance>[] = [
     {
         accessorKey: "classNumber",
-        header: "Class No.",
+        header: "Class",
     },
     {
         accessorKey: "classDate",
@@ -88,19 +142,32 @@ export const columns: ColumnDef<Attendance>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            const student = row.original
+            const attendance = row.original
             
             const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false)
             const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false)
+            
+            const [openPopover1, setOpenPopover1] = React.useState(false) // for the calendar popover
+            const [openPopover2, setOpenPopover2] = React.useState(false) // for the calendar popover
+
+            const form = useForm<z.infer<typeof editSchema>>({
+                resolver: zodResolver(editSchema),
+                defaultValues: {
+                    dateExpected: new Date(attendance.classDate),
+                    attendanceCheck: attendance.attendanceCheck ? attendance.attendanceCheck : "",
+                    dateAttended: undefined,
+                    checkIn: attendance.checkIn ? attendance.checkIn : "",
+                    makeupMins: attendance.makeupMins ? attendance.makeupMins : "",
+                    checkOut: attendance.checkOut ? attendance.checkOut : "",
+                    notes: attendance.notes ? attendance.notes : "",
+                },
+            })
 
             // edit student handler
-            function editClass() {
+            function editClass(values: z.infer<typeof editSchema>) {
                 console.log("edit clicked")
-                console.log(student)
-            }
-
-            function deleteClass() {
-                console.log("delete clicked")
+                console.log(values)
+                console.log(attendance)
             }
         
             return (
@@ -115,12 +182,138 @@ export const columns: ColumnDef<Attendance>[] = [
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={editClass}>Edit Class</DropdownMenuItem>
-                            <DropdownMenuItem onClick={deleteClass}>Delete Class</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>Edit Class</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
 
                     { /* render display for editDialog */}
+                    <Dialog open={isEditDialogOpen} onOpenChange={isEditDialogOpen ? setIsEditDialogOpen : setIsDeleteDialogOpen}>
+                        <DialogContent>
+                            <Form {...form}>
+                                <form onSubmit={form.handleSubmit(editClass)} className="space-y-8 w-full">
+                                    <DialogHeader>
+                                        <DialogTitle>Edit Class: #{attendance.classNumber}</DialogTitle>
+                                        <DialogDescription></DialogDescription>
+                                    </DialogHeader>
+                                    {/* display date picker for class date */}
+                                    <FormField
+                                        control={form.control}
+                                        name="dateExpected"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Class Date</FormLabel>
+                                                <FormControl>
+                                                    <Popover open={openPopover1} onOpenChange={setOpenPopover1} {...field}>
+                                                        <PopoverTrigger asChild>
+                                                        <Button
+                                                            variant="outline"
+                                                            id="date"
+                                                            className="w-full justify-between font-normal"
+                                                        >
+                                                            {field.value ? field.value.toLocaleDateString() : "Select date"}
+                                                            <ChevronDownIcon />
+                                                        </Button>
+                                                        </PopoverTrigger>
+                                                        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                                                            <Calendar
+                                                                mode="single"
+                                                                selected={field.value}
+                                                                captionLayout="dropdown"
+                                                                onSelect={(selectedDate) => {
+                                                                    field.onChange(selectedDate)
+                                                                    setOpenPopover1(false)
+                                                                }}
+                                                            />
+                                                        </PopoverContent>
+                                                    </Popover>
+                                                </FormControl>
+                                                <FormMessage/>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    {/* display combo box for attendance check */}
+                                    <FormField
+                                        control={form.control}
+                                        name="attendanceCheck"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Attendance Check</FormLabel>
+                                                <FormControl>
+                                                    <ComboboxOptions
+                                                        options={attendanceCheckOptions}
+                                                        value={field.value} 
+                                                        onChange={field.onChange} 
+                                                        selectPhrase="Select..."
+                                                        commandEmpty="Selection not found."
+                                                    />
+                                                </FormControl>
+                                                <FormMessage/>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    {/* display date picker for attended date */}
+                                    <FormField
+                                        control={form.control}
+                                        name="dateAttended"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Attended Date</FormLabel>
+                                                <FormControl>
+                                                    
+                                                    <Popover open={openPopover2} onOpenChange={setOpenPopover2} {...field}>
+                                                        <PopoverTrigger asChild>
+                                                        <Button
+                                                            variant="outline"
+                                                            id="date"
+                                                            className="w-full justify-between font-normal"
+                                                        >
+                                                            {field.value ? field.value.toLocaleDateString() : "Select date"}
+                                                            <ChevronDownIcon />
+                                                        </Button>
+                                                        </PopoverTrigger>
+                                                        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                                                            <Calendar
+                                                                mode="single"
+                                                                selected={field.value}
+                                                                captionLayout="dropdown"
+                                                                onSelect={(selectedDate) => {
+                                                                    field.onChange(selectedDate)
+                                                                    setOpenPopover2(false)
+                                                                }}
+                                                            />
+                                                        </PopoverContent>
+                                                    </Popover>
+                                                </FormControl>
+                                                <FormMessage/>
+                                            </FormItem>
+                                        )}
+                                    />
+                                    {formFieldOptions.map((item) => (
+                                        <FormField
+                                            key={item.label}
+                                            control={form.control}
+                                            name={item.name}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>{item.label}</FormLabel>
+                                                    <FormControl>
+                                                        <Input {...field} value={field.value instanceof Date ? field.value.toISOString().slice(0, 16) : field.value} className="w-full"/>
+                                                    </FormControl>
+                                                    <FormMessage/>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    ))}
+                                    <DialogFooter>
+                                        <DialogClose asChild>
+                                            <Button variant="outline">Cancel</Button>
+                                        </DialogClose>
+                                        <Button type="submit">Edit Student</Button>
+                                    </DialogFooter>
+                                </form>
+                            </Form>
+                        </DialogContent>
+                    </Dialog>
 
                     { /* render display for deleteDialog */}
                     <Dialog open={isDeleteDialogOpen} onOpenChange={isDeleteDialogOpen ? setIsDeleteDialogOpen : setIsEditDialogOpen}>

@@ -39,7 +39,7 @@ export async function addPaymentNum(id: number) {
     return currentPaymentNum;
 }
 
-export async function addNewPaymentTable(id: number, date: string, paymentNum: number) {
+export async function addNewPaymentTable(id: number, date: string, paymentNum: number, numOfClasses: number) {
     // initializations
     const requests = new Controller();
     const attendanceUrl = "http://localhost:8080/attendance/";
@@ -56,15 +56,15 @@ export async function addNewPaymentTable(id: number, date: string, paymentNum: n
     };
     
     await requests.add(attendanceUrl, data);
-    await generateClasses(id, date, paymentNum);
+    await generateClasses(id, date, paymentNum, numOfClasses);
 }
 
-async function generateClasses(id: number, date: string, paymentNum: number) {
+async function generateClasses(id: number, date: string, paymentNum: number, numOfClasses: number) {
     // initializations
     const requests = new Controller();
     const attendanceUrl = "http://localhost:8080/attendance/";
 
-    for (let i = 2; i <= 10; i++) {
+    for (let i = 2; i <= numOfClasses; i++) {
         const nextClassDate = dayjs(date).add(7*(i-1), 'days').format('MMM D, YYYY');
         const data = {
             student_id: id,
