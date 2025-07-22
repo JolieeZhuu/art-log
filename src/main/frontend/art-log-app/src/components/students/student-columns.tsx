@@ -89,6 +89,7 @@ export const columns = ({ onUpdate }: { onUpdate: (updated: Student) => void }):
     {
         id: "action",
         cell: ({ row }) => (
+            
             <Checkbox
                 checked={row.getIsSelected()}
                 disabled={row.getIsSelected()}

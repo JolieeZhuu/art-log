@@ -253,8 +253,8 @@ export function DialogStudentForm() {
             phone_number: values.phoneNumber,
             payment_number: 0,
             class_number: 0,
-            notes: 'Notes for ' + values.firstName,
-            payment_notes: 'Payment notes for ' + values.firstName,
+            notes: "",
+            payment_notes: "",
             time_expected: values.timeExpected
         }
 
@@ -267,7 +267,7 @@ export function DialogStudentForm() {
         <div>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button variant="outline">Open Form</Button>
+                    <Button variant="outline">Create Student</Button>
                 </DialogTrigger>
                     <DialogContent className="sm:max-w-[450px]">
                     <Form {...form}>

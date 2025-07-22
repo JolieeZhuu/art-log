@@ -55,7 +55,6 @@ export function DataTable<TData, TValue>({
                     }
                     className="max-w-sm"
                 />
-                <DialogStudentForm/>
             </div>
             
             <ScrollArea className="h-[300px] rounded-md border">

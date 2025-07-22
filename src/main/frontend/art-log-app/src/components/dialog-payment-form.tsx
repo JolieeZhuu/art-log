@@ -27,7 +27,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { ComboboxOptions } from "@/components/combobox-options"
+import { Input } from "@/components/ui/input"
 
 // external imports
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -37,26 +37,14 @@ import { z } from "zod" // zod is used for input validation
 import { addPaymentNum, addNewPaymentTable } from "@/components/payments/payment-funcs"
 import dayjs from 'dayjs'
 
-const numOfClassOptions = [
-    {
-        value: "10 classes",
-        label: "10 classes",
-    },
-    {
-        value: "20 classes",
-        label: "20 classes",
-    },
-]
-
 const paymentSchema = z.object({
     dateExpected: z.date({
         message: "Expected date is required.",
     }),
-    numOfClasses: z.string({
-        message: "Number of classes is required.",
-    }),
+    numOfClasses: z.number().min(1, {
+        message: "The value must be a number greater or equal to 1.",
+    })
 })
-
 
 export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymentAdded?: () => void }) {
 
@@ -81,7 +69,7 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
 
         const date = values.dateExpected
         const formattedDate = dayjs(date).format('MMM D, YYYY'); // Jan 1, 2025
-        const classes = Number(values.numOfClasses.split(" ")[0])
+        const classes = values.numOfClasses
 
         const currentPaymentNum = await addPaymentNum(id);
         await addNewPaymentTable(id, formattedDate, currentPaymentNum, classes);
@@ -147,12 +135,17 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
                                     <FormItem>
                                         <FormLabel>Number of Classes</FormLabel>
                                         <FormControl>
-                                            <ComboboxOptions
-                                                options={numOfClassOptions}
-                                                value={field.value} 
-                                                onChange={field.onChange} 
-                                                selectPhrase="Select..."
-                                                commandEmpty="Selection not found."
+                                            <Input
+                                                {...field}
+                                                value={field.value?.toString() || ""}
+                                                onChange={(e) => {
+                                                    const value = e.target.value
+                                                    field.onChange(value === "" ? undefined : Number(value))
+                                                }}
+                                                className="w-full" 
+                                                placeholder="ex: 10"
+                                                type="number"
+                                                min="1"
                                             />
                                         </FormControl>
                                         <FormMessage />

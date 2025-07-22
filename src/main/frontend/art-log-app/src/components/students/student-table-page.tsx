@@ -4,8 +4,9 @@ import { columns, type Student } from "@/components/students/student-columns"
 import { DataTable } from "@/components/students/student-data-table"
 
 import { StudentController } from "@/restAPI/entities"
+import { type Checkout } from "@/components/checkout/checkout-columns"
 
-export default function StudentTable({ dayOfWeek, substring, setSelectedStudents } : { dayOfWeek: string; substring: string; setSelectedStudents: (selected: Student[]) => void }) {
+export default function StudentTable({ dayOfWeek, substring, setSelectedStudents, selectedStudents } : { dayOfWeek: string; substring: string; setSelectedStudents: (selected: Checkout[]) => void; selectedStudents: Checkout[] }) {
 
     // variable initializations
     const requests = new StudentController()
@@ -43,6 +44,6 @@ export default function StudentTable({ dayOfWeek, substring, setSelectedStudents
     }
 
     return (
-        <DataTable columns={columns({ onUpdate: handleEditUpdates })} data={data} onSelectionChange={setSelectedStudents}/>
+        <DataTable columns={columns({ onUpdate: handleEditUpdates })} data={data} onSelectionChange={setSelectedStudents} selectedStudents={selectedStudents}/>
     )
 }
