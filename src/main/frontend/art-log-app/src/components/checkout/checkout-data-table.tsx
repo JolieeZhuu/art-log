@@ -18,7 +18,6 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { DialogStudentForm } from "@/components/dialog-student-form"
 
 
 interface DataTableProps<TData, TValue> {

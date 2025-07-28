@@ -218,7 +218,13 @@ const formFieldOptions: {
     },
 ]
 
-export function DialogStudentForm() {
+// defining the type and expected props passed
+interface DialogStudentFormProps {
+    onStudentCreated: () => void
+}
+
+// receives props matching DialogStudentFormProps interface
+export function DialogStudentForm({ onStudentCreated }: DialogStudentFormProps) {
 
     // variable initializations
     const requests = new Controller()
@@ -259,6 +265,7 @@ export function DialogStudentForm() {
         }
 
         await requests.add(studentUrl, data)
+        onStudentCreated()
         setOpen(false)
         toast(`${values.firstName} ${values.lastName} has been added.`)
     }

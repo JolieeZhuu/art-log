@@ -2,7 +2,6 @@ package com.project.art_log;
 
 import java.util.List;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +18,7 @@ public class StudentService extends AbstractService<Student, Integer> {
         return studentRepo.findByDayIgnoreCase(day);
     }
 	
-	public List<Student> getByDayAndTimeExpectedContaining(String day, String substring, Sort sort) {
-		return studentRepo.findByDayIgnoreCaseAndTimeExpectedContaining(day, substring, sort);
+	public List<Student> getByDayAndTimeOrderedByTimeAndName(String day, String substring) {
+		return studentRepo.findByDayAndTimeOrderedByTimeAndName(day, substring);
 	}
 }

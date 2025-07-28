@@ -1,7 +1,6 @@
 import * as React from "react"
 
 import { useParams } from "react-router-dom"
-import { useState } from "react"
 
 import Layout from "@/components/layout"
 import { ModeToggle } from "@/components/mode-toggle"
@@ -84,7 +83,7 @@ export function DayPage() {
     return (
         <Layout
             children={(
-                <div>
+                <div className="p-[2rem]">
                     <SiteHeader heading={day[0].toUpperCase() + day.substring(1)} />
                     <div className="flex flex-wrap gap-7 pt-4">
                         <div className="absolute top-4 right-4">

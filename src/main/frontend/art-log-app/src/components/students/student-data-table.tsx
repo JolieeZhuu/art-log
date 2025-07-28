@@ -30,6 +30,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   onSelectionChange: (selected: Checkout[]) => void
   selectedStudents: Checkout[]
+  onStudentCreated: () => void
 }
 
 export function DataTable<TData extends Student, TValue>({
@@ -37,6 +38,7 @@ export function DataTable<TData extends Student, TValue>({
   data,
   onSelectionChange,
   selectedStudents,
+  onStudentCreated,
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -120,7 +122,7 @@ export function DataTable<TData extends Student, TValue>({
                     }
                     className="max-w-sm"
                 />
-                <DialogStudentForm/>
+                <DialogStudentForm onStudentCreated={onStudentCreated}/>
             </div>
             
             <ScrollArea className="h-[300px] rounded-md border">

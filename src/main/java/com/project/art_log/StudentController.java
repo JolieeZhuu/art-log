@@ -1,14 +1,24 @@
 package com.project.art_log;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.flywaydb.core.Flyway;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+
 
 @RestController
 @RequestMapping("/student")
@@ -29,11 +39,10 @@ public class StudentController extends AbstractController<Student, Integer> {
     }
     
     @GetMapping("/day-string/{day}/{substring}")
-    public ResponseEntity<List<Student>> getByDayAndTimeExpectedContaining(@PathVariable("day") String day, 
+    public ResponseEntity<List<Student>> getByDayAndTimeOrderedByTimeAndName(@PathVariable("day") String day, 
     																      @PathVariable("substring") String substring) {
-    	Sort sort = Sort.by("timeExpected").ascending();
     	System.out.println("getting by day and expected time substring works");
-    	return ResponseEntity.ok().body(studentService.getByDayAndTimeExpectedContaining(day, substring, sort));
+    	return ResponseEntity.ok().body(studentService.getByDayAndTimeOrderedByTimeAndName(day, substring));
     }
 }
 

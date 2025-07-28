@@ -6,7 +6,7 @@ export function Students() {
     return (
         <Layout
             children={(
-                <div className="w-[73rem]">
+                <div className="w-[73rem] p-[2rem]">
                     <SiteHeader heading="Students"/>
 
                     <div className="absolute top-4 right-4">

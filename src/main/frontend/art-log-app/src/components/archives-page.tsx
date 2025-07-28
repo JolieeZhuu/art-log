@@ -85,7 +85,7 @@ export function Archives() {
     return (
         <Layout
             children={(
-                <div className="w-[73rem]">
+                <div className="w-[73rem] p-[2rem]">
                     <div className="flex">
                         <Breadcrumb className="pr-3">
                             <BreadcrumbList>

@@ -26,6 +26,7 @@ export default function StudentTable({ dayOfWeek, substring, setSelectedStudents
                 notes: notes,
             }
         })
+        console.log(studentValuesList)
         
 
         return studentValuesList
@@ -35,6 +36,11 @@ export default function StudentTable({ dayOfWeek, substring, setSelectedStudents
         getData().then((data) => setData(data))
     }, [dayOfWeek, substring])
 
+    async function handleNewData() {
+        const newData = await getData()
+        setData(newData)
+    }
+
     function handleEditUpdates(updatedStudent: Student) {
         setData((prev) =>
             prev.map((student) =>
@@ -43,7 +49,23 @@ export default function StudentTable({ dayOfWeek, substring, setSelectedStudents
         )
     }
 
+    function handleDeleteStudent(deletedStudentId: number) {
+        // pass the current state value "prev" and update with new array of all students that are not deleted
+        setData((prev) => 
+            prev.filter((student) => student.id !== deletedStudentId) // filters OUT the "deleted" student
+        )
+    }
+
     return (
-        <DataTable columns={columns({ onUpdate: handleEditUpdates })} data={data} onSelectionChange={setSelectedStudents} selectedStudents={selectedStudents}/>
+        <DataTable 
+            columns={columns({ 
+                onUpdate: handleEditUpdates,
+                onDelete: handleDeleteStudent,
+            })} 
+            data={data} 
+            onSelectionChange={setSelectedStudents} 
+            selectedStudents={selectedStudents} 
+            onStudentCreated={handleNewData}
+        />
     )
 }

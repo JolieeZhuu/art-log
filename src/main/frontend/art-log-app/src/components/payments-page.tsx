@@ -98,7 +98,7 @@ export function PaymentsPage() {
     return (
         <Layout
             children={(
-                <div className="max-w-screen">
+                <div className="max-w-screen p-[2rem]">
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>

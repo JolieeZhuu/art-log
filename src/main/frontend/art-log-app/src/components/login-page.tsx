@@ -82,7 +82,7 @@ export function LoginPage() {
     }
 
     return (
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center min-h-screen">
             <Card className="w-full max-w-sm">
                 <CardHeader>
                     <CardTitle>Login to ART.LOG</CardTitle>
