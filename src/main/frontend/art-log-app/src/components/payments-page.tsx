@@ -1,4 +1,7 @@
-import { useState, useEffect } from "react"
+// external imports
+import dayjs from 'dayjs'
+
+import { useState, useEffect, useRef } from "react"
 import { Archive } from "lucide-react"
 
 import { useParams } from "react-router-dom"
@@ -17,7 +20,7 @@ import Layout from "@/components/layout"
 import { ModeToggle } from "@/components/mode-toggle"
 import { SiteHeader } from "@/components/site-header"
 
-import { Controller } from "@/restAPI/entities"
+import { AttendanceController } from "@/restAPI/entities"
 import { DialogPaymentForm } from "@/components/dialog-payment-form"
 import PaymentTable from "@/components/payments/payments-table-page"
 
@@ -52,9 +55,11 @@ export function PaymentsPage() {
     const id = parseInt(idParam)
     const [student, setStudent] = useState<Student | null>(null)
     const [cardList, setCardList] = useState<React.ReactElement[]>([])
+    const tableRefreshFunctions = useRef<{ [paymentNumber: number]: () => void }>({});
 
-    const requests = new Controller()
+    const requests = new AttendanceController()
     const studentUrl = "http://localhost:8080/student/"
+    const attendanceUrl = "http://localhost:8080/attendance/"
 
     useEffect(() => {
         getStudent()
@@ -65,6 +70,56 @@ export function PaymentsPage() {
         const storeStudent = await requests.getById(studentUrl, id)
         setStudent(storeStudent)
     }
+
+    async function addClass(paymentNumber: number) {    
+        // get the date of the last class of payment table
+        const student = await requests.getById(studentUrl, id)
+        const totalClasses = student.total_classes
+        const lastClass = await requests.getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, paymentNumber, id, totalClasses)
+    
+        // generate new class 7 days apart
+        const lastDate = lastClass.date_expected
+        const nextClassDate = dayjs(lastDate).add(7, 'days').format('MMM D, YYYY')
+        console.log(nextClassDate)
+        const data1 = {
+            student_id: id,
+            class_number: totalClasses + 1,
+            date_expected: nextClassDate,
+            date_attended: null,
+            check_in: null,
+            hours: 1,
+            check_out: null,
+            payment_number: paymentNumber,
+        }
+    
+        await requests.add(attendanceUrl, data1)
+    
+        // edit the student so that total classes += 1
+        const data2 = {
+            student_id: id,
+            first_name: student.first_name,
+            last_name: student.last_name,
+            class_id: student.class_id,
+            day: student.day,
+            phone_number: student.phone_number,
+            time_expected: student.time_expected,
+            payment_notes: student.payment_notes,
+            notes: student.notes,
+            payment_number: student.payment_number,
+            class_number: student.class_number,
+            total_classes: totalClasses + 1,
+        }
+    
+        await requests.edit(studentUrl, data2)
+
+        if (tableRefreshFunctions.current[paymentNumber]) {
+            tableRefreshFunctions.current[paymentNumber]();
+        }
+    }
+
+    const handleTableReady = (paymentNumber: number) => (refreshFn: () => void) => {
+        tableRefreshFunctions.current[paymentNumber] = refreshFn;
+    };
 
     async function loadCards() {
         const num = await getPaymentNum(id)
@@ -82,11 +137,11 @@ export function PaymentsPage() {
                         <CardHeader className="justify-items-start">
                             <CardTitle>Payment Table {num - index}</CardTitle>
                             <CardAction>
-                                <Button variant="outline">Add Class</Button>
+                                <Button variant="outline" onClick={() => addClass(num - index)}>Add Class</Button>
                             </CardAction>
                         </CardHeader>
                         <CardContent>
-                            <PaymentTable studentId={id} paymentNumber={num - index}/>
+                            <PaymentTable studentId={id} paymentNumber={num - index} onClassAdded={handleTableReady(num - index)}/>
                         </CardContent>
                     </Card>
                 </div>

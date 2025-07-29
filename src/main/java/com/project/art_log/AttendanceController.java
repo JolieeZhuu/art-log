@@ -27,4 +27,12 @@ public class AttendanceController extends AbstractController<Attendance, Integer
 		System.out.println("getting by student id and payment number works");
 		return ResponseEntity.ok().body(attendanceService.getByStudentIdAndPaymentNumber(studentId, paymentNumber));
 	}
+	
+	@GetMapping("/class/{paymentNumber}/{studentId}/{classNumber}")
+	public ResponseEntity<Attendance> getLastClass(@PathVariable("paymentNumber") Integer paymentNumber, 
+															@PathVariable("studentId") Integer studentId, 
+															@PathVariable("classNumber") Integer classNumber) {
+		System.out.println("getting by payment number, student id, and class number works");
+		return ResponseEntity.ok().body(attendanceService.getByPaymentNumberAndStudentIdAndClassNumber(paymentNumber, studentId, classNumber));
+	}
 }

@@ -75,6 +75,7 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
         await addNewPaymentTable(id, formattedDate, currentPaymentNum, classes);
 
         setOpen(false);
+        form.reset()
         onPaymentAdded?.() // trigger callback
         //const formattedDate = monthNames[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear()
         //console.log(typeof formattedDate)

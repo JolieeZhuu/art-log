@@ -257,16 +257,18 @@ export function DialogStudentForm({ onStudentCreated }: DialogStudentFormProps) 
             class_id: values.classId,
             day: values.day,
             phone_number: values.phoneNumber,
-            payment_number: 0,
-            class_number: 0,
+            time_expected: values.timeExpected,
             notes: "",
             payment_notes: "",
-            time_expected: values.timeExpected
+            payment_number: 0,
+            class_number: 0,
+            total_classes: 0,
         }
 
         await requests.add(studentUrl, data)
         onStudentCreated()
         setOpen(false)
+        form.reset()
         toast(`${values.firstName} ${values.lastName} has been added.`)
     }
 

@@ -216,7 +216,7 @@ export const columns = ({
                 toast(`${values.firstName} ${values.lastName} has been edited.`)
             }
 
-            async function deleteStudent(values: z.infer<typeof deleteSchema>) {
+            async function deleteStudent() {
                 const storeStudent = await requests.getById(studentUrl, student.id)
 
                 await requests.deleteById(studentUrl, student.id)
@@ -288,9 +288,9 @@ export const columns = ({
                             <Form {...deleteForm}>
                                 <form onSubmit={deleteForm.handleSubmit(deleteStudent)} className="space-y-8 w-full">
                                     <DialogHeader>
-                                        <DialogTitle>Delete Student</DialogTitle>
+                                        <DialogTitle>Delete Student: {student.name}</DialogTitle>
                                         <DialogDescription>
-                                            Are you sure you want to delete student, {student.name}? You can't undo this action.
+                                            Are you sure you want to delete the student, {student.name}? You can't undo this action.
                                         </DialogDescription>
                                         <DialogDescription>
                                         </DialogDescription>

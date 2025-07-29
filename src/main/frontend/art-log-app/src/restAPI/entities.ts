@@ -86,4 +86,13 @@ export class AttendanceController extends Controller {
 			console.error('Error:', error);
 		}
 	}
+
+    async getByPaymentNumberAndStudentIdAndClassNumber(url: string, paymentNumber: number, studentId: number, classNumber: number) {
+        try {
+            const data = await this.httpGet.get(url + "class/" + paymentNumber + "/" + studentId + "/" + classNumber)
+            return data
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 }

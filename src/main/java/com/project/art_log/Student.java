@@ -19,11 +19,12 @@ public class Student {
     private String classId;
     private String day;
     private String phoneNumber;
+	private String timeExpected;
 	private String paymentNotes;
 	private String notes;
     private Integer paymentNumber;
 	private Integer classNumber;
-	private String timeExpected;
+	private Integer totalClasses;
     
 	public Student() {
 		
@@ -80,6 +81,12 @@ public class Student {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
+	public String getTimeExpected() {
+		return timeExpected;
+	}
+	public void setTimeExpected(String timeExpected) {
+		this.timeExpected = timeExpected;
+	}	
 	public String getPaymentNotes() {
 		return paymentNotes;
 	}
@@ -104,10 +111,10 @@ public class Student {
 	public void setClassNumber(Integer classNumber) {
 		this.classNumber = classNumber;
 	}
-	public String getTimeExpected() {
-		return timeExpected;
+	public Integer getTotalClasses() {
+		return totalClasses;
 	}
-	public void setTimeExpected(String timeExpected) {
-		this.timeExpected = timeExpected;
-	}	
+	public void setTotalClasses(Integer totalClasses) {
+		this.totalClasses = totalClasses;
+	}
 }
