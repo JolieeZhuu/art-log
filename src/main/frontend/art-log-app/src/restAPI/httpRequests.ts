@@ -4,7 +4,8 @@ export class GetHTTP {
 		const response = await fetch(url, {
 			method: 'GET'
 		});
-		const resData = await response.json(); // awaits response.json()
+        // awaits response.json()
+		const resData = await response.json();
 		return resData;
 	}
 }

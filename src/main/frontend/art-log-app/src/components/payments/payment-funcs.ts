@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 
 // internal imports
-import { AttendanceController } from '@/restAPI/entities'
+import { AttendanceController, Controller } from '@/restAPI/entities'
 
 export async function getPaymentNum(id: number) {
     // initializations
@@ -99,4 +99,12 @@ async function generateClasses(id: number, date: string, paymentNum: number, num
 
         await requests.add(attendanceUrl, data)
     }
+}
+
+export async function getTotalClasses(studentId: number) {
+    const requests = new Controller()
+    const studentUrl = "http://localhost:8080/student/"
+
+    const student = await requests.getById(studentUrl, studentId)
+    return student.total_classes
 }

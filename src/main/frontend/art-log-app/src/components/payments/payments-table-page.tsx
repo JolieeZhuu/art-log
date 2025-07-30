@@ -24,10 +24,12 @@ export default function PaymentTable({ studentId, paymentNumber, onClassAdded }:
         attendances.sort((a: any, b: any) => (a.class_number - b.class_number)) // a-b = lowest to highest, b-a = highest to lowest
 
         // variable to store JSX code
-        const attendanceValuesList: Attendance[] = attendances.map(({ attendance_id, class_number, date_expected, date_attended, attendance_check, check_in, makeup_mins, check_out, notes } : { attendance_id: number, class_number: number, date_expected: string, date_attended: string, attendance_check: string, check_in: string, makeup_mins: string, check_out: string, notes: string }) => {
+        const attendanceValuesList: Attendance[] = attendances.map(({ attendance_id, student_id, class_number, payment_number, date_expected, date_attended, attendance_check, check_in, makeup_mins, check_out, notes } : { attendance_id: number, student_id: number, class_number: number, payment_number: number, date_expected: string, date_attended: string, attendance_check: string, check_in: string, makeup_mins: string, check_out: string, notes: string }) => {
             return {
                 id: attendance_id,
+                studentId: student_id,
                 classNumber: class_number,
+                paymentNumber: payment_number,
                 classDate: date_expected,
                 attendanceCheck: attendance_check,
                 attendedDate: date_attended,

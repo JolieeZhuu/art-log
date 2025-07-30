@@ -95,4 +95,13 @@ export class AttendanceController extends Controller {
             console.error('Error:', error);
         }
     }
+
+    async deleteByStudentId(url: string, studentId: number) {
+        try {
+            await this.httpDelete.delete(url + "student/" + studentId);
+			console.log('deleted data');
+        } catch (error) {
+			console.error('Error:', error);
+		}
+    }
 }

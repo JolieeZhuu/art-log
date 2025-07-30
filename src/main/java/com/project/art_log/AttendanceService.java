@@ -3,6 +3,7 @@ package com.project.art_log;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AttendanceService extends AbstractService<Attendance, Integer> {
@@ -20,5 +21,10 @@ public class AttendanceService extends AbstractService<Attendance, Integer> {
 	
 	public Attendance getByPaymentNumberAndStudentIdAndClassNumber(Integer paymentNumber, Integer studentId, Integer classNumber) {
 		return attendanceRepo.findByPaymentNumberAndStudentIdAndClassNumber(paymentNumber, studentId, classNumber);
+	}
+	
+	@Transactional
+	public int deleteByStudentId(Integer studentId) {
+		return attendanceRepo.deleteByStudentId(studentId);
 	}
 }

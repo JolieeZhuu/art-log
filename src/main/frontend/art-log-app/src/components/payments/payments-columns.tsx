@@ -1,4 +1,8 @@
 // defining the core and appearance of the table
+
+// external imports
+import dayjs from 'dayjs'
+
 import * as React from "react"
 
 import type { ColumnDef } from "@tanstack/react-table";
@@ -47,7 +51,10 @@ import type { FieldPath } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod" // zod is used for input validation
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input"
+
+import { getTotalClasses } from '@/components/payments/payment-funcs'
+import { AttendanceController } from '@/restAPI/entities'
 
 const editSchema = z.object({
     dateExpected: z.date({
@@ -94,9 +101,12 @@ const attendanceCheckOptions = [
     },
 ]
 
+
 export type Attendance = {
     id: number
+    studentId: number
     classNumber: number
+    paymentNumber: number
     classDate: string
     attendanceCheck: string
     attendedDate: string
@@ -164,10 +174,75 @@ export const columns: ColumnDef<Attendance>[] = [
             })
 
             // edit student handler
-            function editClass(values: z.infer<typeof editSchema>) {
+            async function editClass(values: z.infer<typeof editSchema>) {
+                // initializations
+                const requests = new AttendanceController()
+                const attendanceUrl = "http://localhost:8080/attendance/"
+
+                const formattedDateExpected = dayjs(values.dateExpected.toString()).format("MMM D, YYYY")
                 console.log("edit clicked")
-                console.log(values)
-                console.log(attendance)
+                console.log("values", values)
+                console.log("attendance", attendance)
+
+                // case 1: if they change class date, every class # from that point and onwards must be changed as well
+                if (formattedDateExpected !== attendance.classDate) {
+                    const currClassNumber = attendance.classNumber
+                    const lastClassNumber: number = await getTotalClasses(attendance.studentId)
+                    for (let i = 0; i <= lastClassNumber - currClassNumber; i++) {
+                        const currClass = await requests.getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, attendance.paymentNumber, attendance.studentId, currClassNumber + i)
+                        console.log("currClass", currClass)
+
+                        if (i === 0) {
+                            const data = {
+                                attendance_id: currClass.attendance_id,
+                                student_id: attendance.studentId,
+                                class_number: currClassNumber + i,
+                                payment_number: attendance.paymentNumber,
+                                date_expected: dayjs(formattedDateExpected).add(7*i, "days").format("MMM D, YYYY"),
+                                attendance_check: values.attendanceCheck,
+                                date_attended: dayjs(values.dateAttended?.toString()).format("MMM D, YYYY"),
+                                check_in: values.checkIn,
+                                hours: 1, // fix makeup minds and hours confusion
+                                check_out: values.checkOut,
+                                notes: values.notes,
+                            }
+                            await requests.edit(attendanceUrl, data)
+                        } else {
+                            const data = {
+                                attendance_id: currClass.attendance_id,
+                                student_id: attendance.studentId,
+                                class_number: currClassNumber + i,
+                                payment_number: attendance.paymentNumber,
+                                date_expected: dayjs(formattedDateExpected).add(7*i, "days").format("MMM D, YYYY"),
+                                attendance_check: attendance.attendanceCheck,
+                                date_attended: dayjs(attendance.attendedDate).format("MMM D, YYYY"),
+                                check_in: attendance.checkIn,
+                                hours: 1, // fix makeup minds and hours confusion
+                                check_out: attendance.checkOut,
+                                notes: attendance.notes,
+                            }
+                            await requests.edit(attendanceUrl, data)
+                        }
+                    }
+                } else {
+                    const data = {
+                        attendance_id: attendance.id,
+                        student_id: attendance.studentId,
+                        class_number: attendance.classNumber,
+                        payment_number: attendance.paymentNumber,
+                        date_expected: dayjs(values.dateExpected.toString()).format("MMM D, YYYY"),
+                        attendance_check: values.attendanceCheck,
+                        date_attended: dayjs(values.dateAttended?.toString()).format("MMM D, YYYY"),
+                        check_in: values.checkIn,
+                        hours: 1, // fix makeup minds and hours confusion
+                        check_out: values.checkOut,
+                        notes: values.notes,
+                    }
+
+                    await requests.edit(attendanceUrl, data)
+                }
+                setIsEditDialogOpen(false)
+                console.log("edited")
             }
         
             return (

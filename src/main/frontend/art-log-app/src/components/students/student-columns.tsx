@@ -42,7 +42,7 @@ import { z } from "zod" // zod is used for input validation
 
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { Controller } from "@/restAPI/entities";
+import { AttendanceController } from "@/restAPI/entities";
 
 const editSchema = z.object({
     firstName: z.string().min(1, {
@@ -149,8 +149,9 @@ export const columns = ({
         id: "actions",
         cell: ({ row }) => {
             const student = row.original
-            const requests = new Controller()
+            const requests = new AttendanceController()
             const studentUrl = "http://localhost:8080/student/"
+            const attendanceUrl = "http://localhost:8080/attendance/"
 
             const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false)
             const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false)
@@ -218,6 +219,8 @@ export const columns = ({
 
             async function deleteStudent() {
                 const storeStudent = await requests.getById(studentUrl, student.id)
+
+                await requests.deleteByStudentId(attendanceUrl, student.id)
 
                 await requests.deleteById(studentUrl, student.id)
 

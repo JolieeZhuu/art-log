@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +35,12 @@ public class AttendanceController extends AbstractController<Attendance, Integer
 															@PathVariable("classNumber") Integer classNumber) {
 		System.out.println("getting by payment number, student id, and class number works");
 		return ResponseEntity.ok().body(attendanceService.getByPaymentNumberAndStudentIdAndClassNumber(paymentNumber, studentId, classNumber));
+	}
+	
+	@DeleteMapping("/student/{studentId}")
+	public ResponseEntity<String> deleteByStudentId(@PathVariable("studentId") Integer studentId) {
+		System.out.println("deleting all by student id works");
+		int deletedCount = attendanceService.deleteByStudentId(studentId);
+        return ResponseEntity.ok().body("Deleted " + deletedCount + " attendance records from student");
 	}
 }
