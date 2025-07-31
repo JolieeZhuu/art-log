@@ -21,7 +21,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { DialogStudentForm } from "@/components/dialog-student-form"
 import { type Checkout } from "@/components/checkout/checkout-columns"
 import { type  Student } from "./student-columns"
-import { Controller } from "@/restAPI/entities"
+import { AttendanceController } from "@/restAPI/entities"
 import dayjs from "dayjs"
 
 
@@ -75,16 +75,56 @@ export function DataTable<TData extends Student, TValue>({
             
             // Create new Checkout array
             const newSelected: Checkout[] = await Promise.all(selectedRowIndices.map(async (rowIndex) => {
-                const requests = new Controller()
+                const requests = new AttendanceController()
                 const studentUrl = "http://localhost:8080/student/"
+                const attendanceUrl = "http://localhost:8080/attendance/"
 
                 const student = data[rowIndex] as Student
                 
                 // Check if this student was already selected
                 const existingCheckout = selectedStudents.find(c => c.id === student.id)
                 const currentDate = dayjs().format('MMM D, YYYY')
+                const currentDOW = dayjs().format("dddd")
                 const checkInTime = dayjs().format('hh:mm A')
                 const checkOutTime = dayjs(currentDate + " " + checkInTime).add(1, 'hours').format('hh:mm A') // assume 1 hour
+
+                /* 
+                to update student attendance check:
+                check if the day of week even aligns
+                    if they do align, then set the attendance of the date that matches to be "Yes" and connect to Google TTS API
+                        if that attendance doesn't exist, create a popup message
+                    else find the first "Absent" that occurred within the month
+                        if found, replace that Absent with Makeup, and change date attended accordingly
+                        else create a popup message
+                */
+                const tempStudent = await requests.getById(studentUrl, student.id)
+                if (currentDOW === tempStudent.day && tempStudent.payment_number > 0) {
+                    // find the date within the current payment table
+                    const foundAttendance = await requests.getByDateExpectedAndStudentIdAndPaymentNumber(attendanceUrl, currentDate, student.id, tempStudent.payment_number)
+                    if (foundAttendance === null) {
+                        console.log("couldn't find it lol")
+                    } else {
+                        const data = {
+                            attendance_id: foundAttendance.attendance_id,
+                            student_id: foundAttendance.student_id,
+                            payment_number: foundAttendance.payment_number,
+                            class_number: foundAttendance.class_number,
+                            date_expected: foundAttendance.date_expected,
+                            attendance_check: "Yes",
+                            date_attended: currentDate,
+                            check_in: checkInTime,
+                            hours: 1, // fix
+                            check_out: checkOutTime,
+                            notes: foundAttendance.notes,
+                        }
+
+                        await requests.edit(attendanceUrl, data)
+                    }
+                } else {
+                    console.log("they don't match lol")
+                    console.log("payment table not created?")
+                }
+
                 
                 if (existingCheckout) {
                     // Keep existing checkout data

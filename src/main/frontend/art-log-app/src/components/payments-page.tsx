@@ -24,7 +24,7 @@ import { AttendanceController } from "@/restAPI/entities"
 import { DialogPaymentForm } from "@/components/dialog-payment-form"
 import PaymentTable from "@/components/payments/payments-table-page"
 
-import { getPaymentNum } from "@/components/payments/payment-funcs"
+import { getPaymentNum, addClass } from "@/components/payments/payment-funcs"
 
 import { Link } from "react-router-dom"
 import {
@@ -71,46 +71,8 @@ export function PaymentsPage() {
         setStudent(storeStudent)
     }
 
-    async function addClass(paymentNumber: number) {    
-        // get the date of the last class of payment table
-        const student = await requests.getById(studentUrl, id)
-        const totalClasses = student.total_classes
-        const lastClass = await requests.getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, paymentNumber, id, totalClasses)
-    
-        // generate new class 7 days apart
-        const lastDate = lastClass.date_expected
-        const nextClassDate = dayjs(lastDate).add(7, 'days').format('MMM D, YYYY')
-        console.log(nextClassDate)
-        const data1 = {
-            student_id: id,
-            class_number: totalClasses + 1,
-            date_expected: nextClassDate,
-            date_attended: null,
-            check_in: null,
-            hours: 1,
-            check_out: null,
-            payment_number: paymentNumber,
-        }
-    
-        await requests.add(attendanceUrl, data1)
-    
-        // edit the student so that total classes += 1
-        const data2 = {
-            student_id: id,
-            first_name: student.first_name,
-            last_name: student.last_name,
-            class_id: student.class_id,
-            day: student.day,
-            phone_number: student.phone_number,
-            time_expected: student.time_expected,
-            payment_notes: student.payment_notes,
-            notes: student.notes,
-            payment_number: student.payment_number,
-            class_number: student.class_number,
-            total_classes: totalClasses + 1,
-        }
-    
-        await requests.edit(studentUrl, data2)
+    async function addClassHandler(paymentNumber: number) {    
+        await addClass(paymentNumber, id)
 
         if (tableRefreshFunctions.current[paymentNumber]) {
             tableRefreshFunctions.current[paymentNumber]();
@@ -137,7 +99,7 @@ export function PaymentsPage() {
                         <CardHeader className="justify-items-start">
                             <CardTitle>Payment Table {num - index}</CardTitle>
                             <CardAction>
-                                <Button variant="outline" onClick={() => addClass(num - index)}>Add Class</Button>
+                                <Button variant="outline" onClick={() => addClassHandler(num - index)}>Add Class</Button>
                             </CardAction>
                         </CardHeader>
                         <CardContent>

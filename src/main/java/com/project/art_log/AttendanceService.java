@@ -27,4 +27,8 @@ public class AttendanceService extends AbstractService<Attendance, Integer> {
 	public int deleteByStudentId(Integer studentId) {
 		return attendanceRepo.deleteByStudentId(studentId);
 	}
+	
+	public Attendance getByDateExpectedAndStudentIdAndPaymentNumber(String dateExpected, Integer studentId, Integer paymentNumber) {
+		return attendanceRepo.findByDateExpectedAndStudentIdAndPaymentNumber(dateExpected, studentId, paymentNumber);
+	}
 }

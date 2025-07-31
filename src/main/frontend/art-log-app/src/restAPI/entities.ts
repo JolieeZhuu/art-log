@@ -104,4 +104,19 @@ export class AttendanceController extends Controller {
 			console.error('Error:', error);
 		}
     }
+
+    async getByDateExpectedAndStudentIdAndPaymentNumber(url: string, dateExpected: string, studentId: number, paymentNumber: number) {
+        try {
+            const params = new URLSearchParams({
+                dateExpected: dateExpected,
+                studentId: studentId.toString(),
+                paymentNumber: paymentNumber.toString()
+            });
+            
+            const data = await this.httpGet.get(url + "date?" + params.toString())
+            return data
+        } catch (error) {
+            console.error('Error:', error)
+        }
+    }
 }

@@ -53,7 +53,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // zod is used for input validation
 import { Input } from "@/components/ui/input"
 
-import { getTotalClasses } from '@/components/payments/payment-funcs'
+import { getTotalClasses, addClass } from '@/components/payments/payment-funcs'
 import { AttendanceController } from '@/restAPI/entities'
 
 const editSchema = z.object({
@@ -92,12 +92,16 @@ const formFieldOptions: {
 
 const attendanceCheckOptions = [
     {
-        value: "yes",
+        value: "Yes",
         label: "Yes",
     },
     {
-        value: "absent",
+        value: "Absent",
         label: "Absent",
+    },
+    {
+        value: "Holiday",
+        label: "Holiday",
     },
 ]
 
@@ -186,13 +190,16 @@ export const columns: ColumnDef<Attendance>[] = [
 
                 // case 1: if they change class date, every class # from that point and onwards must be changed as well
                 if (formattedDateExpected !== attendance.classDate) {
+
                     const currClassNumber = attendance.classNumber
                     const lastClassNumber: number = await getTotalClasses(attendance.studentId)
                     for (let i = 0; i <= lastClassNumber - currClassNumber; i++) {
                         const currClass = await requests.getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, attendance.paymentNumber, attendance.studentId, currClassNumber + i)
-                        console.log("currClass", currClass)
+                        console.log("currClass", currClass) // debug
 
                         if (i === 0) {
+                            console.log("values date attended", values.dateAttended?.toString()) // debug
+            
                             const data = {
                                 attendance_id: currClass.attendance_id,
                                 student_id: attendance.studentId,
@@ -200,7 +207,7 @@ export const columns: ColumnDef<Attendance>[] = [
                                 payment_number: attendance.paymentNumber,
                                 date_expected: dayjs(formattedDateExpected).add(7*i, "days").format("MMM D, YYYY"),
                                 attendance_check: values.attendanceCheck,
-                                date_attended: dayjs(values.dateAttended?.toString()).format("MMM D, YYYY"),
+                                date_attended: values.dateAttended?.toString() !== undefined ? dayjs(values.dateAttended?.toString()).format("MMM D, YYYY") : "",
                                 check_in: values.checkIn,
                                 hours: 1, // fix makeup minds and hours confusion
                                 check_out: values.checkOut,
@@ -208,23 +215,32 @@ export const columns: ColumnDef<Attendance>[] = [
                             }
                             await requests.edit(attendanceUrl, data)
                         } else {
+                            console.log("attendance attendned Date", attendance.attendedDate) // debug
                             const data = {
                                 attendance_id: currClass.attendance_id,
                                 student_id: attendance.studentId,
                                 class_number: currClassNumber + i,
                                 payment_number: attendance.paymentNumber,
                                 date_expected: dayjs(formattedDateExpected).add(7*i, "days").format("MMM D, YYYY"),
-                                attendance_check: attendance.attendanceCheck,
-                                date_attended: dayjs(attendance.attendedDate).format("MMM D, YYYY"),
-                                check_in: attendance.checkIn,
+                                attendance_check: "",
+                                date_attended: "",
+                                check_in: "",
                                 hours: 1, // fix makeup minds and hours confusion
-                                check_out: attendance.checkOut,
-                                notes: attendance.notes,
+                                check_out: "",
+                                notes: "",
                             }
                             await requests.edit(attendanceUrl, data)
                         }
                     }
+
+                    // check if holiday
+                    console.log("checking holiday", values.attendanceCheck === "Holiday") // DEBUG
+                    if (values.attendanceCheck === "Holiday" && values.attendanceCheck !== attendance.attendanceCheck) {
+                        await addClass(attendance.paymentNumber, attendance.studentId)
+                    }
+
                 } else {
+                    console.log("values date attended", values.dateAttended?.toString() === undefined) // debug
                     const data = {
                         attendance_id: attendance.id,
                         student_id: attendance.studentId,
@@ -232,7 +248,7 @@ export const columns: ColumnDef<Attendance>[] = [
                         payment_number: attendance.paymentNumber,
                         date_expected: dayjs(values.dateExpected.toString()).format("MMM D, YYYY"),
                         attendance_check: values.attendanceCheck,
-                        date_attended: dayjs(values.dateAttended?.toString()).format("MMM D, YYYY"),
+                        date_attended: values.dateAttended?.toString() !== undefined ? dayjs(values.dateAttended?.toString()).format("MMM D, YYYY") : "",
                         check_in: values.checkIn,
                         hours: 1, // fix makeup minds and hours confusion
                         check_out: values.checkOut,
@@ -240,6 +256,18 @@ export const columns: ColumnDef<Attendance>[] = [
                     }
 
                     await requests.edit(attendanceUrl, data)
+
+                    /* !!!!!!
+                    for holiday attendance check, holidays should be a customized list from the user, 
+                    and then the program will automatically identify when the holiday occurs
+                    !!!!!!!!!
+                    */
+
+                    // check if holiday
+                    console.log("checking holiday", values.attendanceCheck === "Holiday") // DEBUG
+                    if (values.attendanceCheck === "Holiday" && values.attendanceCheck !== attendance.attendanceCheck) {
+                        await addClass(attendance.paymentNumber, attendance.studentId)
+                    }
                 }
                 setIsEditDialogOpen(false)
                 console.log("edited")

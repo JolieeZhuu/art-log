@@ -20,4 +20,10 @@ public interface AttendanceRepo extends JpaRepository<Attendance, Integer> {
 	@Modifying // only for DELETE operations
 	@Query("DELETE FROM Attendance WHERE studentId = :studentId")
 	int deleteByStudentId(@Param("studentId") Integer studentId);
+	
+	@Query("SELECT a FROM Attendance a WHERE a.dateExpected = :dateExpected AND a.studentId = :studentId " + 
+	"AND a.paymentNumber = :paymentNumber")
+	Attendance findByDateExpectedAndStudentIdAndPaymentNumber(@Param("dateExpected") String dateExpected,
+																@Param("studentId") Integer studentId,
+																@Param("paymentNumber") Integer paymentNumber);
 }

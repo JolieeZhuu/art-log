@@ -113,7 +113,7 @@ export function DayPage() {
                         <div className="w-full max-w-7xl">
                             <Card>
                                 <CardHeader className="justify-items-start">
-                                    <CardTitle>{day[0].toUpperCase() + day.substring(1)} Checkout List</CardTitle>
+                                    <CardTitle>Checkout List</CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <CheckoutTable checkoutData={checkoutData}/>

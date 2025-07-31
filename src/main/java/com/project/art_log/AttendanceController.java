@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -42,5 +43,13 @@ public class AttendanceController extends AbstractController<Attendance, Integer
 		System.out.println("deleting all by student id works");
 		int deletedCount = attendanceService.deleteByStudentId(studentId);
         return ResponseEntity.ok().body("Deleted " + deletedCount + " attendance records from student");
+	}
+	
+	@GetMapping("/date")
+	public ResponseEntity<Attendance> getClassByDate(@RequestParam("dateExpected") String dateExpected,
+													@RequestParam("studentId") Integer studentId,
+													@RequestParam("paymentNumber") Integer paymentNumber) {
+		System.out.println("getting by date expected, studnet id, and payment number works");
+		return ResponseEntity.ok().body(attendanceService.getByDateExpectedAndStudentIdAndPaymentNumber(dateExpected, studentId, paymentNumber));
 	}
 }
