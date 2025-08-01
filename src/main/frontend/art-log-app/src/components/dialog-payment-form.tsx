@@ -37,6 +37,8 @@ import { z } from "zod" // zod is used for input validation
 import { addPaymentNum, addNewPaymentTable } from "@/components/payments/payment-funcs"
 import dayjs from 'dayjs'
 
+import { toast } from "sonner"
+
 const paymentSchema = z.object({
     dateExpected: z.date({
         message: "Expected date is required.",
@@ -68,7 +70,7 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
         //const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
         const date = values.dateExpected
-        const formattedDate = dayjs(date).format('MMM D, YYYY'); // Jan 1, 2025
+        const formattedDate = dayjs(date).toDate() // Jan 1, 2025
         const classes = values.numOfClasses
 
         const currentPaymentNum = await addPaymentNum(id);
@@ -77,6 +79,7 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
         setOpen(false);
         form.reset()
         onPaymentAdded?.() // trigger callback
+        toast("New payment table was created.")
         //const formattedDate = monthNames[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear()
         //console.log(typeof formattedDate)
     }

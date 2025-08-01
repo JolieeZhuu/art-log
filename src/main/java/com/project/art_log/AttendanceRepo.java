@@ -1,5 +1,6 @@
 package com.project.art_log;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,7 +24,13 @@ public interface AttendanceRepo extends JpaRepository<Attendance, Integer> {
 	
 	@Query("SELECT a FROM Attendance a WHERE a.dateExpected = :dateExpected AND a.studentId = :studentId " + 
 	"AND a.paymentNumber = :paymentNumber")
-	Attendance findByDateExpectedAndStudentIdAndPaymentNumber(@Param("dateExpected") String dateExpected,
+	Attendance findByDateExpectedAndStudentIdAndPaymentNumber(@Param("dateExpected") LocalDate dateExpected,
 																@Param("studentId") Integer studentId,
 																@Param("paymentNumber") Integer paymentNumber);
+	
+	@Query("SELECT a FROM Attendance a WHERE a.dateExpected >= :thirtyDaysAgo AND a.attendanceCheck = 'Absent' " +
+	" ORDER BY a.dateExpected ASC")
+	Attendance findFirstAbsentInThirtyDays(@Param("thirtyDaysAgo") LocalDate thirtyDaysAgo);
+	
+	
 }

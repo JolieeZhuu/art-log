@@ -38,7 +38,7 @@ export async function addPaymentNum(id: number) {
     return currentPaymentNum
 }
 
-export async function addNewPaymentTable(id: number, date: string, paymentNum: number, numOfClasses: number) {
+export async function addNewPaymentTable(id: number, date: Date, paymentNum: number, numOfClasses: number) {
     const student = await requests.getById(studentUrl, id)
 
     const data1 = {
@@ -68,14 +68,14 @@ export async function addNewPaymentTable(id: number, date: string, paymentNum: n
     }
     
     await requests.add(attendanceUrl, data1)
-    await generateClasses(id, date, paymentNum, numOfClasses) // generates remaining 
+    await generateClasses(id, date.toString(), paymentNum, numOfClasses) // generates remaining 
 
     await requests.edit(studentUrl, data2)
 }
 
 async function generateClasses(id: number, date: string, paymentNum: number, numOfClasses: number) {
     for (let i = 2; i <= numOfClasses; i++) {
-        const nextClassDate = dayjs(date).add(7*(i-1), 'days').format('MMM D, YYYY')
+        const nextClassDate = dayjs(date).add(7*(i-1), 'days').toDate()
         const data = {
             student_id: id,
             class_number: i,
@@ -103,7 +103,7 @@ export async function addClass(paymentNum: number, id: number) {
 
     // generate new class 7 days apart
     const lastDate = lastClass.date_expected
-    const nextClassDate = dayjs(lastDate).add(7, 'days').format('MMM D, YYYY')
+    const nextClassDate = dayjs(lastDate).add(7, 'days').toDate()
     console.log(nextClassDate)
     const data1 = {
         student_id: id,

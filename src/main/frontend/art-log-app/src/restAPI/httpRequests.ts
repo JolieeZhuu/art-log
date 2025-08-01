@@ -4,9 +4,13 @@ export class GetHTTP {
 		const response = await fetch(url, {
 			method: 'GET'
 		});
-        // awaits response.json()
-		const resData = await response.json();
-		return resData;
+    
+        if (!response.ok) {
+            return null // Return null for 404s
+        }
+        
+        const text = await response.text()
+        return text ? JSON.parse(text) : null // Handle empty responses
 	}
 }
 

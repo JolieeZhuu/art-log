@@ -128,6 +128,12 @@ export const columns: ColumnDef<Attendance>[] = [
     {
         accessorKey: "classDate",
         header: "Class Date",
+        cell: ({ row }) => {
+            const classDate: string = row.getValue("classDate")
+            const formatted = dayjs(classDate).format("MMM DD, YYYY")
+
+            return <div>{formatted}</div>
+        },
     },
     {
         accessorKey: "attendanceCheck",
@@ -136,6 +142,12 @@ export const columns: ColumnDef<Attendance>[] = [
     {
         accessorKey: "attendedDate",
         header: "Attd. Date",
+        cell: ({ row }) => {
+            const attendedDate: string = row.getValue("attendedDate")
+            const formatted = attendedDate ? dayjs(attendedDate).format("MMM DD, YYYY") : ""
+
+            return <div>{formatted}</div>
+        },
     },
     {
         accessorKey: "checkIn",
@@ -195,19 +207,16 @@ export const columns: ColumnDef<Attendance>[] = [
                     const lastClassNumber: number = await getTotalClasses(attendance.studentId)
                     for (let i = 0; i <= lastClassNumber - currClassNumber; i++) {
                         const currClass = await requests.getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, attendance.paymentNumber, attendance.studentId, currClassNumber + i)
-                        console.log("currClass", currClass) // debug
 
-                        if (i === 0) {
-                            console.log("values date attended", values.dateAttended?.toString()) // debug
-            
+                        if (i === 0) {            
                             const data = {
                                 attendance_id: currClass.attendance_id,
                                 student_id: attendance.studentId,
                                 class_number: currClassNumber + i,
                                 payment_number: attendance.paymentNumber,
-                                date_expected: dayjs(formattedDateExpected).add(7*i, "days").format("MMM D, YYYY"),
+                                date_expected: dayjs(formattedDateExpected).add(7*i, "days").toDate(),
                                 attendance_check: values.attendanceCheck,
-                                date_attended: values.dateAttended?.toString() !== undefined ? dayjs(values.dateAttended?.toString()).format("MMM D, YYYY") : "",
+                                date_attended: values.dateAttended !== undefined ? dayjs(values.dateAttended?.toString()).toDate() : "",
                                 check_in: values.checkIn,
                                 hours: 1, // fix makeup minds and hours confusion
                                 check_out: values.checkOut,
@@ -215,13 +224,12 @@ export const columns: ColumnDef<Attendance>[] = [
                             }
                             await requests.edit(attendanceUrl, data)
                         } else {
-                            console.log("attendance attendned Date", attendance.attendedDate) // debug
                             const data = {
                                 attendance_id: currClass.attendance_id,
                                 student_id: attendance.studentId,
                                 class_number: currClassNumber + i,
                                 payment_number: attendance.paymentNumber,
-                                date_expected: dayjs(formattedDateExpected).add(7*i, "days").format("MMM D, YYYY"),
+                                date_expected: dayjs(formattedDateExpected).add(7*i, "days").toDate(),
                                 attendance_check: "",
                                 date_attended: "",
                                 check_in: "",
@@ -234,21 +242,19 @@ export const columns: ColumnDef<Attendance>[] = [
                     }
 
                     // check if holiday
-                    console.log("checking holiday", values.attendanceCheck === "Holiday") // DEBUG
                     if (values.attendanceCheck === "Holiday" && values.attendanceCheck !== attendance.attendanceCheck) {
                         await addClass(attendance.paymentNumber, attendance.studentId)
                     }
 
                 } else {
-                    console.log("values date attended", values.dateAttended?.toString() === undefined) // debug
                     const data = {
                         attendance_id: attendance.id,
                         student_id: attendance.studentId,
                         class_number: attendance.classNumber,
                         payment_number: attendance.paymentNumber,
-                        date_expected: dayjs(values.dateExpected.toString()).format("MMM D, YYYY"),
+                        date_expected: dayjs(values.dateExpected.toString()).toDate(),
                         attendance_check: values.attendanceCheck,
-                        date_attended: values.dateAttended?.toString() !== undefined ? dayjs(values.dateAttended?.toString()).format("MMM D, YYYY") : "",
+                        date_attended: values.dateAttended?.toString() !== undefined ? dayjs(values.dateAttended?.toString()).toDate() : "",
                         check_in: values.checkIn,
                         hours: 1, // fix makeup minds and hours confusion
                         check_out: values.checkOut,

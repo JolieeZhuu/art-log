@@ -36,6 +36,9 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
+import { Toaster } from '@/components/ui/sonner'
+import { toast } from "sonner"
+
 type Student = {
     student_id: number
     first_name: string
@@ -59,7 +62,6 @@ export function PaymentsPage() {
 
     const requests = new AttendanceController()
     const studentUrl = "http://localhost:8080/student/"
-    const attendanceUrl = "http://localhost:8080/attendance/"
 
     useEffect(() => {
         getStudent()
@@ -77,6 +79,9 @@ export function PaymentsPage() {
         if (tableRefreshFunctions.current[paymentNumber]) {
             tableRefreshFunctions.current[paymentNumber]();
         }
+
+        // add toaster
+        toast(`New class was created in Payment Table ${paymentNumber}`)
     }
 
     const handleTableReady = (paymentNumber: number) => (refreshFn: () => void) => {
@@ -155,6 +160,7 @@ export function PaymentsPage() {
                             {cardList}
                         </div>
                     </div>
+                    <Toaster/>
                 </div>
             )}
         />

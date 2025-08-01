@@ -1,5 +1,6 @@
 package com.project.art_log;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -46,10 +47,16 @@ public class AttendanceController extends AbstractController<Attendance, Integer
 	}
 	
 	@GetMapping("/date")
-	public ResponseEntity<Attendance> getClassByDate(@RequestParam("dateExpected") String dateExpected,
+	public ResponseEntity<Attendance> getClassByDate(@RequestParam("dateExpected") LocalDate dateExpected,
 													@RequestParam("studentId") Integer studentId,
 													@RequestParam("paymentNumber") Integer paymentNumber) {
-		System.out.println("getting by date expected, studnet id, and payment number works");
+		System.out.println("getting by date expected, student id, and payment number works");
 		return ResponseEntity.ok().body(attendanceService.getByDateExpectedAndStudentIdAndPaymentNumber(dateExpected, studentId, paymentNumber));
+	}
+	
+	@GetMapping("/absent")
+	public ResponseEntity<Attendance> getFirstAbsent() {
+		System.out.println("getting first absence within thirty days works");
+		return ResponseEntity.ok().body(attendanceService.getFirstAbsentInThirtyDays());
 	}
 }

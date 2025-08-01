@@ -24,6 +24,18 @@ import { type  Student } from "./student-columns"
 import { AttendanceController } from "@/restAPI/entities"
 import dayjs from "dayjs"
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+
+
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -44,6 +56,8 @@ export function DataTable<TData extends Student, TValue>({
         []
     )
     
+    const [alertDialogOpen, setAlertDialogOpen] = React.useState(false)
+
     // convert selectedIds array to the format TanStack Table expects
     // so rather than passing an array of numbers, it passes a map like {"0": true, "1": true}
     const rowSelection = React.useMemo(() => {
@@ -74,7 +88,7 @@ export function DataTable<TData extends Student, TValue>({
                 .map(key => parseInt(key))
             
             // Create new Checkout array
-            const newSelected: Checkout[] = await Promise.all(selectedRowIndices.map(async (rowIndex) => {
+            const checkoutResults = await Promise.all(selectedRowIndices.map(async (rowIndex) => {
                 const requests = new AttendanceController()
                 const studentUrl = "http://localhost:8080/student/"
                 const attendanceUrl = "http://localhost:8080/attendance/"
@@ -98,11 +112,14 @@ export function DataTable<TData extends Student, TValue>({
                         else create a popup message
                 */
                 const tempStudent = await requests.getById(studentUrl, student.id)
+                console.log(currentDOW === tempStudent.day && tempStudent.payment_number > 0)
                 if (currentDOW === tempStudent.day && tempStudent.payment_number > 0) {
                     // find the date within the current payment table
                     const foundAttendance = await requests.getByDateExpectedAndStudentIdAndPaymentNumber(attendanceUrl, currentDate, student.id, tempStudent.payment_number)
+                    console.log("foundattendance", foundAttendance)
                     if (foundAttendance === null) {
-                        console.log("couldn't find it lol")
+                        setAlertDialogOpen(true)
+                        return null
                     } else {
                         const data = {
                             attendance_id: foundAttendance.attendance_id,
@@ -121,11 +138,32 @@ export function DataTable<TData extends Student, TValue>({
                         await requests.edit(attendanceUrl, data)
                     }
                 } else {
-                    console.log("they don't match lol")
-                    console.log("payment table not created?")
+                    const foundAbsent = await requests.getFirstAbsentWithinThirtyDays(attendanceUrl)
+                    console.log("foundabsent", foundAbsent)
+                    if (foundAbsent !== null) {
+                        const data = {
+                            attendance_id: foundAbsent.attendance_id,
+                            student_id: foundAbsent.student_id,
+                            payment_number: foundAbsent.payment_number,
+                            class_number: foundAbsent.class_number,
+                            date_expected: new Date(foundAbsent.date_expected),
+                            attendance_check: "Makeup",
+                            date_attended: new Date(currentDate),
+                            check_in: checkInTime,
+                            hours: 1, // fix
+                            check_out: checkOutTime,
+                            notes: foundAbsent.notes,
+                        }
+                        
+                        await requests.edit(attendanceUrl, data)
+                    } else {
+                        setAlertDialogOpen(true)
+                        console.log("they don't match lol")
+                        console.log("payment table not created?")
+                        return null
+                    }
                 }
 
-                
                 if (existingCheckout) {
                     // Keep existing checkout data
                     return existingCheckout
@@ -135,14 +173,15 @@ export function DataTable<TData extends Student, TValue>({
                     return {
                         id: student.id,
                         name: student.name,
-                        checkIn: checkInTime, // Current time
+                        checkIn: checkInTime,
                         checkOut: checkOutTime,
-                        classId: studentDetails.class_id, // You'll need to get this from your student data
-                        day: studentDetails.day, // You'll need to get this from your student data
+                        classId: studentDetails.class_id,
+                        day: studentDetails.day,
                     }
                 }
             }))
-            
+
+            const newSelected: Checkout[] = checkoutResults.filter((checkout): checkout is Checkout => checkout !== null) // filters out null checkouts (so they aren't checked)
             onSelectionChange(newSelected)
         },
         state: {
@@ -153,6 +192,22 @@ export function DataTable<TData extends Student, TValue>({
 
     return (
         <div className="mb-4">
+            <div>
+                <AlertDialog open={alertDialogOpen} onOpenChange={setAlertDialogOpen}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                        <AlertDialogTitle>Error!</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            User mistmatch error!
+                        </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                        <AlertDialogAction>Ok</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
+
             <div className="flex justify-between gap-4 py-4">
                 <Input
                     placeholder="Search students..."

@@ -119,4 +119,13 @@ export class AttendanceController extends Controller {
             console.error('Error:', error)
         }
     }
+
+    async getFirstAbsentWithinThirtyDays(url: string) {
+        try {
+            const data = await this.httpGet.get(url + "absent")
+            return data
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 }

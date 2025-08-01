@@ -1,5 +1,7 @@
 package com.project.art_log;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,9 +20,9 @@ public class Attendance {
 	private Integer studentId;
 	private Integer paymentNumber;
 	private Integer classNumber;
-	private String dateExpected;
+	private LocalDate dateExpected;
 	private String attendanceCheck;
-	private String dateAttended;
+	private LocalDate dateAttended;
 	private String checkIn;
 	private Integer hours;
 	private String checkOut;
@@ -31,7 +33,7 @@ public class Attendance {
 	} // equivalent to no args constructor
 	
 	public Attendance(Integer attendanceId, Integer studentId, Integer paymentNumber, Integer classNumber,
-			String dateExpected, String attendanceCheck, String dateAttended, String checkIn, Integer hours,
+			LocalDate dateExpected, String attendanceCheck, LocalDate dateAttended, String checkIn, Integer hours,
 			String checkOut) {
 		super();
 		this.attendanceId = attendanceId;
@@ -71,10 +73,10 @@ public class Attendance {
 	public void setClassNumber(Integer classNumber) {
 		this.classNumber = classNumber;
 	}
-	public String getDateExpected() {
+	public LocalDate getDateExpected() {
 		return dateExpected;
 	}
-	public void setDateExpected(String dateExpected) {
+	public void setDateExpected(LocalDate dateExpected) {
 		this.dateExpected = dateExpected;
 	}
 	public String getAttendanceCheck() {
@@ -83,10 +85,10 @@ public class Attendance {
 	public void setAttendanceCheck(String attendanceCheck) {
 		this.attendanceCheck = attendanceCheck;
 	}
-	public String getDateAttended() {
+	public LocalDate getDateAttended() {
 		return dateAttended;
 	}
-	public void setDateAttended(String dateAttended) {
+	public void setDateAttended(LocalDate dateAttended) {
 		this.dateAttended = dateAttended;
 	}
 	public String getCheckIn() {
