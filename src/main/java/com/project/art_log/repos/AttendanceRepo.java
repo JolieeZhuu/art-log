@@ -10,10 +10,13 @@ import org.springframework.data.repository.query.Param;
 
 import com.project.art_log.entities.Attendance;
 
+// Handles direct queries to the database
 public interface AttendanceRepo extends JpaRepository<Attendance, Integer> {
 	
+	// Example of derived queries
 	List<Attendance> findByStudentIdAndPaymentNumber(Integer studentId, Integer paymentNumber);
 	
+	// Example of JPQL
 	@Query("SELECT a FROM Attendance a WHERE a.paymentNumber = :paymentNumber AND a.studentId = :studentId " + 
 	"AND a.classNumber = :classNumber")
 	Attendance findByPaymentNumberAndStudentIdAndClassNumber(@Param("paymentNumber") Integer paymentNumber, 

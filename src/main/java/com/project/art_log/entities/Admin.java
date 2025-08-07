@@ -7,13 +7,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "admin")
+@Table(name = "admin") // Table name in PostgreSQL
 
 public class Admin {
+	
+	// JPA (Java Persistence API) annotations
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer adminId; // Identified through annotations as the primary key that is auto-generated
 	
-	private Integer adminId;
     private String firstName;
     private String lastName;
     private String username;

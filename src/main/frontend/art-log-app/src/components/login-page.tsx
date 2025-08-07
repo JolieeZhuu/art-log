@@ -1,4 +1,14 @@
-// shadcn imports
+// External imports
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod" // Used for input validation
+
+// Internal imports
+import { getAll, } from "@/restAPI/entities"
+import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+
+// UI components
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -17,17 +27,9 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 
-// external imports
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod" // zod is used for input validation
-
-// internal imports
-import { getAll, } from "@/restAPI/entities"
-import { useNavigate } from "react-router-dom"
-import { useState } from "react"
 
 // visit https://zod.dev/ for documentation
+// Schema with expected input types and error messages if input is invalid
 const adminSchema = z.object({
     username: z.string().min(1, {
         message: "Username is required.",
@@ -39,12 +41,12 @@ const adminSchema = z.object({
 
 export function LoginPage() {
 
-    // variable initializations
+    // Variable initializations
     const adminUrl = "http://localhost:8080/admin/"
     const navigate = useNavigate()
     const [isMatching, setIsMatching] = useState(true);
     
-    // define form
+    // Define form and default values
     const form = useForm<z.infer<typeof adminSchema>>({
         resolver: zodResolver(adminSchema),
         defaultValues: {
@@ -53,10 +55,8 @@ export function LoginPage() {
         },
     })
 
-    // define submit handler
+    // Define submit handler, parameter values are the form values
     async function onSubmit(values: z.infer<typeof adminSchema>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
         console.log(values)
 
         const admins = new Map()

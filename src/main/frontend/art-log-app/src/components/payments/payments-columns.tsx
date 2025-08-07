@@ -1,14 +1,21 @@
-// defining the core and appearance of the table
-
-// external imports
-import dayjs from 'dayjs'
+// Defining the core and appearance of the table
 
 import * as React from "react"
+import { MoreHorizontal, ChevronDownIcon } from "lucide-react"
 
+// External imports
+import dayjs from 'dayjs'
+import type { FieldPath } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod" // Used for input validation
+
+// Internal imports
+import { getTotalClasses, addClass } from '@/components/payments/payment-funcs'
+import { edit, getByPaymentNumberAndStudentIdAndClassNumber } from '@/restAPI/entities'
+
+// UI components
 import type { ColumnDef } from "@tanstack/react-table";
-
-import { MoreHorizontal } from "lucide-react"
- 
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -18,8 +25,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-
 import {
     Dialog,
     DialogClose,
@@ -29,7 +34,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-
 import {
     Form,
     FormControl,
@@ -38,7 +42,6 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { ChevronDownIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
@@ -46,17 +49,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { ComboboxOptions } from "@/components/combobox-options"
-
-// external imports
-import type { FieldPath } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod" // zod is used for input validation
 import { Input } from "@/components/ui/input"
 
-import { getTotalClasses, addClass } from '@/components/payments/payment-funcs'
-import { edit, getByPaymentNumberAndStudentIdAndClassNumber } from '@/restAPI/entities'
-
+// Define expected valid types for the form fields
+// Also defines error messages if input is invalid
 const editSchema = z.object({
     dateExpected: z.date({
         message: "Class date is required."
@@ -91,6 +87,7 @@ const formFieldOptions: {
     },
 ]
 
+// Options for the attendance check combobox
 const attendanceCheckOptions = [
     {
         value: "Yes",
@@ -130,6 +127,7 @@ export const columns: ColumnDef<Attendance>[] = [
         accessorKey: "classDate",
         header: "Class Date",
         cell: ({ row }) => {
+            // Format the class date to a more readable format
             const classDate: string = row.getValue("classDate")
             const formatted = dayjs(classDate).format("MMM DD, YYYY")
 
@@ -144,6 +142,7 @@ export const columns: ColumnDef<Attendance>[] = [
         accessorKey: "attendedDate",
         header: "Attd. Date",
         cell: ({ row }) => {
+            // Format the class date to a more readable format
             const attendedDate: string = row.getValue("attendedDate")
             const formatted = attendedDate ? dayjs(attendedDate).format("MMM DD, YYYY") : ""
 
@@ -174,9 +173,10 @@ export const columns: ColumnDef<Attendance>[] = [
             const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false)
             const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false)
             
-            const [openPopover1, setOpenPopover1] = React.useState(false) // for the calendar popover
-            const [openPopover2, setOpenPopover2] = React.useState(false) // for the calendar popover
+            const [openPopover1, setOpenPopover1] = React.useState(false) // For the calendar popover 1
+            const [openPopover2, setOpenPopover2] = React.useState(false) // For the calendar popover 2
 
+            // Setting default values for the form
             const form = useForm<z.infer<typeof editSchema>>({
                 resolver: zodResolver(editSchema),
                 defaultValues: {
@@ -190,7 +190,7 @@ export const columns: ColumnDef<Attendance>[] = [
                 },
             })
 
-            // edit student handler
+            // Edit student handler
             async function editClass(values: z.infer<typeof editSchema>) {
                 // initializations
                 const attendanceUrl = "http://localhost:8080/attendance/"
@@ -200,7 +200,7 @@ export const columns: ColumnDef<Attendance>[] = [
                 console.log("values", values)
                 console.log("attendance", attendance)
 
-                // case 1: if they change class date, every class # from that point and onwards must be changed as well
+                // Case 1: if they change class date, every class # from that point and onwards must be changed as well
                 if (formattedDateExpected !== attendance.classDate) {
 
                     const currClassNumber = attendance.classNumber
@@ -208,6 +208,7 @@ export const columns: ColumnDef<Attendance>[] = [
                     for (let i = 0; i <= lastClassNumber - currClassNumber; i++) {
                         const currClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, attendance.paymentNumber, attendance.studentId, currClassNumber + i)
 
+                        // First class is the one being edited, so there may be new values
                         if (i === 0) {            
                             const data = {
                                 attendance_id: currClass.attendance_id,
@@ -224,6 +225,8 @@ export const columns: ColumnDef<Attendance>[] = [
                             }
                             await edit(attendanceUrl, data)
                         } else {
+                            // The following classes will only have expected date changed
+                            // Other values will remain the same (or set to default?)
                             const data = {
                                 attendance_id: currClass.attendance_id,
                                 student_id: attendance.studentId,
@@ -233,7 +236,7 @@ export const columns: ColumnDef<Attendance>[] = [
                                 attendance_check: "",
                                 date_attended: "",
                                 check_in: "",
-                                hours: 1, // fix makeup minds and hours confusion
+                                hours: 1, // fix makeup mins and hours confusion
                                 check_out: "",
                                 notes: "",
                             }
@@ -241,12 +244,12 @@ export const columns: ColumnDef<Attendance>[] = [
                         }
                     }
 
-                    // check if holiday
+                    // Check if holiday (will need to add a new class to the end of the list)
                     if (values.attendanceCheck === "Holiday" && values.attendanceCheck !== attendance.attendanceCheck) {
                         await addClass(attendance.paymentNumber, attendance.studentId)
                     }
-
                 } else {
+                    // Case 2: if they do not change class date, then only the values of the class being edited will be changed
                     const data = {
                         attendance_id: attendance.id,
                         student_id: attendance.studentId,
@@ -269,7 +272,7 @@ export const columns: ColumnDef<Attendance>[] = [
                     !!!!!!!!!
                     */
 
-                    // check if holiday
+                    // Check if holiday (will need to add a new class to the end of the list)
                     console.log("checking holiday", values.attendanceCheck === "Holiday") // DEBUG
                     if (values.attendanceCheck === "Holiday" && values.attendanceCheck !== attendance.attendanceCheck) {
                         await addClass(attendance.paymentNumber, attendance.studentId)
@@ -295,7 +298,7 @@ export const columns: ColumnDef<Attendance>[] = [
                         </DropdownMenuContent>
                     </DropdownMenu>
 
-                    { /* render display for editDialog */}
+                    {/* Render display for editDialog */}
                     <Dialog open={isEditDialogOpen} onOpenChange={isEditDialogOpen ? setIsEditDialogOpen : setIsDeleteDialogOpen}>
                         <DialogContent>
                             <Form {...form}>
@@ -304,7 +307,7 @@ export const columns: ColumnDef<Attendance>[] = [
                                         <DialogTitle>Edit Class: #{attendance.classNumber}</DialogTitle>
                                         <DialogDescription></DialogDescription>
                                     </DialogHeader>
-                                    {/* display date picker for class date */}
+                                    {/* Display date picker for class date */}
                                     <FormField
                                         control={form.control}
                                         name="dateExpected"
@@ -340,7 +343,7 @@ export const columns: ColumnDef<Attendance>[] = [
                                             </FormItem>
                                         )}
                                     />
-                                    {/* display combo box for attendance check */}
+                                    {/* Display combo box for attendance check */}
                                     <FormField
                                         control={form.control}
                                         name="attendanceCheck"
@@ -360,7 +363,7 @@ export const columns: ColumnDef<Attendance>[] = [
                                             </FormItem>
                                         )}
                                     />
-                                    {/* display date picker for attended date */}
+                                    {/* Display date picker for attended date */}
                                     <FormField
                                         control={form.control}
                                         name="dateAttended"
@@ -424,7 +427,7 @@ export const columns: ColumnDef<Attendance>[] = [
                         </DialogContent>
                     </Dialog>
 
-                    { /* render display for deleteDialog */}
+                    {/* Render display for deleteDialog */}
                     <Dialog open={isDeleteDialogOpen} onOpenChange={isDeleteDialogOpen ? setIsDeleteDialogOpen : setIsEditDialogOpen}>
                         <DialogContent>hello deleteDialog</DialogContent>
                     </Dialog>

@@ -1,6 +1,16 @@
 import * as React from "react"
+import { ChevronDownIcon } from "lucide-react"
 
-// component ui imports
+// External imports
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod" // Used for input validation
+import dayjs from 'dayjs'
+
+// Internal imports
+import { addPaymentNum, addNewPaymentTable } from "@/components/payments/payment-funcs"
+
+// UI components
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -20,7 +30,6 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { ChevronDownIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
@@ -28,17 +37,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Input } from "@/components/ui/input"
-
-// external imports
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod" // zod is used for input validation
-
-import { addPaymentNum, addNewPaymentTable } from "@/components/payments/payment-funcs"
-import dayjs from 'dayjs'
-
 import { toast } from "sonner"
 
+// Schema with expected input types and error messages if input is invalid
 const paymentSchema = z.object({
     dateExpected: z.date({
         message: "Expected date is required.",
@@ -50,13 +51,12 @@ const paymentSchema = z.object({
 
 export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymentAdded?: () => void }) {
 
-    // variable initializations
-    const [openPopover, setOpenPopover] = React.useState(false) // for the calendar popover
+    // Variable initializations
+    const [openPopover, setOpenPopover] = React.useState(false) // For the calendar popover
 
     const [open, setOpen] = React.useState(false) // for the dialog
-    //const [submitted, setSubmitted] = React.useState(false)
     
-    // define form
+    // Define form
     const form = useForm<z.infer<typeof paymentSchema>>({
         resolver: zodResolver(paymentSchema),
         defaultValues: {
@@ -65,9 +65,8 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
         },
     })
 
-    // define submit handler
+    // Define submit handler
     async function onSubmit(values: z.infer<typeof paymentSchema>) {
-        //const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
         const date = values.dateExpected
         const formattedDate = dayjs(date).toDate() // Jan 1, 2025
@@ -78,10 +77,8 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
 
         setOpen(false);
         form.reset()
-        onPaymentAdded?.() // trigger callback
+        onPaymentAdded?.() // Trigger callback
         toast("New payment table was created.")
-        //const formattedDate = monthNames[date.getMonth()] + " " + date.getDate() + " " + date.getFullYear()
-        //console.log(typeof formattedDate)
     }
 
     return (

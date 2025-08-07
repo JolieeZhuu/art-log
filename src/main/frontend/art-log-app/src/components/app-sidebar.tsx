@@ -1,5 +1,6 @@
 import { CalendarDays, Home, LogOut, Settings, Table } from "lucide-react"
 
+// UI components
 import {
   Sidebar,
   SidebarContent,
@@ -11,7 +12,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-// sidebar items
+// Sidebar items
 const dashboard = [
     {
         title: "Summary",

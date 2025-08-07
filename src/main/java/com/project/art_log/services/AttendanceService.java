@@ -19,6 +19,8 @@ public class AttendanceService extends AbstractService<Attendance, Integer> {
 		this.attendanceRepo = attendanceRepo;
 	}
 	
+	// Attendance specific service functions
+	
 	public List<Attendance> getByStudentIdAndPaymentNumber(Integer studentId, Integer paymentNumber) {
 		return attendanceRepo.findByStudentIdAndPaymentNumber(studentId, paymentNumber);
 	}

@@ -24,22 +24,30 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 
 // File that allows React Application to connect the network with Spring Boot
+// CORS: cross-origin resource sharing
 
 @Configuration
 public class CorsConfig {
 	
+	// Describes request as XMLHttpRequest (XHR)
+	// Allows the front-end to retrieve any form of data through a URL
 	private static final String X_REQUESTED_WITH = "X-Requested-With";
 	
-	@Bean
+	@Bean // Managed by Inversion of Control (IoC) container for dependency injection and simpler management of Java objects
 	public CorsFilter corsFilter() {
-		var urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-        var corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
+		var urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource(); // Maps URL patterns to CORS configurations
+        var corsConfiguration = new CorsConfiguration(); // Object that developer can customize settings with
+        corsConfiguration.setAllowCredentials(true); // Required; allows cookies, authorization headers, and client certificates
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173")); // Specifies domains that can make requests to the server (Vite+React)
+        
+        // specifies HTTP headers/methods that can be requested (allowed) and accessed (exposed)
         corsConfiguration.setAllowedHeaders(List.of(ORIGIN, ACCESS_CONTROL_ALLOW_ORIGIN, CONTENT_TYPE, ACCEPT, AUTHORIZATION, X_REQUESTED_WITH, ACCESS_CONTROL_REQUEST_METHOD, ACCESS_CONTROL_REQUEST_HEADERS, ACCESS_CONTROL_ALLOW_CREDENTIALS));
         corsConfiguration.setExposedHeaders(List.of(ORIGIN, ACCESS_CONTROL_ALLOW_ORIGIN, CONTENT_TYPE, ACCEPT, AUTHORIZATION, X_REQUESTED_WITH, ACCESS_CONTROL_REQUEST_METHOD, ACCESS_CONTROL_REQUEST_HEADERS, ACCESS_CONTROL_ALLOW_CREDENTIALS));
         corsConfiguration.setAllowedMethods(List.of(GET.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name(), OPTIONS.name()));
+        
+        // Applies the CORS configuration to all URL patterns, through /**
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+        
         return new CorsFilter(urlBasedCorsConfigurationSource);
 	}
 }

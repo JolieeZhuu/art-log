@@ -1,9 +1,17 @@
 import * as React from "react"
 
+// External imports
 import { useParams } from "react-router-dom"
+import axios from "axios"
 
+// Internal imports
 import Layout from "@/components/layout"
 import { ModeToggle } from "@/components/mode-toggle"
+import { type Checkout } from "@/components/checkout/checkout-columns"
+import CheckoutTable from "@/components/checkout/checkout-table-page"
+import StudentTable from "@/components/students/student-table-page"
+
+// UI components
 import {
     Card,
     CardContent,
@@ -11,31 +19,30 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Toaster } from "@/components/ui/sonner"
-import { type Checkout } from "@/components/checkout/checkout-columns"
-import CheckoutTable from "@/components/checkout/checkout-table-page"
-
 import { SiteHeader } from "@/components/site-header"
-import StudentTable from "@/components/students/student-table-page"
-
-import axios from "axios"
 
 export function DayPage() {
 
     const { day } = useParams<{ day?: string }>()
+    // Validate the day parameter
     if (!day) {
         return <div>Invalid day parameter.</div>
     }
+
+    // Whenever page refreshes, fetch:
     const [selectedMorningStudents, setSelectedMorningStudents] = React.useState<Checkout[]>(() => {
-        // initial render loads from localStorage (so when passes through props, it doesn't have to call localStorage again)
+        // Initial render loads from localStorage (so when passes through props, it doesn't have to call localStorage again)
         const saved = localStorage.getItem("selectedMorningStudents")
-        return saved ? JSON.parse(saved) : [] // handles if array is null, but returns an array otherwise (localStorage only accepts parsed strings)
+        return saved ? JSON.parse(saved) : [] // Handles if array is null, but returns an array otherwise (localStorage only accepts parsed strings)
     })
+
     const [selectedAfternoonStudents, setSelectedAfternoonStudents] = React.useState<Checkout[]>(() => {
         const saved = localStorage.getItem("selectedAfternoonStudents")
         return saved ? JSON.parse(saved) : []
     })
+
     const [checkoutData, setCheckoutData] = React.useState<Checkout[]>(() => {
-        const savedCheckoutData = localStorage.getItem("checkoutData")
+        const savedCheckoutData = localStorage.getItem("checkoutData") // Fetch from localStorage if it exists
         if (savedCheckoutData) {
             return JSON.parse(savedCheckoutData)
         }
@@ -53,12 +60,12 @@ export function DayPage() {
                 }
                 return hours * 60 + minutes
             }
-            return timeToMinutes(a.checkOut) - timeToMinutes(b.checkOut)
+            return timeToMinutes(a.checkOut) - timeToMinutes(b.checkOut) // Sort by checkOut time (by converting the time to minutes)
         })
-        return sortedStudents ? sortedStudents : []
+        return sortedStudents ? sortedStudents : [] // Return an empty array if no students are selected
     })
 
-    // save to localStorage whenever selections change
+    // Whenever the selected students change, update/save to localStorage
     React.useEffect(() => {
         localStorage.setItem("selectedMorningStudents", JSON.stringify(selectedMorningStudents))
     }, [selectedMorningStudents])
@@ -71,7 +78,7 @@ export function DayPage() {
         localStorage.setItem("checkoutData", JSON.stringify(checkoutData))
     }, [checkoutData])
 
-    React.useEffect(() => {
+    React.useEffect(() => { // Update checkoutData whenever selectedMorningStudents or selectedAfternoonStudents change
         const allSelectedStudents = selectedMorningStudents.concat(selectedAfternoonStudents)
         const sortedStudents = allSelectedStudents.sort((a, b) => {
             function timeToMinutes(timeStr: string) {
@@ -97,13 +104,13 @@ export function DayPage() {
     }, [selectedMorningStudents, selectedAfternoonStudents])
 
     React.useEffect(() => {
-        function clearSelection() { // called when the time of day arrives
-            // page will update accordingly since there are useEffect functions for each student list
+        function clearSelection() { // Called when the time of day arrives
+            // Page will update accordingly since there are useEffect functions for each student list
             setSelectedMorningStudents([])
             setSelectedAfternoonStudents([])
             localStorage.removeItem("selectedMorningStudents")
             localStorage.removeItem("selectedAfternoonStudents")
-            console.log("checkmarks cleared at 7:00 PM") // debug
+            console.log("checkmarks cleared at 7:00 PM") // Debug
         }
         async function checkTimeAndClear() {
             const now = new Date()
@@ -114,16 +121,17 @@ export function DayPage() {
                 const lastClearedDate = localStorage.getItem("lastCleared")
                 const today = new Date().toDateString()
 
-                if (lastClearedDate !== today) { // only clears once per day
+                if (lastClearedDate !== today) { // Only clears once per day
                    clearSelection()
-                   localStorage.setItem("lastCleared", today) // store to check when the next day comes
+                   localStorage.setItem("lastCleared", today) // Store to check when the next day comes
                 }
+
+                // below code for testing purposes; must remove above if statement to work
                 // clearSelection()
                 // localStorage.setItem("lastCleared", today)
                 // await playTTS("Checkmarks cleared at 7:00 PM")
             }
         }
-        // check every minute
         const interval = setInterval(checkTimeAndClear, 60 * 1000) // since parameters are in milliseconds, check every minute
 
         return () => clearInterval(interval)
@@ -133,7 +141,7 @@ export function DayPage() {
 
         async function callCheckouts() {
             const studentNames = checkTimeAndCross()
-            console.log("studentNames", studentNames)
+            console.log("studentNames", studentNames) // debug
             if (studentNames !== "") {
                 await playTTS(`${studentNames} can pack up now.`)
             }
@@ -141,13 +149,13 @@ export function DayPage() {
         }
 
         function checkTimeAndCross() {
-            console.log("checkoutdata", checkoutData)
-            console.log(selectedMorningStudents, selectedAfternoonStudents)
-            const filteredStudents = checkoutData.filter(student => !student.crossedOut);
-            console.log("filteredStudents", filteredStudents)
+            console.log("checkoutdata", checkoutData) // debug
+            console.log(selectedMorningStudents, selectedAfternoonStudents) // debug
+            const filteredStudents = checkoutData.filter(student => !student.crossedOut) // Filter out students that are already crossed out
+            console.log("filteredStudents", filteredStudents) // debug
 
-            let studentNames = ""
-            let hasUpdates = false
+            let studentNames = "" // concatenates names of students who can pack up
+            let hasUpdates = false // Manage updates instead of page reload
             
             // Create a new array with updated students
             const updatedCheckoutData = checkoutData.map(student => {
@@ -176,32 +184,34 @@ export function DayPage() {
 
             // Only update state if there were changes
             if (hasUpdates) {
-                setCheckoutData(updatedCheckoutData) // You need this state setter
+                setCheckoutData(updatedCheckoutData) // State setter
             }
 
             return studentNames
 
         }
-        // check every minute
-        const interval = setInterval(callCheckouts, 60 * 1000) // since parameters are in milliseconds, check every minute
+        const interval = setInterval(callCheckouts, 60 * 1000) // Since parameters are in milliseconds, check every minute
 
         return () => clearInterval(interval)
     }, [])
 
     async function playTTS(text: string, lang = 'en') {
         try {
+            // HTTP GET request to the TTS API
+            // Ensure the text is URL-encoded to handle special characters
             const response = await axios.get(
                 `http://localhost:8080/speak?text=${encodeURIComponent(text)}&lang=${lang}`,
-                { responseType: 'blob' } // This is crucial for binary data
-            );
+                { responseType: 'blob' } // Tells axios to expect a binary data response
+                // Binary Large Object = blob
+            )
             
-            const audioUrl = URL.createObjectURL(response.data);
-            const audio = new Audio(audioUrl);
-            await audio.play();
+            const audioUrl = URL.createObjectURL(response.data) // Creates a temporary URL that points to the binary data
+            const audio = new Audio(audioUrl) // URLs can be played directly in audio elements
+            await audio.play()
             
-            audio.onended = () => URL.revokeObjectURL(audioUrl);
+            audio.onended = () => URL.revokeObjectURL(audioUrl) // Event handler that releases the blob URL from memory after playback ends
         } catch (error) {
-            console.error('TTS Error:', error);
+            console.error('TTS Error:', error)
         } 
     }
 
@@ -214,7 +224,7 @@ export function DayPage() {
                         <div className="absolute top-4 right-4">
                             <ModeToggle/>
                         </div>
-                        {/* display student list cards */}
+                        {/* Display student list cards */}
                         <div className="w-full max-w-xl">
                             <Card>
                                 <CardHeader className="justify-items-start">

@@ -1,4 +1,6 @@
 import * as React from "react"
+
+// UI components
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -7,7 +9,6 @@ import {
     getFilteredRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-
 import {
     Table,
     TableBody,
@@ -16,10 +17,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-
+// Define the props for the DataTable component
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -36,7 +36,7 @@ export function DataTable<TData, TValue>({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        onColumnFiltersChange: setColumnFilters,
+        onColumnFiltersChange: setColumnFilters, // For filter features
         getFilteredRowModel: getFilteredRowModel(),
         state: {
             columnFilters,
@@ -47,7 +47,7 @@ export function DataTable<TData, TValue>({
         <div className="mb-4">
             <ScrollArea className="h-[535px] rounded-md border">
                 <Table>
-                    <TableHeader className="sticky top-0 bg-secondary z-20">
+                    <TableHeader className="sticky top-0 bg-secondary z-20"> {/* Table header doesn't move with scroll */}
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                         {headerGroup.headers.map((header) => {

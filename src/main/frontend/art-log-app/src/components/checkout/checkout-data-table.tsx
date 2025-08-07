@@ -1,4 +1,6 @@
 import * as React from "react"
+
+// UI components
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -7,7 +9,6 @@ import {
     getFilteredRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-
 import { Input } from "@/components/ui/input"
 import {
     Table,
@@ -19,7 +20,7 @@ import {
 } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-
+// Define the props for the DataTable component (easier to read)
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -36,7 +37,7 @@ export function DataTable<TData, TValue>({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        onColumnFiltersChange: setColumnFilters,
+        onColumnFiltersChange: setColumnFilters, // For filter features
         getFilteredRowModel: getFilteredRowModel(),
         state: {
             columnFilters,
@@ -46,6 +47,7 @@ export function DataTable<TData, TValue>({
     return (
         <div className="mb-4">
             <div className="flex justify-between gap-4 py-4">
+                {/* Search bar for filtering students by name */}
                 <Input
                     placeholder="Search students..."
                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -58,7 +60,7 @@ export function DataTable<TData, TValue>({
             
             <ScrollArea className="h-[300px] rounded-md border">
                 <Table>
-                    <TableHeader className="sticky top-0 bg-secondary z-20">
+                    <TableHeader className="sticky top-0 bg-secondary z-20"> {/* Table header doesn't move with scroll */}
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                         {headerGroup.headers.map((header) => {

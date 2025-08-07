@@ -1,11 +1,19 @@
-// external imports
-import dayjs from 'dayjs'
-
 import { useState, useEffect, useRef } from "react"
 import { Archive } from "lucide-react"
 
+// External imports
 import { useParams } from "react-router-dom"
+import { Link } from "react-router-dom"
 
+// Internal imports
+import Layout from "@/components/layout"
+import { ModeToggle } from "@/components/mode-toggle"
+import { SiteHeader } from "@/components/site-header"
+import { getById } from "@/restAPI/entities"
+import { getPaymentNum, addClass } from "@/components/payments/payment-funcs"
+import PaymentTable from "@/components/payments/payments-table-page"
+
+// UI components
 import {
     Card,
     CardAction,
@@ -15,18 +23,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-
-import Layout from "@/components/layout"
-import { ModeToggle } from "@/components/mode-toggle"
-import { SiteHeader } from "@/components/site-header"
-
-import { getById } from "@/restAPI/entities"
 import { DialogPaymentForm } from "@/components/dialog-payment-form"
-import PaymentTable from "@/components/payments/payments-table-page"
-
-import { getPaymentNum, addClass } from "@/components/payments/payment-funcs"
-
-import { Link } from "react-router-dom"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -35,7 +32,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from "sonner"
 
@@ -51,6 +47,7 @@ type Student = {
 
 export function PaymentsPage() {
     const { id: idParam } = useParams()
+    // Check if idParam is valid
     if (!idParam) {
         return <div>Invalid ID parameter.</div>
     }
@@ -72,6 +69,9 @@ export function PaymentsPage() {
         setStudent(storeStudent)
     }
 
+    // Function to handle adding a class to a payment table
+    // This function will be passed to the PaymentTable component
+    // and will be called when a new class is added (so no page refresh is needed)
     async function addClassHandler(paymentNumber: number) {    
         await addClass(paymentNumber, id)
 
@@ -79,7 +79,7 @@ export function PaymentsPage() {
             tableRefreshFunctions.current[paymentNumber]();
         }
 
-        // add toaster
+        // Add toaster
         toast(`New class was created in Payment Table ${paymentNumber}`)
     }
 

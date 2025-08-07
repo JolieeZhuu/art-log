@@ -1,8 +1,8 @@
 import * as React from "react"
 
+// Internal imports
 import { columns, type Student } from "@/components/students/student-columns"
 import { DataTable } from "@/components/students/student-data-table"
-
 import { getByDayAndExpectedTimeEnding } from "@/restAPI/entities"
 import { type Checkout } from "@/components/checkout/checkout-columns"
 
@@ -10,13 +10,13 @@ export default function StudentTable({ dayOfWeek, substring, setSelectedStudents
 
     // variable initializations
     const studentUrl = "http://localhost:8080/student/"
-    const [data, setData] = React.useState<Student[]>([]) // used to handle async function with useEffect
+    const [data, setData] = React.useState<Student[]>([]) // Used to handle async function with useEffect
 
     async function getData(): Promise<Student[]> {
-        // Fetch data from your API here.
+        // Fetch data from API
         const studentList = await getByDayAndExpectedTimeEnding(studentUrl, dayOfWeek, substring)
 
-        // store values to be used during editMode
+        // Store values to be used during editMode
         const studentValuesList: Student[] = studentList.map(({ student_id, first_name, last_name, payment_notes, notes } : { student_id: number, first_name: string, last_name: string, payment_notes: string, notes: string}) => {
             return {
                 id: student_id,
@@ -49,9 +49,9 @@ export default function StudentTable({ dayOfWeek, substring, setSelectedStudents
     }
 
     function handleDeleteStudent(deletedStudentId: number) {
-        // pass the current state value "prev" and update with new array of all students that are not deleted
+        // Pass the current state value "prev" and update with new array of all students that are not deleted
         setData((prev) => 
-            prev.filter((student) => student.id !== deletedStudentId) // filters OUT the "deleted" student
+            prev.filter((student) => student.id !== deletedStudentId) // Filters OUT the "deleted" student
         )
     }
 

@@ -1,10 +1,10 @@
-// external imports
+// External imports
 import dayjs from 'dayjs'
 
-// internal imports
+// Internal imports
 import { getById, edit, add, getByPaymentNumberAndStudentIdAndClassNumber, } from '@/restAPI/entities'
 
-// initializations
+// Initializations
 const studentUrl = "http://localhost:8080/student/"
 const attendanceUrl = "http://localhost:8080/attendance/"
 
@@ -17,7 +17,7 @@ export async function getPaymentNum(id: number) {
 
 export async function addPaymentNum(id: number) {
     const student = await getById(studentUrl, id)
-    const currentPaymentNum = student.payment_number + 1 // payment made, thus new table
+    const currentPaymentNum = student.payment_number + 1 // Payment made, thus new table
     const data = {
         student_id: student.student_id,
         first_name: student.first_name,
@@ -49,7 +49,7 @@ export async function addNewPaymentTable(id: number, date: Date, paymentNum: num
         hours: 1,
         check_out: null,
         payment_number: paymentNum
-    }
+    } // Make changes to Student entity
 
     const data2 = {
         student_id: id,
@@ -64,7 +64,7 @@ export async function addNewPaymentTable(id: number, date: Date, paymentNum: num
         payment_number: student.payment_number,
         class_number: student.class_number,
         total_classes: numOfClasses,
-    }
+    } // Make changes to Attendance entity
     
     await add(attendanceUrl, data1)
     await generateClasses(id, date.toString(), paymentNum, numOfClasses) // generates remaining 
@@ -73,6 +73,8 @@ export async function addNewPaymentTable(id: number, date: Date, paymentNum: num
 }
 
 async function generateClasses(id: number, date: string, paymentNum: number, numOfClasses: number) {
+    // Generates remaining classes after the first one
+    // Classes are 7 days apart
     for (let i = 2; i <= numOfClasses; i++) {
         const nextClassDate = dayjs(date).add(7*(i-1), 'days').toDate()
         const data = {
@@ -100,7 +102,7 @@ export async function addClass(paymentNum: number, id: number) {
     const totalClasses = student.total_classes
     const lastClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, paymentNum, id, totalClasses)
 
-    // generate new class 7 days apart
+    // Generate the new class 7 days apart from the last class
     const lastDate = lastClass.date_expected
     const nextClassDate = dayjs(lastDate).add(7, 'days').toDate()
     console.log(nextClassDate)
@@ -117,7 +119,7 @@ export async function addClass(paymentNum: number, id: number) {
 
     await add(attendanceUrl, data1)
 
-    // edit the student so that total classes += 1
+    // Edit the student so that total classes += 1
     const data2 = {
         student_id: id,
         first_name: student.first_name,

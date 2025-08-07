@@ -7,13 +7,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "student")
+@Table(name = "student") // Table name in PostgreSQL
 
 public class Student {
+	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer studentId; // Identified through annotations as the primary key that is auto-generated
 	
-	private Integer studentId;
     private String firstName;
     private String lastName;
     private String classId;

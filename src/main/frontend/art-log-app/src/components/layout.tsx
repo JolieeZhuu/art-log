@@ -1,7 +1,7 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 
-// sidebar trigger skipped due to an error
+// Sidebar trigger skipped due to an error
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

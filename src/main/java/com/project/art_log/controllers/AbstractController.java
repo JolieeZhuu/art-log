@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.project.art_log.services.AbstractService;
 
+// Handles incoming HTTP requests from the front-end
+// Prepares the data to be return to the user
+
 public abstract class AbstractController<T, ID> {
 	private final AbstractService<T, ID> service;
 	
@@ -19,7 +22,7 @@ public abstract class AbstractController<T, ID> {
 		this.service = service;
 	}
 	
-    @GetMapping("/")
+    @GetMapping("/") // example of an endpoint, to fetch all entities specified by the program
     public ResponseEntity<List<T>> getAll() {
     	System.out.println("getting all works"); 
         return ResponseEntity.ok().body(service.getAll());  

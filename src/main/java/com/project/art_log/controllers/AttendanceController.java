@@ -27,6 +27,8 @@ public class AttendanceController extends AbstractController<Attendance, Integer
 		this.attendanceService = attendanceService;
 	}
 	
+	// Attendance specific controller functions
+	
 	@GetMapping("/student/{studentId}/{paymentNumber}")
 	public ResponseEntity<List<Attendance>> getByStudentId(@PathVariable("studentId") Integer studentId, 
 														   @PathVariable("paymentNumber") Integer paymentNumber) {

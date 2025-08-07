@@ -17,6 +17,8 @@ public class StudentService extends AbstractService<Student, Integer> {
 		this.studentRepo = studentRepo;
 	}
 	
+	// Student specific service functions
+	
 	public List<Student> getByDay(String day) {
         return studentRepo.findByDayIgnoreCase(day);
     }

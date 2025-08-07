@@ -1,6 +1,14 @@
 import * as React from "react"
 
-// component ui imports
+// External imports
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod" // Used for input validation
+
+// Internal imports
+import { add } from "@/restAPI/entities"
+
+// UI components
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -25,13 +33,7 @@ import type { FieldPath } from "react-hook-form"
 import { ComboboxOptions } from "@/components/combobox-options"
 import { toast } from "sonner"
 
-// external imports
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod" // zod is used for input validation
-
-import { add } from "@/restAPI/entities"
-
+// Schema with expected input types and error messages if input is invalid
 const studentSchema = z.object({
     firstName: z.string().min(1, {
         message: "First name is required.",
@@ -173,7 +175,7 @@ const timeExpectedOptions = [
 ]
 
 
-// shortcut to defining an array of maps in TS
+// Shortcut to defining an array of maps in TS
 const formFieldOptions: {
     name: FieldPath<z.infer<typeof studentSchema>>
     label: string
@@ -220,21 +222,20 @@ const formFieldOptions: {
 
 
 
-// defining the type and expected props passed
+// Defining the type and expected props passed
 interface DialogStudentFormProps {
     onStudentCreated: () => void
 }
 
-// receives props matching DialogStudentFormProps interface
+// Receives props matching DialogStudentFormProps interface
 export function DialogStudentForm({ onStudentCreated }: DialogStudentFormProps) {
 
-    // variable initializations
+    // Variable initializations
     const studentUrl = "http://localhost:8080/student/"
 
     const [open, setOpen] = React.useState(false)
-    //const [submitted, setSubmitted] = React.useState(false)
     
-    // define form
+    // Define form
     const form = useForm<z.infer<typeof studentSchema>>({
         resolver: zodResolver(studentSchema),
         defaultValues: {
@@ -247,7 +248,7 @@ export function DialogStudentForm({ onStudentCreated }: DialogStudentFormProps) 
         },
     })
 
-    // define submit handler
+    // Define submit handler
     async function onSubmit(values: z.infer<typeof studentSchema>) {
         console.log("hello")
         console.log("Submitted values:", values)
@@ -267,9 +268,9 @@ export function DialogStudentForm({ onStudentCreated }: DialogStudentFormProps) 
         }
 
         await add(studentUrl, data)
-        onStudentCreated()
+        onStudentCreated() // Trigger callback to refresh data
         setOpen(false)
-        form.reset()
+        form.reset() // Reset form fields after submission
         toast(`${values.firstName} ${values.lastName} has been added.`)
     }
 

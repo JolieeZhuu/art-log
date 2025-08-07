@@ -20,25 +20,30 @@ configurations {
 }
 
 repositories {
-    // This line tells Gradle to look in the default repositories
+    // Tells Gradle to look in the default repositories
     mavenCentral()
-    // THIS IS THE CRUCIAL LINE YOU PROBABLY NEED TO ADD
+    // Crucial line to use gTTS4j
     maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-	implementation "org.springframework.boot:spring-boot-starter-actuator"
-	implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-	implementation "org.springframework.boot:spring-boot-starter-validation"
-	implementation "org.springframework.boot:spring-boot-starter-web"
-	implementation "org.flywaydb:flyway-core"
-	implementation "org.flywaydb:flyway-database-postgresql"
+	implementation "org.springframework.boot:spring-boot-starter-actuator" // Monitors and manages endpoints and application status
+	implementation "org.springframework.boot:spring-boot-starter-data-jpa" // Enables JPA for DB operations
+	implementation "org.springframework.boot:spring-boot-starter-validation" // Enables data validation
+	implementation "org.springframework.boot:spring-boot-starter-web" // Web and REST API dependency
+	
+	// DB specific
+	implementation "org.flywaydb:flyway-core" // Enables Flyway migration (version controlling and schema management)
+	implementation "org.flywaydb:flyway-database-postgresql" // Postgre-specific flyway migration
+	runtimeOnly "org.postgresql:postgresql" // Enables PostgreSQL connection (see application.properties)
+	
 	//implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
 	// https://mvnrepository.com/artifact/com.tetradotoxina/gtts4j
-	implementation "com.tetradotoxina:gtts4j:2.0.0"
+	implementation "com.tetradotoxina:gtts4j:2.0.0" // For gTTS4j
     
-	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"	
-	runtimeOnly "org.postgresql:postgresql"
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor" // Easier annotating?
+	
+	// For test running
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 }

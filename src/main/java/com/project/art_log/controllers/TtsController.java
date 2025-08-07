@@ -15,30 +15,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TtsController {
 
-    /**
-     * An endpoint to generate speech from text.
-     * Example URL: http://localhost:8080/speak?text=Hello+world&lang=en
-     * Example URL: http://localhost:8080/speak?text=Bonjour&lang=fr
-     */
-    @GetMapping(value = "/speak", produces = "audio/mpeg")
-    public ResponseEntity<byte[]> speak(
-            @RequestParam("text") String text,
-            @RequestParam(value = "lang", defaultValue = "en") String lang) {
+    // Example URL: http://localhost:8080/speak?text=Hello+world&lang=en
+	// Path ends in /speak, and will return an mp3 file (hence audio/mpeg)
+	
+    @GetMapping(value = "/speak", produces = "audio/mpeg") // Endpoint to generate speech from text.
+    public ResponseEntity<byte[]> speak(@RequestParam("text") String text,
+            							@RequestParam(value = "lang", defaultValue = "en") String lang) {
     	
     	System.out.println("audio bytes sent");
 
-        // A basic security check to prevent very long requests
+        // Basic security check to prevent very long requests
         if (text.length() > 500) {
             return ResponseEntity.badRequest().build();
         }
 
         try {
-        	
+        	// From documentation
         	GTTS4J gtts4j = new GTTS4JImpl();
-        	boolean slow = false;
-        	String filePath = System.getProperty("user.dir")+File.separator+"speech.mp3";
+        	boolean slow = false; // Set speech speed to normal
+        	// String filePath = System.getProperty("user.dir")+File.separator+"speech.mp3";
 
-        	byte[] data = gtts4j.textToSpeech(text, lang, slow); // generate audio bytes
+        	byte[] data = gtts4j.textToSpeech(text, lang, slow); // Converts the string to audio bytes
         	// gtts4j.saveFile(filePath, data, true); // converts bytes to audio file
 
         	

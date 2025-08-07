@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+// Service is the branch between Controller and Repository
+// Handles most of the business logic and operations
+
 public abstract class AbstractService<T, ID> {
 	private final JpaRepository<T, ID> repository;
 

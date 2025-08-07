@@ -1,4 +1,14 @@
 import * as React from "react"
+
+// External imports
+import dayjs from "dayjs"
+
+// Internal imports
+import { type Checkout } from "@/components/checkout/checkout-columns"
+import { type  Student } from "./student-columns"
+import { getById, getByDateExpectedAndStudentIdAndPaymentNumber, edit, getFirstAbsentWithinThirtyDays, } from "@/restAPI/entities"
+
+// UI components
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -7,7 +17,6 @@ import {
     getFilteredRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-
 import { Input } from "@/components/ui/input"
 import {
     Table,
@@ -19,15 +28,9 @@ import {
 } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { DialogStudentForm } from "@/components/dialog-student-form"
-import { type Checkout } from "@/components/checkout/checkout-columns"
-import { type  Student } from "./student-columns"
-import { getById, getByDateExpectedAndStudentIdAndPaymentNumber, edit, getFirstAbsentWithinThirtyDays, } from "@/restAPI/entities"
-import dayjs from "dayjs"
-
 import {
   AlertDialog,
   AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -36,7 +39,7 @@ import {
 } from "@/components/ui/alert-dialog"
 
 
-
+// Define the type for the student data
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -58,10 +61,10 @@ export function DataTable<TData extends Student, TValue>({
     
     const [alertDialogOpen, setAlertDialogOpen] = React.useState(false)
 
-    // convert selectedIds array to the format TanStack Table expects
-    // so rather than passing an array of numbers, it passes a map like {"0": true, "1": true}
+    // Convert selectedIds array to the format TanStack Table expects
+    // So rather than passing an array of numbers, it passes a map like {"0": true, "1": true}
     const rowSelection = React.useMemo(() => {
-        const selection: Record<string, boolean> = {} // format of TanStack Table
+        const selection: Record<string, boolean> = {} // Format of TanStack Table
         selectedStudents.forEach(student => {
             const rowIndex = data.findIndex(item => item.id === student.id)
             if (rowIndex !== -1) {
@@ -69,7 +72,7 @@ export function DataTable<TData extends Student, TValue>({
             }
         })
         return selection
-    }, [selectedStudents, data]) // only when selectedIds or data changes
+    }, [selectedStudents, data]) // Only when selectedIds or data changes
 
     const table = useReactTable({
         data,
@@ -79,7 +82,7 @@ export function DataTable<TData extends Student, TValue>({
         getFilteredRowModel: getFilteredRowModel(),
         enableRowSelection: true,
         onRowSelectionChange: async (updater) => {
-            // handle the row selection change (used instead of a useEffect function)
+            // Handle the row selection change (used instead of a useEffect function)
             const newSelection = typeof updater === 'function' ? updater(rowSelection) : updater
             
             // Get currently selected row indices
@@ -110,10 +113,11 @@ export function DataTable<TData extends Student, TValue>({
                         if found, replace that Absent with Makeup, and change date attended accordingly
                         else create a popup message
                 */
+
                 const tempStudent = await getById(studentUrl, student.id)
                 console.log(currentDOW === tempStudent.day && tempStudent.payment_number > 0)
                 if (currentDOW === tempStudent.day && tempStudent.payment_number > 0) {
-                    // find the date within the current payment table
+                    // Find the date within the current payment table
                     const foundAttendance = await getByDateExpectedAndStudentIdAndPaymentNumber(attendanceUrl, currentDate, student.id, tempStudent.payment_number)
                     console.log("foundattendance", foundAttendance)
                     if (foundAttendance === null) {

@@ -1,10 +1,20 @@
-// defining the core and appearance of the table
-import * as React from "react"
-import type { ColumnDef } from "@tanstack/react-table";
+// Defining the core and appearance of the table
 
+import * as React from "react"
 import { MoreHorizontal } from "lucide-react"
+
+// External imports
+import type { FieldPath } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod" // Used for input validation
+
+// Internal imports
+import { getById, edit, deleteById, deleteByStudentId } from "@/restAPI/entities";
+
+// UI components
+import type { ColumnDef } from "@tanstack/react-table";
 import { toast } from "sonner"
- 
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
@@ -14,7 +24,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
 import {
     Dialog,
     DialogClose,
@@ -33,17 +42,10 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-
-// external imports
-import type { FieldPath } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod" // zod is used for input validation
-
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { getById, edit, deleteById, deleteByStudentId } from "@/restAPI/entities";
-
+// Define expected valid types for the form fields
+// Also defines error messages if input is invalid
 const editSchema = z.object({
     firstName: z.string().min(1, {
         error: "First name field cannot be empty.",
@@ -55,6 +57,8 @@ const editSchema = z.object({
     notes: z.string(),
 })
 
+// Define expected valid types for the form fields
+// Also defines error messages if input is invalid
 const deleteSchema = z.object({
     confirmation: z.string()
         .refine(val => val === "delete student", {
@@ -155,7 +159,7 @@ export const columns = ({
             const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false)
             const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false)
 
-            // define form
+            // Define form and default values
             const editForm = useForm<z.infer<typeof editSchema>>({
                 resolver: zodResolver(editSchema),
                 defaultValues: {
@@ -165,7 +169,8 @@ export const columns = ({
                     notes: student.notes
                 },
             })
-
+            
+            // Define form and default values
             const deleteForm = useForm<z.infer<typeof deleteSchema>>({
                 resolver: zodResolver(deleteSchema),
                 defaultValues: {
@@ -177,9 +182,9 @@ export const columns = ({
                 if (isDeleteDialogOpen) {
                     deleteForm.reset({ confirmation: "" });
                 }
-            }, [isDeleteDialogOpen, deleteForm]); // reset form when user opens dialog again
+            }, [isDeleteDialogOpen, deleteForm]); // Reset form when user opens dialog again
 
-            // edit student handler
+            // Edit student handler
             async function editStudent(values: z.infer<typeof editSchema>) {
 
                 const storeStudent = await getById(studentUrl, student.id)
@@ -208,14 +213,14 @@ export const columns = ({
                     checkIn: "",
                 }
 
-                onUpdate(updatedStudent)
+                onUpdate(updatedStudent) // Update the student in the parent component so no need to refresh the page
 
                 await edit(studentUrl, data)
                 setIsEditDialogOpen(false)
-                console.log("save clicked")
                 toast(`${values.firstName} ${values.lastName} has been edited.`)
             }
 
+            // Delete student handler
             async function deleteStudent() {
                 const storeStudent = await getById(studentUrl, student.id)
 
@@ -223,11 +228,10 @@ export const columns = ({
 
                 await deleteById(studentUrl, student.id)
 
-                onDelete(student.id)
+                onDelete(student.id) // Update the student in the parent component so no need to refresh the page
 
                 setIsDeleteDialogOpen(false)
-                deleteForm.reset()
-                console.log("delete clicked")
+                deleteForm.reset() // Reset form values after it closes
                 toast(`${storeStudent.first_name} ${storeStudent.last_name} has been deleted.`)
             }
         
@@ -248,7 +252,7 @@ export const columns = ({
                         </DropdownMenuContent>
                     </DropdownMenu>
 
-                    { /* render display for editDialog */}
+                    {/* Render display for editDialog */}
                     <Dialog open={isEditDialogOpen} onOpenChange={isEditDialogOpen ? setIsEditDialogOpen : setIsDeleteDialogOpen}>
                         <DialogContent>
                             <Form {...editForm}>
@@ -284,7 +288,7 @@ export const columns = ({
                         </DialogContent>
                     </Dialog>
 
-                    { /* render display for deleteDialog */}
+                    {/* Render display for deleteDialog */}
                     <Dialog open={isDeleteDialogOpen} onOpenChange={isDeleteDialogOpen ? setIsDeleteDialogOpen : setIsEditDialogOpen}>
                         <DialogContent>
                             <Form {...deleteForm}>

@@ -9,14 +9,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "attendance")
+@Table(name = "attendance") // Table name in PostgreSQL
 
 public class Attendance {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer attendanceId; // Identified through annotations as the primary key that is auto-generated
 	
-	private Integer attendanceId;
 	private Integer studentId;
 	private Integer paymentNumber;
 	private Integer classNumber;
