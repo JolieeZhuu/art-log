@@ -1,8 +1,11 @@
-package com.project.art_log;
+package com.project.art_log.services;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+
+import com.project.art_log.entities.Student;
+import com.project.art_log.repos.StudentRepo;
 
 @Service
 public class StudentService extends AbstractService<Student, Integer> {

@@ -1,4 +1,4 @@
-package com.project.art_log;
+package com.project.art_log.controllers;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.project.art_log.entities.Student;
+import com.project.art_log.services.StudentService;
 
 
 

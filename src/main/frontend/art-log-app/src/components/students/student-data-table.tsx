@@ -21,7 +21,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { DialogStudentForm } from "@/components/dialog-student-form"
 import { type Checkout } from "@/components/checkout/checkout-columns"
 import { type  Student } from "./student-columns"
-import { AttendanceController } from "@/restAPI/entities"
+import { getById, getByDateExpectedAndStudentIdAndPaymentNumber, edit, getFirstAbsentWithinThirtyDays, } from "@/restAPI/entities"
 import dayjs from "dayjs"
 
 import {
@@ -89,7 +89,6 @@ export function DataTable<TData extends Student, TValue>({
             
             // Create new Checkout array
             const checkoutResults = await Promise.all(selectedRowIndices.map(async (rowIndex) => {
-                const requests = new AttendanceController()
                 const studentUrl = "http://localhost:8080/student/"
                 const attendanceUrl = "http://localhost:8080/attendance/"
 
@@ -97,7 +96,7 @@ export function DataTable<TData extends Student, TValue>({
                 
                 // Check if this student was already selected
                 const existingCheckout = selectedStudents.find(c => c.id === student.id)
-                const currentDate = dayjs().format('MMM D, YYYY')
+                const currentDate = dayjs().format('YYYY-MM-DD')
                 const currentDOW = dayjs().format("dddd")
                 const checkInTime = dayjs().format('hh:mm A')
                 const checkOutTime = dayjs(currentDate + " " + checkInTime).add(1, 'hours').format('hh:mm A') // assume 1 hour
@@ -111,11 +110,11 @@ export function DataTable<TData extends Student, TValue>({
                         if found, replace that Absent with Makeup, and change date attended accordingly
                         else create a popup message
                 */
-                const tempStudent = await requests.getById(studentUrl, student.id)
+                const tempStudent = await getById(studentUrl, student.id)
                 console.log(currentDOW === tempStudent.day && tempStudent.payment_number > 0)
                 if (currentDOW === tempStudent.day && tempStudent.payment_number > 0) {
                     // find the date within the current payment table
-                    const foundAttendance = await requests.getByDateExpectedAndStudentIdAndPaymentNumber(attendanceUrl, currentDate, student.id, tempStudent.payment_number)
+                    const foundAttendance = await getByDateExpectedAndStudentIdAndPaymentNumber(attendanceUrl, currentDate, student.id, tempStudent.payment_number)
                     console.log("foundattendance", foundAttendance)
                     if (foundAttendance === null) {
                         setAlertDialogOpen(true)
@@ -131,14 +130,15 @@ export function DataTable<TData extends Student, TValue>({
                             date_attended: currentDate,
                             check_in: checkInTime,
                             hours: 1, // fix
-                            check_out: checkOutTime,
+                            //check_out: "7:00 AM", // fix back to checkOutTime
+                            check_out: checkOutTime, // fix back to checkOutTime
                             notes: foundAttendance.notes,
                         }
 
-                        await requests.edit(attendanceUrl, data)
+                        await edit(attendanceUrl, data)
                     }
                 } else {
-                    const foundAbsent = await requests.getFirstAbsentWithinThirtyDays(attendanceUrl)
+                    const foundAbsent = await getFirstAbsentWithinThirtyDays(attendanceUrl)
                     console.log("foundabsent", foundAbsent)
                     if (foundAbsent !== null) {
                         const data = {
@@ -151,11 +151,12 @@ export function DataTable<TData extends Student, TValue>({
                             date_attended: new Date(currentDate),
                             check_in: checkInTime,
                             hours: 1, // fix
-                            check_out: checkOutTime,
+                            // check_out: "7:00 AM", // fix back to checkOutTime
+                            check_out: checkOutTime, // fix back to checkOutTime
                             notes: foundAbsent.notes,
                         }
                         
-                        await requests.edit(attendanceUrl, data)
+                        await edit(attendanceUrl, data)
                     } else {
                         setAlertDialogOpen(true)
                         console.log("they don't match lol")
@@ -169,14 +170,16 @@ export function DataTable<TData extends Student, TValue>({
                     return existingCheckout
                 } else {
                     // Create new checkout with current time
-                    const studentDetails = await requests.getById(studentUrl, student.id)
+                    const studentDetails = await getById(studentUrl, student.id)
                     return {
                         id: student.id,
                         name: student.name,
                         checkIn: checkInTime,
-                        checkOut: checkOutTime,
+                        // checkOut: "7:00 AM", // fix back to checkOutTime
+                        check_out: checkOutTime, // fix back to checkOutTime
                         classId: studentDetails.class_id,
                         day: studentDetails.day,
+                        crossedOut: false, // default value
                     }
                 }
             }))

@@ -8,27 +8,68 @@ export type Checkout = {
     classId: string
     checkOut: string
     day: string
+    crossedOut: boolean
 }
 
 export const columns: ColumnDef<Checkout>[] = [
     {
         accessorKey: "name",
         header: "Student Name",
+        cell: ({ row }) => {
+            const student = row.original;
+            return (
+                <span className={student.crossedOut ? "line-through" : ""}>
+                    {student.name}
+                </span>
+            );
+        },
     },
     {
         accessorKey: "checkOut",
         header: "Check Out Time",
+        cell: ({ row }) => {
+            const student = row.original;
+            return (
+                <span className={student.crossedOut ? "line-through" : ""}>
+                    {student.checkOut}
+                </span>
+            );
+        },
     },
     {
         accessorKey: "classId",
         header: "Level",
+        cell: ({ row }) => {
+            const student = row.original;
+            return (
+                <span className={student.crossedOut ? "line-through" : ""}>
+                    {student.classId}
+                </span>
+            );
+        },
     },
     {
         accessorKey: "checkIn",
         header: "Check In Time",
+        cell: ({ row }) => {
+            const student = row.original;
+            return (
+                <span className={student.crossedOut ? "line-through" : ""}>
+                    {student.checkIn}
+                </span>
+            );
+        },
     },
     {
         accessorKey: "day",
         header: "Day",
+        cell: ({ row }) => {
+            const student = row.original;
+            return (
+                <span className={student.crossedOut ? "line-through" : ""}>
+                    {student.day}
+                </span>
+            );
+        },
     },
 ]

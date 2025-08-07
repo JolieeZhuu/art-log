@@ -23,10 +23,9 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // zod is used for input validation
 
 // internal imports
-import { Controller } from "@/restAPI/entities"
+import { getAll, } from "@/restAPI/entities"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
-
 
 // visit https://zod.dev/ for documentation
 const adminSchema = z.object({
@@ -41,7 +40,6 @@ const adminSchema = z.object({
 export function LoginPage() {
 
     // variable initializations
-    const requests = new Controller()
     const adminUrl = "http://localhost:8080/admin/"
     const navigate = useNavigate()
     const [isMatching, setIsMatching] = useState(true);
@@ -62,7 +60,7 @@ export function LoginPage() {
         console.log(values)
 
         const admins = new Map()
-        await requests.getAll(adminUrl)
+        await getAll(adminUrl)
         .then(data => {
             data.forEach((admin: any) => {
                 admins.set(admin.username, admin.password);
@@ -83,6 +81,7 @@ export function LoginPage() {
 
     return (
         <div className="flex justify-center items-center min-h-screen">
+
             <Card className="w-full max-w-sm">
                 <CardHeader>
                     <CardTitle>Login to ART.LOG</CardTitle>

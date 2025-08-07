@@ -30,7 +30,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod" // zod is used for input validation
 
-import { Controller } from "@/restAPI/entities"
+import { add } from "@/restAPI/entities"
 
 const studentSchema = z.object({
     firstName: z.string().min(1, {
@@ -218,6 +218,8 @@ const formFieldOptions: {
     },
 ]
 
+
+
 // defining the type and expected props passed
 interface DialogStudentFormProps {
     onStudentCreated: () => void
@@ -227,7 +229,6 @@ interface DialogStudentFormProps {
 export function DialogStudentForm({ onStudentCreated }: DialogStudentFormProps) {
 
     // variable initializations
-    const requests = new Controller()
     const studentUrl = "http://localhost:8080/student/"
 
     const [open, setOpen] = React.useState(false)
@@ -265,7 +266,7 @@ export function DialogStudentForm({ onStudentCreated }: DialogStudentFormProps) 
             total_classes: 0,
         }
 
-        await requests.add(studentUrl, data)
+        await add(studentUrl, data)
         onStudentCreated()
         setOpen(false)
         form.reset()

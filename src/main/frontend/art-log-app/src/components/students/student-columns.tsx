@@ -42,7 +42,7 @@ import { z } from "zod" // zod is used for input validation
 
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { AttendanceController } from "@/restAPI/entities";
+import { getById, edit, deleteById, deleteByStudentId } from "@/restAPI/entities";
 
 const editSchema = z.object({
     firstName: z.string().min(1, {
@@ -149,7 +149,6 @@ export const columns = ({
         id: "actions",
         cell: ({ row }) => {
             const student = row.original
-            const requests = new AttendanceController()
             const studentUrl = "http://localhost:8080/student/"
             const attendanceUrl = "http://localhost:8080/attendance/"
 
@@ -183,7 +182,7 @@ export const columns = ({
             // edit student handler
             async function editStudent(values: z.infer<typeof editSchema>) {
 
-                const storeStudent = await requests.getById(studentUrl, student.id)
+                const storeStudent = await getById(studentUrl, student.id)
 
                 console.log("edit clicked")
                 console.log(values)
@@ -211,18 +210,18 @@ export const columns = ({
 
                 onUpdate(updatedStudent)
 
-                await requests.edit(studentUrl, data)
+                await edit(studentUrl, data)
                 setIsEditDialogOpen(false)
                 console.log("save clicked")
                 toast(`${values.firstName} ${values.lastName} has been edited.`)
             }
 
             async function deleteStudent() {
-                const storeStudent = await requests.getById(studentUrl, student.id)
+                const storeStudent = await getById(studentUrl, student.id)
 
-                await requests.deleteByStudentId(attendanceUrl, student.id)
+                await deleteByStudentId(attendanceUrl, student.id)
 
-                await requests.deleteById(studentUrl, student.id)
+                await deleteById(studentUrl, student.id)
 
                 onDelete(student.id)
 

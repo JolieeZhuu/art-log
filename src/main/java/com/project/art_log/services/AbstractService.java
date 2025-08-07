@@ -1,4 +1,4 @@
-package com.project.art_log;
+package com.project.art_log.services;
 
 import java.util.List;
 import java.util.Optional;

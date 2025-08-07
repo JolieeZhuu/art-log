@@ -1,10 +1,13 @@
-package com.project.art_log;
+package com.project.art_log.services;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.project.art_log.entities.Attendance;
+import com.project.art_log.repos.AttendanceRepo;
 
 @Service
 public class AttendanceService extends AbstractService<Attendance, Integer> {

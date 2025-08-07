@@ -3,7 +3,7 @@ import * as React from "react"
 import { columns, type Attendance } from "@/components/payments/payments-columns"
 import { DataTable } from "@/components/payments/payments-data-table"
 
-import { AttendanceController } from "@/restAPI/entities"
+import { getByStudentIdAndPaymentNumber } from "@/restAPI/entities"
 
 interface PaymentTableProps {
     studentId: number;
@@ -14,13 +14,12 @@ interface PaymentTableProps {
 export default function PaymentTable({ studentId, paymentNumber, onClassAdded }: PaymentTableProps) {
 
     // variable initializations
-    const requests = new AttendanceController()
     const attendanceUrl = "http://localhost:8080/attendance/"
     const [data, setData] = React.useState<Attendance[]>([]) // used to handle async function with useEffect
 
     const getData = React.useCallback(async (): Promise<void> => { // Changed return type to void
         // Fetch data from your API here.
-        const attendances = await requests.getByStudentIdAndPaymentNumber(attendanceUrl, studentId, paymentNumber)
+        const attendances = await getByStudentIdAndPaymentNumber(attendanceUrl, studentId, paymentNumber)
         attendances.sort((a: any, b: any) => (a.class_number - b.class_number)) // a-b = lowest to highest, b-a = highest to lowest
 
         // variable to store JSX code

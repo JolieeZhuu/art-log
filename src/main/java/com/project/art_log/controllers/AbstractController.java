@@ -1,4 +1,4 @@
-package com.project.art_log;
+package com.project.art_log.controllers;
 
 import java.util.List;
 
@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import com.project.art_log.services.AbstractService;
 
 public abstract class AbstractController<T, ID> {
 	private final AbstractService<T, ID> service;

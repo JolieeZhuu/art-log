@@ -1,4 +1,4 @@
-package com.project.art_log;
+package com.project.art_log.entities;
 
 import java.time.LocalDate;
 

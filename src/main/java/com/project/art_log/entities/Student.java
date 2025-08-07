@@ -1,4 +1,4 @@
-package com.project.art_log;
+package com.project.art_log.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

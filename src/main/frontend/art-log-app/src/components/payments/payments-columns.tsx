@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+
 import {
     Dialog,
     DialogClose,
@@ -54,7 +55,7 @@ import { z } from "zod" // zod is used for input validation
 import { Input } from "@/components/ui/input"
 
 import { getTotalClasses, addClass } from '@/components/payments/payment-funcs'
-import { AttendanceController } from '@/restAPI/entities'
+import { edit, getByPaymentNumberAndStudentIdAndClassNumber } from '@/restAPI/entities'
 
 const editSchema = z.object({
     dateExpected: z.date({
@@ -180,7 +181,7 @@ export const columns: ColumnDef<Attendance>[] = [
                 resolver: zodResolver(editSchema),
                 defaultValues: {
                     dateExpected: new Date(attendance.classDate),
-                    attendanceCheck: attendance.attendanceCheck ? attendance.attendanceCheck : "",
+                    attendanceCheck: attendance.attendanceCheck ? attendance.attendanceCheck : "", 
                     dateAttended: undefined,
                     checkIn: attendance.checkIn ? attendance.checkIn : "",
                     makeupMins: attendance.makeupMins ? attendance.makeupMins : "",
@@ -192,7 +193,6 @@ export const columns: ColumnDef<Attendance>[] = [
             // edit student handler
             async function editClass(values: z.infer<typeof editSchema>) {
                 // initializations
-                const requests = new AttendanceController()
                 const attendanceUrl = "http://localhost:8080/attendance/"
 
                 const formattedDateExpected = dayjs(values.dateExpected.toString()).format("MMM D, YYYY")
@@ -206,7 +206,7 @@ export const columns: ColumnDef<Attendance>[] = [
                     const currClassNumber = attendance.classNumber
                     const lastClassNumber: number = await getTotalClasses(attendance.studentId)
                     for (let i = 0; i <= lastClassNumber - currClassNumber; i++) {
-                        const currClass = await requests.getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, attendance.paymentNumber, attendance.studentId, currClassNumber + i)
+                        const currClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, attendance.paymentNumber, attendance.studentId, currClassNumber + i)
 
                         if (i === 0) {            
                             const data = {
@@ -222,7 +222,7 @@ export const columns: ColumnDef<Attendance>[] = [
                                 check_out: values.checkOut,
                                 notes: values.notes,
                             }
-                            await requests.edit(attendanceUrl, data)
+                            await edit(attendanceUrl, data)
                         } else {
                             const data = {
                                 attendance_id: currClass.attendance_id,
@@ -237,7 +237,7 @@ export const columns: ColumnDef<Attendance>[] = [
                                 check_out: "",
                                 notes: "",
                             }
-                            await requests.edit(attendanceUrl, data)
+                            await edit(attendanceUrl, data)
                         }
                     }
 
@@ -261,7 +261,7 @@ export const columns: ColumnDef<Attendance>[] = [
                         notes: values.notes,
                     }
 
-                    await requests.edit(attendanceUrl, data)
+                    await edit(attendanceUrl, data)
 
                     /* !!!!!!
                     for holiday attendance check, holidays should be a customized list from the user, 

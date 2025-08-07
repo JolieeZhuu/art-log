@@ -14,7 +14,7 @@ import Layout from "@/components/layout"
 import { SiteHeader } from "@/components/site-header"
 import { ModeToggle } from "@/components/mode-toggle"
 
-import { Controller } from "@/restAPI/entities"
+import { getById } from "@/restAPI/entities"
 
 import PaymentTable from "@/components/payments/payments-table-page"
 
@@ -50,7 +50,6 @@ export function Archives() {
     const [student, setStudent] = useState<Student | null>(null)
     const [cardList, setCardList] = useState<React.ReactElement[]>([])
 
-    const requests = new Controller()
     const studentUrl = "http://localhost:8080/student/"
     
     useEffect(() => {
@@ -59,7 +58,7 @@ export function Archives() {
     }, [id])
     
     async function getStudent() {
-        const storeStudent = await requests.getById(studentUrl, id)
+        const storeStudent = await getById(studentUrl, id)
         setStudent(storeStudent)
     }
 
