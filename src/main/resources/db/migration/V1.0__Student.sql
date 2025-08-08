@@ -1,16 +1,16 @@
-CREATE SCHEMA IF NOT EXISTS artLog;
+CREATE SCHEMA IF NOT EXISTS artlog;
 
-CREATE TABLE if not exists artLog.student (
-student_id SERIAL PRIMARY KEY,
-first_name varchar(250),
-last_name varchar(250),
-class_id varchar(250),
-day varchar(250),
-phone_number varchar(250),
-time_expected varchar(250),
-payment_notes varchar(250),
-notes varchar(250),
-payment_number integer,
-class_number integer,
-total_classes integer,
+CREATE TABLE IF NOT EXISTS artlog.student (
+    student_id SERIAL PRIMARY KEY,
+    first_name TEXT,
+    last_name TEXT,
+    class_id TEXT,
+    day TEXT,
+    phone_number TEXT,
+    time_expected TEXT,
+    payment_notes TEXT,
+    notes TEXT,
+    payment_number INTEGER,
+    class_number INTEGER,
+    total_classes INTEGER
 );
