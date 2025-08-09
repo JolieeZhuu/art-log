@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
 
 // Internal imports
-import { getAll, } from "@/restAPI/entities"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 
@@ -30,9 +29,9 @@ import {
 
 // visit https://zod.dev/ for documentation
 // Schema with expected input types and error messages if input is invalid
-const adminSchema = z.object({
-    username: z.string().min(1, {
-        message: "Username is required.",
+const loginSchema = z.object({
+    email: z.email({
+        message: "Email is required.",
     }),
     password: z.string().min(1, {
         message: "Password is required.",
@@ -42,40 +41,43 @@ const adminSchema = z.object({
 export function LoginPage() {
 
     // Variable initializations
-    const adminUrl = "http://localhost:8080/admin/"
     const navigate = useNavigate()
-    const [isMatching, setIsMatching] = useState(true);
+    const [submitError, setSubmitError] = useState("")
     
     // Define form and default values
-    const form = useForm<z.infer<typeof adminSchema>>({
-        resolver: zodResolver(adminSchema),
+    const form = useForm<z.infer<typeof loginSchema>>({
+        resolver: zodResolver(loginSchema),
         defaultValues: {
-            username: "",
+            email: "",
             password: "",
         },
     })
 
     // Define submit handler, parameter values are the form values
-    async function onSubmit(values: z.infer<typeof adminSchema>) {
+    async function onSubmit(values: z.infer<typeof loginSchema>) {
         console.log(values)
 
-        const admins = new Map()
-        await getAll(adminUrl)
-        .then(data => {
-            data.forEach((admin: any) => {
-                admins.set(admin.username, admin.password);
-                console.log(admin.username)
-            })
-        })
+        setSubmitError("") // Reset error message
 
-        if (admins.get(values.username) === values.password) {
-            setIsMatching(true);
-            setTimeout(() => {
-                navigate(`/summary`);
-            }, 100);
-        } else {
-            setIsMatching(false);
-            console.log("username or password is incorrect"); // DEBUG
+        try {
+            const response = await fetch('http://localhost:8080/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values)
+            })
+            
+            if (response.ok) {
+                // Success - redirect to summary page
+                navigate('/summary')
+            } else {
+                // Get error message from backend
+                const errorMsg = await response.text()
+                setSubmitError(errorMsg)
+            }
+        } catch (error: any) {
+            setSubmitError('Failed to login. Please try again.')
         }
     }
 
@@ -92,12 +94,12 @@ export function LoginPage() {
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                             <FormField
                                 control={form.control}
-                                name="username"
+                                name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Username</FormLabel>
+                                        <FormLabel>Email</FormLabel>
                                         <FormControl>
-                                            <Input {...field} className="w-full" placeholder="ex: art"/>
+                                            <Input {...field} className="w-full" placeholder="ex: art@example.com" type="email"/>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -116,17 +118,13 @@ export function LoginPage() {
                                     </FormItem>
                                 )}
                             />
-                            {
-                                isMatching ? (
-                                    <></>
-                                ) : (
-                                    <FormMessage>Username or password is incorrect.</FormMessage>
-                                )
-                            }
+                            {/* Show submit errors (like email already exists) */}
+                            {submitError && (
+                                <FormMessage>{submitError}</FormMessage>
+                            )}
                             <Button type="submit" variant="outline">Submit</Button>
                         </form>
                     </Form>
-                    
                 </CardContent>
             </Card>
         </div>

@@ -29,6 +29,7 @@ public class SecurityConfiguration {
 					.requestMatchers("/student/**").permitAll()  // Endpoints that are allowed to be exposed
 					.requestMatchers("/attendance/**").permitAll()  // Allow access to student endpoints
 					.requestMatchers("/auth/**").permitAll()
+					.requestMatchers("/user/**").permitAll()
 					.anyRequest().authenticated()
 			) // authorize all HTTP requests
 			.sessionManagement(session -> session

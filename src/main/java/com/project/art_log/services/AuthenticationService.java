@@ -36,12 +36,28 @@ public class AuthenticationService {
 	}
 	
 	public User signup(RegisterUserDto input) {
-		User user = new User(input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
-		user.setVerificationCode(generateVerificationCode());
-		user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
-		user.setEnabled(false);
-		sendVerificationEmail(user);
-		return userRepo.save(user);
+		// Check if username already exists
+	    if (userRepo.findByUsername(input.getUsername()).isPresent()) {
+	        throw new RuntimeException("Username already exists");
+	    }
+	    
+	    // Check if email already exists
+	    if (userRepo.findByEmail(input.getEmail()).isPresent()) {
+	        throw new RuntimeException("Email already registered");
+	    }
+	    
+	    User user = new User(input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
+	    user.setVerificationCode(generateVerificationCode());
+	    user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
+	    user.setEnabled(false);
+	    
+	    try {
+	        sendVerificationEmail(user);
+	        return userRepo.save(user);
+	    } catch (Exception e) {
+	        // Handle any unexpected database errors
+	        throw new RuntimeException("Failed to create account. Please try again.");
+	    }
 	}
 	
 	public User authenticate(LoginUserDto input) {
@@ -124,5 +140,9 @@ public class AuthenticationService {
 		Random random = new Random();
 		int code = random.nextInt(900000) + 100000; // 6 digits random verification code
 		return String.valueOf(code);
+	}
+	
+	public boolean isUsernameAvailable(String username) {
+	    return userRepo.findByUsername(username).isEmpty();
 	}
 }

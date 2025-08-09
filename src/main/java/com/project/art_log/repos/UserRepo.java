@@ -9,4 +9,5 @@ import com.project.art_log.entities.User;
 public interface UserRepo extends JpaRepository<User, Integer> {
 	Optional<User> findByEmail(String email);
 	Optional<User> findByVerificationCode(String verificationCode);
+	Optional<User> findByUsername(String username);
 }

@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "user")
 public class User implements UserDetails { // integrates with Spring Security through implementation
+	private static final long serialVersionUID = 1L;
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer userId;
