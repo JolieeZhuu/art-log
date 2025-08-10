@@ -1,5 +1,5 @@
-import Layout from "@/components/layout"
-import { ModeToggle } from "@/components/mode-toggle"
+import Layout from "@/components/navbar/layout"
+import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
 import { SiteHeader } from "./site-header"
 
 export function Summary() {

@@ -9,7 +9,7 @@ export function HomePage() {
     return (
         <div>
             <h1>Welcome to the Home Page</h1>
-            <div className="flex gap-4">
+            <div className="flex gap-4 justify-center mt-4">
                 <Button onClick={() => navigate('/signup')}>Go to Signup</Button>
                 <Button onClick={() => navigate('/login')}>Go to Login</Button>
             </div>

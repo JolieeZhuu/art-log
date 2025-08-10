@@ -6,12 +6,12 @@ import { useParams } from "react-router-dom"
 import { Link } from "react-router-dom"
 
 // Internal imports
-import Layout from "@/components/layout"
-import { ModeToggle } from "@/components/mode-toggle"
+import Layout from "@/components/navbar/layout"
+import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
 import { SiteHeader } from "@/components/site-header"
 import { getById } from "@/restAPI/entities"
-import { getPaymentNum, addClass } from "@/components/payments/payment-funcs"
-import PaymentTable from "@/components/payments/payments-table-page"
+import { getPaymentNum, addClass } from "@/components/payment-tables/payment-funcs"
+import PaymentTable from "@/components/payment-tables/payments-table-page"
 
 // UI components
 import {

@@ -8,7 +8,7 @@ import { z } from "zod" // Used for input validation
 import dayjs from 'dayjs'
 
 // Internal imports
-import { addPaymentNum, addNewPaymentTable } from "@/components/payments/payment-funcs"
+import { addPaymentNum, addNewPaymentTable } from "@/components/payment-tables/payment-funcs"
 
 // UI components
 import { Button } from "@/components/ui/button"

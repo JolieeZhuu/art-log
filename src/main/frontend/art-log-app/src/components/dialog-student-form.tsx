@@ -201,6 +201,12 @@ const formFieldOptions: {
         input: dayOptions,
     },
     {
+        name: "timeExpected",
+        label: "Time Expected",
+        placeholder: "ex: 4 PM",
+        input: timeExpectedOptions,
+    },
+    {
         name: "classId",
         label: "Class ID",
         placeholder: "ex: LVL1",
@@ -211,12 +217,6 @@ const formFieldOptions: {
         label: "Phone Number",
         placeholder: "ex: 6471234567",
         input: "input",
-    },
-    {
-        name: "timeExpected",
-        label: "Time Expected",
-        placeholder: "ex: 4 PM",
-        input: timeExpectedOptions,
     },
 ]
 

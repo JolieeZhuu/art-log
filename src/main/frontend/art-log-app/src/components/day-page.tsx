@@ -5,11 +5,11 @@ import { useParams } from "react-router-dom"
 import axios from "axios"
 
 // Internal imports
-import Layout from "@/components/layout"
-import { ModeToggle } from "@/components/mode-toggle"
-import { type Checkout } from "@/components/checkout/checkout-columns"
-import CheckoutTable from "@/components/checkout/checkout-table-page"
-import StudentTable from "@/components/students/student-table-page"
+import Layout from "@/components/navbar/layout"
+import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
+import { type Checkout } from "@/components/checkout-tables/checkout-columns"
+import CheckoutTable from "@/components/checkout-tables/checkout-table-page"
+import StudentTable from "@/components/student-tables/student-table-page"
 
 // UI components
 import {

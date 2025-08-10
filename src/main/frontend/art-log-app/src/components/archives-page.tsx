@@ -9,15 +9,15 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 
-import Layout from "@/components/layout"
+import Layout from "@/components/navbar/layout"
 import { SiteHeader } from "@/components/site-header"
-import { ModeToggle } from "@/components/mode-toggle"
+import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
 
 import { getById } from "@/restAPI/entities"
 
-import PaymentTable from "@/components/payments/payments-table-page"
+import PaymentTable from "@/components/payment-tables/payments-table-page"
 
-import { getPaymentNum } from "@/components/payments/payment-funcs"
+import { getPaymentNum } from "@/components/payment-tables/payment-funcs"
 
 import { Link } from "react-router-dom"
 import {

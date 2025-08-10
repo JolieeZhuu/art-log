@@ -4,7 +4,7 @@ import * as React from "react"
 import dayjs from "dayjs"
 
 // Internal imports
-import { type Checkout } from "@/components/checkout/checkout-columns"
+import { type Checkout } from "@/components/checkout-tables/checkout-columns"
 import { type  Student } from "./student-columns"
 import { getById, getByDateExpectedAndStudentIdAndPaymentNumber, edit, getFirstAbsentWithinThirtyDays, } from "@/restAPI/entities"
 

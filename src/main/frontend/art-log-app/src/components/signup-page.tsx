@@ -128,7 +128,7 @@ export function SignupPage() {
             <Card className="w-full max-w-sm">
                 <CardHeader>
                     <CardTitle>Signup to Art Log</CardTitle>
-                    <CardDescription>Enter your email, desired username, and password to create an account.</CardDescription>
+                    <CardDescription>Enter your email, username, and password to create an account.</CardDescription>
                 </CardHeader>
                 <CardContent className="break-words">                    
                     <Form {...form}>

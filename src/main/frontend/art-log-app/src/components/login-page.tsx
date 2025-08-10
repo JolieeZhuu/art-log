@@ -87,7 +87,7 @@ export function LoginPage() {
             <Card className="w-full max-w-sm">
                 <CardHeader>
                     <CardTitle>Login to ART.LOG</CardTitle>
-                    <CardDescription>Enter your username and password to access our student database.</CardDescription>
+                    <CardDescription>Enter your email and password to access the application.</CardDescription>
                 </CardHeader>
                 <CardContent className="break-words">                    
                     <Form {...form}>

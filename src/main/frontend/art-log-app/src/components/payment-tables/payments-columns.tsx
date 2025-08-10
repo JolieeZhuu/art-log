@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
 
 // Internal imports
-import { getTotalClasses, addClass } from '@/components/payments/payment-funcs'
+import { getTotalClasses, addClass } from '@/components/payment-tables/payment-funcs'
 import { edit, getByPaymentNumberAndStudentIdAndClassNumber } from '@/restAPI/entities'
 
 // UI components

@@ -10,6 +10,13 @@ import { useState } from "react"
 // UI Components
 import { Button } from "@/components/ui/button"
 import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
@@ -18,10 +25,8 @@ import { REGEXP_ONLY_DIGITS } from "input-otp"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 
@@ -76,43 +81,50 @@ export function VerificationPage() {
         }
     }
 
-
     return (
-        <div>
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-                    <FormField
-                    control={form.control}
-                    name="pin"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>One-Time Password</FormLabel>
-                        <FormControl>
-                            <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS} {...field}>
-                                <InputOTPGroup>
-                                    <InputOTPSlot index={0} />
-                                    <InputOTPSlot index={1} />
-                                    <InputOTPSlot index={2} />
-                                    <InputOTPSlot index={3} />
-                                    <InputOTPSlot index={4} />
-                                    <InputOTPSlot index={5} />
-                                </InputOTPGroup>
-                            </InputOTP>
-                        </FormControl>
-                        <FormDescription>
-                            Please enter the one-time password sent to your phone.
-                        </FormDescription>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    {/* Show submit errors (like email already exists) */}
-                    {submitError && (
-                        <FormMessage>{submitError}</FormMessage>
-                    )}
-                    <Button type="submit">Submit</Button>
-                </form>
-            </Form>
+        <div className="flex justify-center items-center min-h-screen">
+            <Card className="w-full max-w-sm">
+                <CardHeader>
+                    <CardTitle>Verify Your Account</CardTitle>
+                    <CardDescription>
+                        Please enter the code sent to your email.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="break-words">
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                                <FormField
+                                control={form.control}
+                                name="pin"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormControl>
+                                        <div className="flex justify-center">
+                                            <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS} {...field}>
+                                                <InputOTPGroup>
+                                                    <InputOTPSlot index={0} />
+                                                    <InputOTPSlot index={1} />
+                                                    <InputOTPSlot index={2} />
+                                                    <InputOTPSlot index={3} />
+                                                    <InputOTPSlot index={4} />
+                                                    <InputOTPSlot index={5} />
+                                                </InputOTPGroup>
+                                            </InputOTP>
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                                {/* Show submit errors (like email already exists) */}
+                                {submitError && (
+                                    <FormMessage>{submitError}</FormMessage>
+                                )}
+                                <Button type="submit">Submit</Button>
+                            </form>
+                        </Form>                    
+                </CardContent>
+            </Card>
         </div>
     )
 };

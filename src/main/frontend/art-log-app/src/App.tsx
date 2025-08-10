@@ -1,7 +1,7 @@
 import './App.css'
 
 // UI Components
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider } from '@/components/dark-light-mode/theme-provider'
 import { LoginPage } from '@/components/login-page'
 import { Summary } from '@/components/summary-page'
 import { DayPage } from '@/components/day-page'
