@@ -6,6 +6,9 @@ export type Student = {
     id: string;
     day: DayOfWeek;
     name: string;
+    phone_number: string;
+    class_id: string;
+    time_expected: string;
 };
 
 export type Column = {
