@@ -8,7 +8,7 @@ import { Link } from "react-router-dom"
 // Internal imports
 import Layout from "@/components/navbar/layout"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
-import { SiteHeader } from "@/components/site-header"
+import { SiteHeader } from "@/components/navbar/site-header"
 import { getById } from "@/restAPI/entities"
 import { getPaymentNum, addClass } from "@/components/payment-tables/payment-funcs"
 import PaymentTable from "@/components/payment-tables/payments-table-page"
@@ -16,6 +16,7 @@ import PaymentTable from "@/components/payment-tables/payments-table-page"
 // UI components
 import {
     Card,
+    CardDescription,
     CardAction,
     CardContent,
     CardHeader,
@@ -23,7 +24,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { DialogPaymentForm } from "@/components/dialog-payment-form"
+import { DialogPaymentForm } from "@/components/form-features/dialog-payment-form"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -89,7 +90,8 @@ export function PaymentsPage() {
 
     async function loadCards() {
         const num = await getPaymentNum(id)
-        console.log(num)
+        const student = await getById(studentUrl, id)
+        console.log(student)
         let tempNum;
         if (num >= 2) {
             tempNum = 2;
@@ -102,6 +104,13 @@ export function PaymentsPage() {
                     <Card>
                         <CardHeader className="justify-items-start">
                             <CardTitle>Payment Table {num - index}</CardTitle>
+                            <CardDescription>
+                                <div className="flex gap-2 mt-2">
+                                    <Badge variant="secondary">{student.total_classes} classes</Badge>
+                                    <Badge variant="secondary">{student.class_hours} h/class</Badge>
+                                    <Badge variant="secondary">{student.payment_notes}</Badge>
+                                </div>
+                            </CardDescription>
                             <CardAction>
                                 <Button variant="outline" onClick={() => addClassHandler(num - index)}>Add Class</Button>
                             </CardAction>

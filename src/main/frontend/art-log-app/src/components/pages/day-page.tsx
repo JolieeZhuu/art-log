@@ -19,7 +19,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Toaster } from "@/components/ui/sonner"
-import { SiteHeader } from "@/components/site-header"
+import { SiteHeader } from "@/components/navbar/site-header"
 
 export function DayPage() {
 

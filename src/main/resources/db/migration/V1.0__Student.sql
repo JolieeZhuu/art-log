@@ -12,5 +12,6 @@ CREATE TABLE IF NOT EXISTS artlog.student (
     notes TEXT,
     payment_number INTEGER,
     class_number INTEGER,
-    total_classes INTEGER
+    total_classes INTEGER,
+    class_hours FLOAT
 );

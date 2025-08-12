@@ -48,7 +48,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { ComboboxOptions } from "@/components/combobox-options"
+import { ComboboxOptions } from "@/components/form-features/combobox-options"
 import { Input } from "@/components/ui/input"
 
 // Define expected valid types for the form fields

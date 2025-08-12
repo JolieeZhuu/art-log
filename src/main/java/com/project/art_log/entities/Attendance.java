@@ -34,7 +34,7 @@ public class Attendance {
 	
 	public Attendance(Integer attendanceId, Integer studentId, Integer paymentNumber, Integer classNumber,
 			LocalDate dateExpected, String attendanceCheck, LocalDate dateAttended, String checkIn, Integer hours,
-			String checkOut) {
+			String checkOut, String notes) {
 		super();
 		this.attendanceId = attendanceId;
 		this.studentId = studentId;
@@ -46,8 +46,9 @@ public class Attendance {
 		this.checkIn = checkIn;
 		this.hours = hours;
 		this.checkOut = checkOut;
-	} // equivalent to all args constructor
-	
+		this.notes = notes;
+	}
+
 	public Integer getAttendanceId() {
 		return attendanceId;
 	}

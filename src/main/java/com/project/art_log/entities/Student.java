@@ -26,13 +26,15 @@ public class Student {
     private Integer paymentNumber;
 	private Integer classNumber;
 	private Integer totalClasses;
+	private Double classHours;
     
 	public Student() {
 		
 	} // equivalent to no args constructor
-	
+	    
 	public Student(Integer studentId, String firstName, String lastName, String classId, String day, String phoneNumber,
-			Integer paymentNumber, Integer classNumber, String notes, String paymentNotes) {
+			String timeExpected, String paymentNotes, String notes, Integer paymentNumber, Integer classNumber,
+			Integer totalClasses, Double classHours) {
 		super();
 		this.studentId = studentId;
 		this.firstName = firstName;
@@ -40,12 +42,15 @@ public class Student {
 		this.classId = classId;
 		this.day = day;
 		this.phoneNumber = phoneNumber;
+		this.timeExpected = timeExpected;
+		this.paymentNotes = paymentNotes;
+		this.notes = notes;
 		this.paymentNumber = paymentNumber;
 		this.classNumber = classNumber;
-		this.notes = notes;
-		this.paymentNotes = paymentNotes;
-	} // equivalent to all args constructor
-    
+		this.totalClasses = totalClasses;
+		this.classHours = classHours;
+	}
+
 	public Integer getStudentId() {
 		return studentId;
 	}
@@ -117,5 +122,11 @@ public class Student {
 	}
 	public void setTotalClasses(Integer totalClasses) {
 		this.totalClasses = totalClasses;
+	}
+	public Double getClassHours() {
+		return classHours;
+	}
+	public void setClassHours(Double classHours) {
+		this.classHours = classHours;
 	}
 }

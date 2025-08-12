@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card"
 
 import Layout from "@/components/navbar/layout"
-import { SiteHeader } from "@/components/site-header"
+import { SiteHeader } from "@/components/navbar/site-header"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
 
 import { getById } from "@/restAPI/entities"
@@ -83,7 +83,7 @@ export function Archives() {
     return (
         <Layout
             children={(
-                <div className="w-[73rem] p-[2rem]">
+                <div className="w-full p-[2rem]">
                     <div className="flex">
                         <Breadcrumb className="pr-3">
                             <BreadcrumbList>

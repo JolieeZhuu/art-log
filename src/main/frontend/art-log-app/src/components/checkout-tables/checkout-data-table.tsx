@@ -60,7 +60,8 @@ export function DataTable<TData, TValue>({
             
             <ScrollArea className="h-[300px] rounded-md border">
                 <Table>
-                    <TableHeader className="sticky top-0 bg-secondary z-20"> {/* Table header doesn't move with scroll */}
+                    {/*Table header doesn't move with scroll*/}
+                    <TableHeader className="sticky top-0 bg-secondary z-20">
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                         {headerGroup.headers.map((header) => {

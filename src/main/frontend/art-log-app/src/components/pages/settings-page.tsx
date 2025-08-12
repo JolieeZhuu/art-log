@@ -1,22 +1,18 @@
 // UI Components
 import Layout from "@/components/navbar/layout"
+import { SiteHeader } from "@/components/navbar/site-header"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
-import { SiteHeader } from "./site-header"
 
-import { ExampleChart } from "@/components/chart/example-chart"
-
-export function Summary() {
+export function Settings() {
     return (
         <Layout
             children={(
-                <div className="w-[73rem] p-[2rem]">
-                    <SiteHeader heading="Summary"/>
+                <div className="w-full p-[2rem]">
+                    <SiteHeader heading="Settings"/>
 
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>
-
-                    <ExampleChart/>
                 </div>
             )}
         />

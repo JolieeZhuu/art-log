@@ -12,7 +12,7 @@ import { Column } from "@/components/dnd/column"
 // UI Components
 import Layout from "@/components/navbar/layout"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
-import { SiteHeader } from "./site-header"
+import { SiteHeader } from "../navbar/site-header"
 
 export function Students() {
 

@@ -1,12 +1,3 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-
 export function SiteHeader({ heading }: { heading: string } ) {
   return (
     <header className="flex h-(--header-height) shrink-0 gap-2 border-b ease-linear">

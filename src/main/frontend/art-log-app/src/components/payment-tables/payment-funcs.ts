@@ -31,6 +31,7 @@ export async function addPaymentNum(id: number) {
         payment_number: currentPaymentNum,
         class_number: 0,
         total_classes: student.total_classes,
+        class_hours: student.class_hours,
     }
 
     await edit(studentUrl, data)
@@ -64,6 +65,7 @@ export async function addNewPaymentTable(id: number, date: Date, paymentNum: num
         payment_number: student.payment_number,
         class_number: student.class_number,
         total_classes: numOfClasses,
+        class_hours: student.class_hours
     } // Make changes to Attendance entity
     
     await add(attendanceUrl, data1)
@@ -133,6 +135,7 @@ export async function addClass(paymentNum: number, id: number) {
         payment_number: student.payment_number,
         class_number: student.class_number,
         total_classes: totalClasses + 1,
+        class_hours: student.class_hours,
     }
 
     await edit(studentUrl, data2)
