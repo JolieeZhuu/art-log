@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS artlog.student (
     class_id TEXT,
     day TEXT,
     phone_number TEXT,
-    time_expected TEXT,
+    time_expected TIME,
     payment_notes TEXT,
     notes TEXT,
     payment_number INTEGER,

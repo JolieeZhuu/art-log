@@ -37,6 +37,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { convertTo24Hour } from "../payment-tables/payment-funcs"
 
 
 // Define the type for the student data
@@ -96,13 +97,19 @@ export function DataTable<TData extends Student, TValue>({
                 const attendanceUrl = "http://localhost:8080/attendance/"
 
                 const student = data[rowIndex] as Student
+                const studentForHours = await getById(studentUrl, student.id)
+                const classHours = Math.floor(studentForHours.class_hours)
+                let classMinutes = 0
+                if (studentForHours.class_hours % 1 !== 0) {
+                    classMinutes = 30 // assume 30 minutes
+                }
                 
                 // Check if this student was already selected
                 const existingCheckout = selectedStudents.find(c => c.id === student.id)
                 const currentDate = dayjs().format('YYYY-MM-DD')
                 const currentDOW = dayjs().format("dddd")
                 const checkInTime = dayjs().format('hh:mm A')
-                const checkOutTime = dayjs(currentDate + " " + checkInTime).add(1, 'hours').format('hh:mm A') // assume 1 hour
+                const checkOutTime = dayjs(currentDate + " " + checkInTime).add(classHours, 'hours').add(classMinutes, 'minutes').format('hh:mm A') // assume 1 hour
 
                 /* 
                 to update student attendance check:
@@ -132,10 +139,10 @@ export function DataTable<TData extends Student, TValue>({
                             date_expected: foundAttendance.date_expected,
                             attendance_check: "Yes",
                             date_attended: currentDate,
-                            check_in: checkInTime,
+                            check_in: convertTo24Hour(checkInTime),
                             hours: 1, // fix
                             //check_out: "7:00 AM", // fix back to checkOutTime
-                            check_out: checkOutTime, // fix back to checkOutTime
+                            check_out: convertTo24Hour(checkOutTime), // fix back to checkOutTime
                             notes: foundAttendance.notes,
                         }
 
@@ -153,10 +160,10 @@ export function DataTable<TData extends Student, TValue>({
                             date_expected: new Date(foundAbsent.date_expected),
                             attendance_check: "Makeup",
                             date_attended: new Date(currentDate),
-                            check_in: checkInTime,
+                            check_in: convertTo24Hour(checkInTime),
                             hours: 1, // fix
                             // check_out: "7:00 AM", // fix back to checkOutTime
-                            check_out: checkOutTime, // fix back to checkOutTime
+                            check_out: convertTo24Hour(checkOutTime), // fix back to checkOutTime
                             notes: foundAbsent.notes,
                         }
                         

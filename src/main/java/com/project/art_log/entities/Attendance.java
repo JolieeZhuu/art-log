@@ -1,6 +1,7 @@
 package com.project.art_log.entities;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,9 +24,9 @@ public class Attendance {
 	private LocalDate dateExpected;
 	private String attendanceCheck;
 	private LocalDate dateAttended;
-	private String checkIn;
+	private LocalTime checkIn;
 	private Integer hours;
-	private String checkOut;
+	private LocalTime checkOut;
 	private String notes;
 
 	public Attendance() {
@@ -33,8 +34,8 @@ public class Attendance {
 	} // equivalent to no args constructor
 	
 	public Attendance(Integer attendanceId, Integer studentId, Integer paymentNumber, Integer classNumber,
-			LocalDate dateExpected, String attendanceCheck, LocalDate dateAttended, String checkIn, Integer hours,
-			String checkOut, String notes) {
+			LocalDate dateExpected, String attendanceCheck, LocalDate dateAttended, LocalTime checkIn, Integer hours,
+			LocalTime checkOut, String notes) {
 		super();
 		this.attendanceId = attendanceId;
 		this.studentId = studentId;
@@ -92,10 +93,10 @@ public class Attendance {
 	public void setDateAttended(LocalDate dateAttended) {
 		this.dateAttended = dateAttended;
 	}
-	public String getCheckIn() {
+	public LocalTime getCheckIn() {
 		return checkIn;
 	}
-	public void setCheckIn(String checkIn) {
+	public void setCheckIn(LocalTime checkIn) {
 		this.checkIn = checkIn;
 	}
 	public Integer getHours() {
@@ -104,10 +105,10 @@ public class Attendance {
 	public void setHours(Integer hours) {
 		this.hours = hours;
 	}
-	public String getCheckOut() {
+	public LocalTime getCheckOut() {
 		return checkOut;
 	}
-	public void setCheckOut(String checkOut) {
+	public void setCheckOut(LocalTime checkOut) {
 		this.checkOut = checkOut;
 	}
 	public String getNotes() {

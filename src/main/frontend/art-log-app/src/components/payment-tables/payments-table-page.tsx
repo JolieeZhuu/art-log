@@ -4,6 +4,7 @@ import * as React from "react"
 import { columns, type Attendance } from "@/components/payment-tables/payments-columns"
 import { DataTable } from "@/components/payment-tables/payments-data-table"
 import { getByStudentIdAndPaymentNumber } from "@/restAPI/entities"
+import { convertTo12Hour } from "./payment-funcs"
 
 // Define the props for the PaymentTable component
 interface PaymentTableProps {
@@ -36,9 +37,9 @@ export default function PaymentTable({ studentId, paymentNumber, onClassAdded }:
                 classDate: date_expected,
                 attendanceCheck: attendance_check,
                 attendedDate: date_attended,
-                checkIn: check_in,
+                checkIn: convertTo12Hour(check_in),
                 makeupMins: makeup_mins,
-                checkOut: check_out,
+                checkOut: convertTo12Hour(check_out),
                 notes: notes,
             }
         })

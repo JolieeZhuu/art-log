@@ -10,7 +10,7 @@ import Layout from "@/components/navbar/layout"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
 import { SiteHeader } from "@/components/navbar/site-header"
 import { getById } from "@/restAPI/entities"
-import { getPaymentNum, addClass } from "@/components/payment-tables/payment-funcs"
+import { getPaymentNum, addClass, convertTo12Hour } from "@/components/payment-tables/payment-funcs"
 import PaymentTable from "@/components/payment-tables/payments-table-page"
 
 // UI components
@@ -150,7 +150,7 @@ export function PaymentsPage() {
                         <div className="flex justify-between items-center gap-4 pt-4">
                             <div className="flex gap-4">
                                 <Badge variant="secondary">{student?.day[0]}{student?.day.substring(1)}</Badge>
-                                <Badge variant="secondary">{student?.time_expected}</Badge>
+                                <Badge variant="secondary">{convertTo12Hour(student?.time_expected)}</Badge>
                                 <Badge variant="secondary">{student?.class_id}</Badge>
                                 <Badge variant="secondary">{student?.phone_number}</Badge>
                             </div>

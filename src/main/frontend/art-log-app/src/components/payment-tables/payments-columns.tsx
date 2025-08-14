@@ -11,7 +11,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
 
 // Internal imports
-import { getTotalClasses, addClass } from '@/components/payment-tables/payment-funcs'
+import { getTotalClasses, addClass, convertTo24Hour } from '@/components/payment-tables/payment-funcs'
 import { edit, getByPaymentNumberAndStudentIdAndClassNumber } from '@/restAPI/entities'
 
 // UI components
@@ -218,9 +218,9 @@ export const columns: ColumnDef<Attendance>[] = [
                                 date_expected: dayjs(formattedDateExpected).add(7*i, "days").toDate(),
                                 attendance_check: values.attendanceCheck,
                                 date_attended: values.dateAttended !== undefined ? dayjs(values.dateAttended?.toString()).toDate() : "",
-                                check_in: values.checkIn,
+                                check_in: convertTo24Hour(values.checkIn),
                                 hours: 1, // fix makeup minds and hours confusion
-                                check_out: values.checkOut,
+                                check_out: convertTo24Hour(values.checkOut),
                                 notes: values.notes,
                             }
                             await edit(attendanceUrl, data)
@@ -235,9 +235,9 @@ export const columns: ColumnDef<Attendance>[] = [
                                 date_expected: dayjs(formattedDateExpected).add(7*i, "days").toDate(),
                                 attendance_check: "",
                                 date_attended: "",
-                                check_in: "",
+                                check_in: null,
                                 hours: 1, // fix makeup mins and hours confusion
-                                check_out: "",
+                                check_out: null,
                                 notes: "",
                             }
                             await edit(attendanceUrl, data)
@@ -258,9 +258,9 @@ export const columns: ColumnDef<Attendance>[] = [
                         date_expected: dayjs(values.dateExpected.toString()).toDate(),
                         attendance_check: values.attendanceCheck,
                         date_attended: values.dateAttended?.toString() !== undefined ? dayjs(values.dateAttended?.toString()).toDate() : "",
-                        check_in: values.checkIn,
+                        check_in: convertTo24Hour(values.checkIn),
                         hours: 1, // fix makeup minds and hours confusion
-                        check_out: values.checkOut,
+                        check_out: convertTo24Hour(values.checkOut),
                         notes: values.notes,
                     }
 

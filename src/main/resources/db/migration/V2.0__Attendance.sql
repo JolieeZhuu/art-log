@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS artlog.attendance (
 	date_expected DATE,
 	attendance_check TEXT,
 	date_attended DATE,
-	check_in TEXT,
+	check_in TIME,
 	hours INTEGER,
-	check_out TEXT,
+	check_out TIME,
 	notes TEXT
 );

@@ -1,5 +1,6 @@
 // Defining the core and appearance of the table
 import type { ColumnDef } from "@tanstack/react-table";
+import { convertTo12Hour } from "../payment-tables/payment-funcs";
 
 export type Checkout = {
     id: number
@@ -35,7 +36,7 @@ export const columns: ColumnDef<Checkout>[] = [
             const student = row.original;
             return (
                 <span className={student.crossedOut ? "line-through" : ""}>
-                    {student.checkOut}
+                    {convertTo12Hour(student.checkOut)}
                 </span>
             );
         },
@@ -63,7 +64,7 @@ export const columns: ColumnDef<Checkout>[] = [
             const student = row.original;
             return (
                 <span className={student.crossedOut ? "line-through" : ""}>
-                    {student.checkIn}
+                    {convertTo12Hour(student.checkIn)}
                 </span>
             );
         },

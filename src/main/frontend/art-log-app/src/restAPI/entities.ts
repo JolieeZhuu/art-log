@@ -26,7 +26,7 @@ export async function getById(url: string, id: number) {
 export async function add(url: string, data: any) {
     try {
         await httpPost.post(url, data);
-        console.log('added data');
+        console.log('added data', data);
     } catch (error) {
         console.error('Error:', error);
     }

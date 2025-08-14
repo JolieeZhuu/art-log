@@ -10,6 +10,7 @@ import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
 import { type Checkout } from "@/components/checkout-tables/checkout-columns"
 import CheckoutTable from "@/components/checkout-tables/checkout-table-page"
 import StudentTable from "@/components/student-tables/student-table-page"
+import { convertTo12Hour } from "../payment-tables/payment-funcs"
 
 // UI components
 import {
@@ -51,6 +52,9 @@ export function DayPage() {
         const allSelectedStudents = selectedMorningStudents.concat(selectedAfternoonStudents)
         const sortedStudents = allSelectedStudents.sort((a, b) => {
             function timeToMinutes(timeStr: string) {
+                let [hours, minutes] = timeStr.split(":").map(Number)
+                return hours * 60 + minutes
+                /*
                 const [time, ampm] = timeStr.split(" ")
                 let [hours, minutes] = time.split(":").map(Number)
                 if (ampm === "AM" && hours === 12) {
@@ -58,7 +62,7 @@ export function DayPage() {
                 } else if (ampm === "PM" && hours !== 12) {
                     hours += 12
                 }
-                return hours * 60 + minutes
+                return hours * 60 + minutes*/
             }
             return timeToMinutes(a.checkOut) - timeToMinutes(b.checkOut) // Sort by checkOut time (by converting the time to minutes)
         })
@@ -82,6 +86,9 @@ export function DayPage() {
         const allSelectedStudents = selectedMorningStudents.concat(selectedAfternoonStudents)
         const sortedStudents = allSelectedStudents.sort((a, b) => {
             function timeToMinutes(timeStr: string) {
+                let [hours, minutes] = timeStr.split(":").map(Number)
+                return hours * 60 + minutes
+                /*
                 const [time, ampm] = timeStr.split(" ")
                 let [hours, minutes] = time.split(":").map(Number)
                 if (ampm === "AM" && hours === 12) {
@@ -89,7 +96,7 @@ export function DayPage() {
                 } else if (ampm === "PM" && hours !== 12) {
                     hours += 12
                 }
-                return hours * 60 + minutes
+                return hours * 60 + minutes*/
             }
             return timeToMinutes(a.checkOut) - timeToMinutes(b.checkOut)
         })
@@ -165,13 +172,16 @@ export function DayPage() {
                 const currentHour = now.getHours()
                 const currentMinute = now.getMinutes()
 
+                let [hours, minutes] = student.checkOut.split(":").map(Number)
+
+                /*
                 const [time, ampm] = student.checkOut.split(" ")
                 let [hours, minutes] = time.split(":").map(Number)
                 if (ampm === "AM" && hours === 12) {
                     hours = 0
                 } else if (ampm === "PM" && hours !== 12) {
                     hours += 12
-                }
+                }*/
 
                 if (currentHour > hours || (currentHour === hours && currentMinute >= minutes)) {
                     studentNames += student.name + ", "

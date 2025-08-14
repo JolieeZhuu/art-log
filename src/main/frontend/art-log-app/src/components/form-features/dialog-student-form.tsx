@@ -7,6 +7,7 @@ import { z } from "zod" // Used for input validation
 
 // Internal imports
 import { add } from "@/restAPI/entities"
+import { convertTo24Hour } from "../payment-tables/payment-funcs"
 
 // UI components
 import { Button } from "@/components/ui/button"
@@ -29,7 +30,6 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import type { FieldPath } from "react-hook-form"
 import { ComboboxOptions } from "@/components/form-features/combobox-options"
 import { toast } from "sonner"
 
@@ -135,109 +135,46 @@ const classIdOptions = [
 ]
 
 const timeExpectedOptions = [
-  {
-    value: "9 AM",
-    label: "9 AM",
-  },
-  {
-    value: "10 AM",
-    label: "10 AM",
-  },
-  {
-    value: "11 AM",
-    label: "11 AM",
-  },
-  {
-    value: "12 AM",
-    label: "12 AM",
-  },
-  {
-    value: "1 PM",
-    label: "1 PM",
-  },
-  {
-    value: "2 PM",
-    label: "2 PM",
-  },
-  {
-    value: "3 PM",
-    label: "3 PM",
-  },
-  {
-    value: "4 PM",
-    label: "4 PM",
-  },
-  {
-    value: "5 PM",
-    label: "5 PM",
-  },
-  {
-    value: "6 PM",
-    label: "6 PM",
-  },
+  { value: "9:15 AM", label: "9:15 AM", },
+  { value: "9:30 AM", label: "9:30 AM", },
+  { value: "9:45 AM", label: "9:45 AM", },
+  { value: "10:00 AM", label: "10:00 AM", },
+  { value: "10:15 AM", label: "10:15 AM", },
+  { value: "10:30 AM", label: "10:30 AM", },
+  { value: "10:45 AM", label: "10:45 AM", },
+  { value: "11:00 AM", label: "11:00 AM", },
+  { value: "11:15 AM", label: "11:15 AM", },
+  { value: "11:30 AM", label: "11:30 AM", },
+  { value: "11:45 AM", label: "11:45 AM", },
+  { value: "12:00 PM", label: "12:00 PM", },
+  { value: "12:15 PM", label: "12:15 PM", },
+  { value: "12:30 PM", label: "12:30 PM", },
+  { value: "12:45 PM", label: "12:45 PM", },
+  { value: "1:00 PM", label: "1:00 PM", },
+  { value: "1:15 PM", label: "1:15 PM", },
+  { value: "1:30 PM", label: "1:30 PM", },
+  { value: "1:45 PM", label: "1:45 PM", },
+  { value: "2:00 PM", label: "2:00 PM", },
+  { value: "2:15 PM", label: "2:15 PM", },
+  { value: "2:30 PM", label: "2:30 PM", },
+  { value: "2:45 PM", label: "2:45 PM", },
+  { value: "3:00 PM", label: "3:00 PM", },
+  { value: "3:15 PM", label: "3:15 PM", },
+  { value: "3:30 PM", label: "3:30 PM", },
+  { value: "3:45 PM", label: "3:45 PM", },
+  { value: "4:00 PM", label: "4:00 PM", },
+  { value: "4:15 PM", label: "4:15 PM", },
+  { value: "4:30 PM", label: "4:30 PM", },
+  { value: "4:45 PM", label: "4:45 PM", },
+  { value: "5:00 PM", label: "5:00 PM", },
+  { value: "5:15 PM", label: "5:15 PM", },
+  { value: "5:30 PM", label: "5:30 PM", },
+  { value: "5:45 PM", label: "5:45 PM", },
+  { value: "6:00 PM", label: "6:00 PM", },
+  { value: "6:15 PM", label: "6:15 PM", },
+  { value: "6:30 PM", label: "6:30 PM", },
+  { value: "6:45 PM", label: "6:45 PM", },
 ]
-
-
-// Shortcut to defining an array of maps in TS
-const formFieldOptions: {
-    name: FieldPath<z.infer<typeof studentSchema>>
-    label: string
-    placeholder: string
-    input: any
-    behaviour: string
-}[] = [
-    {
-        name: "firstName",
-        label: "First Name",
-        placeholder: "ex: Emma",
-        input: "input",
-        behaviour: "alone"
-    },
-    {
-        name: "lastName",
-        label: "Last Name",
-        placeholder: "ex: Stone",
-        input: "input",
-        behaviour: "alone"
-    },
-    {
-        name: "day",
-        label: "Day",
-        placeholder: "ex: Monday",
-        input: dayOptions,
-        behaviour: "alone"
-    },
-    {
-        name: "timeExpected",
-        label: "Time Expected",
-        placeholder: "ex: 4 PM",
-        input: timeExpectedOptions,
-        behaviour: "side"
-    },
-    {
-        name: "hoursOfClass",
-        label: "Hours of Class",
-        placeholder: "ex: 1.5",
-        input: "input",
-        behaviour: "side"
-    },
-    {
-        name: "classId",
-        label: "Class ID",
-        placeholder: "ex: LVL1",
-        input: classIdOptions,
-        behaviour: "alone"
-    },
-    {
-        name: "phoneNumber",
-        label: "Phone Number",
-        placeholder: "ex: 6471234567",
-        input: "input",
-        behaviour: "alone"
-    },
-]
-
-
 
 // Defining the type and expected props passed
 interface DialogStudentFormProps {
@@ -277,7 +214,7 @@ export function DialogStudentForm({ onStudentCreated }: DialogStudentFormProps) 
             class_id: values.classId,
             day: values.day,
             phone_number: values.phoneNumber,
-            time_expected: values.timeExpected,
+            time_expected: convertTo24Hour(values.timeExpected),
             notes: "",
             payment_notes: "",
             payment_number: 0,
@@ -385,7 +322,7 @@ export function DialogStudentForm({ onStudentCreated }: DialogStudentFormProps) 
                                                     value={field.value?.toString() || ""}
                                                     onChange={(e) => {
                                                         const value = e.target.value
-                                                        field.onChange(value === "" ? 1 : Number(value))
+                                                        field.onChange(value === "" ? "" : Number(value))
                                                     }}
                                                     type="number" 
                                                     step="any" 

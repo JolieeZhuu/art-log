@@ -141,3 +141,20 @@ export async function addClass(paymentNum: number, id: number) {
     await edit(studentUrl, data2)
 }
 
+export function convertTo24Hour(timeStr: string | undefined) {
+    // ex: 9:15 PM to 21:15:00
+    if (timeStr === undefined) {
+        return null
+    }
+    const converted = dayjs(`2025-01-01 ${timeStr}`).format("HH:mm:ss")
+    return converted
+}
+
+export function convertTo12Hour(timeStr: string | undefined) {
+    // ex: 21:15:00 to 9:15 PM 
+    if (timeStr === undefined) {
+        return ""
+    }
+    const converted = dayjs(`2025-01-01 ${timeStr}`).format("h:mm A")
+    return converted
+}

@@ -1,5 +1,7 @@
 package com.project.art_log.entities;
 
+import java.time.LocalTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,7 +22,7 @@ public class Student {
     private String classId;
     private String day;
     private String phoneNumber;
-	private String timeExpected;
+	private LocalTime timeExpected;
 	private String paymentNotes;
 	private String notes;
     private Integer paymentNumber;
@@ -33,7 +35,7 @@ public class Student {
 	} // equivalent to no args constructor
 	    
 	public Student(Integer studentId, String firstName, String lastName, String classId, String day, String phoneNumber,
-			String timeExpected, String paymentNotes, String notes, Integer paymentNumber, Integer classNumber,
+			LocalTime timeExpected, String paymentNotes, String notes, Integer paymentNumber, Integer classNumber,
 			Integer totalClasses, Double classHours) {
 		super();
 		this.studentId = studentId;
@@ -87,10 +89,10 @@ public class Student {
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	public String getTimeExpected() {
+	public LocalTime getTimeExpected() {
 		return timeExpected;
 	}
-	public void setTimeExpected(String timeExpected) {
+	public void setTimeExpected(LocalTime timeExpected) {
 		this.timeExpected = timeExpected;
 	}	
 	public String getPaymentNotes() {
