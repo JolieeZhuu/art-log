@@ -29,6 +29,8 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
+import { Separator } from "../ui/separator"
+
 type Student = {
     student_id: number
     first_name: string
@@ -84,8 +86,8 @@ export function Archives() {
         <Layout
             children={(
                 <div className="w-full p-[2rem]">
-                    <div className="flex">
-                        <Breadcrumb className="pr-3">
+                    <div className="flex gap-5">
+                        <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem>
                                 <BreadcrumbLink asChild>
@@ -104,6 +106,11 @@ export function Archives() {
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
+                        <Separator
+                            orientation="vertical"
+                            className="data-[orientation=vertical]:h-5"
+                        />
+                        <p className="text-sm">Go to <Link to={`/day/${student?.day}`}>{student?.day} Checkout</Link></p>
                     </div>
                     <div className="mt-4">
                         <SiteHeader heading={`Archived Payment Tables for ${student?.first_name} ${student?.last_name}`}/>

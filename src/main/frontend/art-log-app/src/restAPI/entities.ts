@@ -59,9 +59,9 @@ export async function getByDay(url: string, day: string) {
     }
 }
 
-export async function getByDayAndExpectedTimeEnding(url: string, day: string, substring: string) {
+export async function getByDayAndExpectedTime(url: string, day: string) {
     try {
-        const data = await httpGet.get(url + "day-string/" + day + "/" + substring);
+        const data = await httpGet.get(url + "day-string/" + day);
         return data;
     } catch (error) {
         console.error('Error:', error);

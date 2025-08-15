@@ -23,7 +23,7 @@ public class StudentService extends AbstractService<Student, Integer> {
         return studentRepo.findByDayIgnoreCase(day);
     }
 	
-	public List<Student> getByDayAndTimeOrderedByTimeAndName(String day, String substring) {
-		return studentRepo.findByDayAndTimeOrderedByTimeAndName(day, substring);
+	public List<Student> getByDayAndTimeOrderedByTimeAndName(String day) {
+		return studentRepo.findByDayAndTimeOrderedByTimeAndName(day);
 	}
 }

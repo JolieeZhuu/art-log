@@ -44,6 +44,7 @@ import { convertTo24Hour } from "../payment-tables/payment-funcs"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  dayOfWeek: string
   onSelectionChange: (selected: Checkout[]) => void
   selectedStudents: Checkout[]
   onStudentCreated: () => void
@@ -52,6 +53,7 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData extends Student, TValue>({
   columns,
   data,
+  dayOfWeek,
   onSelectionChange,
   selectedStudents,
   onStudentCreated,
@@ -231,7 +233,7 @@ export function DataTable<TData extends Student, TValue>({
                     }
                     className="max-w-sm"
                 />
-                <DialogStudentForm onStudentCreated={onStudentCreated}/>
+                <DialogStudentForm onStudentCreated={onStudentCreated} dayOfWeek={dayOfWeek}/>
             </div>
             
             <ScrollArea className="h-[300px] rounded-md border">

@@ -10,7 +10,6 @@ import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
 import { type Checkout } from "@/components/checkout-tables/checkout-columns"
 import CheckoutTable from "@/components/checkout-tables/checkout-table-page"
 import StudentTable from "@/components/student-tables/student-table-page"
-import { convertTo12Hour } from "../payment-tables/payment-funcs"
 
 // UI components
 import {
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/card"
 import { Toaster } from "@/components/ui/sonner"
 import { SiteHeader } from "@/components/navbar/site-header"
+import { AvailabilitySlots } from "../chart/availability-chart"
 
 export function DayPage() {
 
@@ -31,14 +31,8 @@ export function DayPage() {
     }
 
     // Whenever page refreshes, fetch:
-    const [selectedMorningStudents, setSelectedMorningStudents] = React.useState<Checkout[]>(() => {
-        // Initial render loads from localStorage (so when passes through props, it doesn't have to call localStorage again)
-        const saved = localStorage.getItem("selectedMorningStudents")
-        return saved ? JSON.parse(saved) : [] // Handles if array is null, but returns an array otherwise (localStorage only accepts parsed strings)
-    })
-
-    const [selectedAfternoonStudents, setSelectedAfternoonStudents] = React.useState<Checkout[]>(() => {
-        const saved = localStorage.getItem("selectedAfternoonStudents")
+    const [selectedStudents, setSelectedStudents] = React.useState<Checkout[]>(() => {
+        const saved = localStorage.getItem("selectedStudents")
         return saved ? JSON.parse(saved) : []
     })
 
@@ -49,8 +43,7 @@ export function DayPage() {
         }
         
         // If no saved data, create from selected students
-        const allSelectedStudents = selectedMorningStudents.concat(selectedAfternoonStudents)
-        const sortedStudents = allSelectedStudents.sort((a, b) => {
+        const sortedStudents = selectedStudents.sort((a, b) => {
             function timeToMinutes(timeStr: string) {
                 let [hours, minutes] = timeStr.split(":").map(Number)
                 return hours * 60 + minutes
@@ -71,20 +64,15 @@ export function DayPage() {
 
     // Whenever the selected students change, update/save to localStorage
     React.useEffect(() => {
-        localStorage.setItem("selectedMorningStudents", JSON.stringify(selectedMorningStudents))
-    }, [selectedMorningStudents])
-
-    React.useEffect(() => {
-        localStorage.setItem("selectedAfternoonStudents", JSON.stringify(selectedAfternoonStudents))
-    }, [selectedAfternoonStudents])
+        localStorage.setItem("selectedStudents", JSON.stringify(selectedStudents))
+    }, [selectedStudents])
     
     React.useEffect(() => {
         localStorage.setItem("checkoutData", JSON.stringify(checkoutData))
     }, [checkoutData])
 
     React.useEffect(() => { // Update checkoutData whenever selectedMorningStudents or selectedAfternoonStudents change
-        const allSelectedStudents = selectedMorningStudents.concat(selectedAfternoonStudents)
-        const sortedStudents = allSelectedStudents.sort((a, b) => {
+        const sortedStudents = selectedStudents.sort((a, b) => {
             function timeToMinutes(timeStr: string) {
                 let [hours, minutes] = timeStr.split(":").map(Number)
                 return hours * 60 + minutes
@@ -108,15 +96,13 @@ export function DayPage() {
         })
         
         setCheckoutData(updatedStudents)
-    }, [selectedMorningStudents, selectedAfternoonStudents])
+    }, [selectedStudents])
 
     React.useEffect(() => {
         function clearSelection() { // Called when the time of day arrives
             // Page will update accordingly since there are useEffect functions for each student list
-            setSelectedMorningStudents([])
-            setSelectedAfternoonStudents([])
-            localStorage.removeItem("selectedMorningStudents")
-            localStorage.removeItem("selectedAfternoonStudents")
+            setSelectedStudents([])
+            localStorage.removeItem("selectedStudents")
             console.log("checkmarks cleared at 7:00 PM") // Debug
         }
         async function checkTimeAndClear() {
@@ -157,7 +143,7 @@ export function DayPage() {
 
         function checkTimeAndCross() {
             console.log("checkoutdata", checkoutData) // debug
-            console.log(selectedMorningStudents, selectedAfternoonStudents) // debug
+            console.log(selectedStudents) // debug
             const filteredStudents = checkoutData.filter(student => !student.crossedOut) // Filter out students that are already crossed out
             console.log("filteredStudents", filteredStudents) // debug
 
@@ -230,28 +216,21 @@ export function DayPage() {
             children={(
                 <div className="p-[2rem]">
                     <SiteHeader heading={day[0].toUpperCase() + day.substring(1)} />
+                    <div className="pt-4">
+                        <AvailabilitySlots dayOfWeek={day[0].toUpperCase() + day.substring(1)} header=""/>
+                    </div>
                     <div className="flex flex-wrap gap-7 pt-4">
                         <div className="absolute top-4 right-4">
                             <ModeToggle/>
                         </div>
                         {/* Display student list cards */}
-                        <div className="w-full max-w-xl">
+                        <div className="w-full max-w-7xl">
                             <Card>
                                 <CardHeader className="justify-items-start">
-                                    <CardTitle>Morning</CardTitle>
+                                    <CardTitle>Student List</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <StudentTable dayOfWeek={day} substring="AM" setSelectedStudents={setSelectedMorningStudents} selectedStudents={selectedMorningStudents}/>
-                                </CardContent>
-                            </Card>
-                        </div>
-                        <div className="w-full max-w-xl">
-                            <Card>
-                                <CardHeader className="justify-items-start">
-                                    <CardTitle>Afternoon</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <StudentTable dayOfWeek={day} substring="PM" setSelectedStudents={setSelectedAfternoonStudents} selectedStudents={selectedAfternoonStudents}/>
+                                    <StudentTable dayOfWeek={day} setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents}/>
                                 </CardContent>
                             </Card>
                         </div>

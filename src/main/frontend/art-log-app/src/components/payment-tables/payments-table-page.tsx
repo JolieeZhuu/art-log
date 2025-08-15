@@ -37,9 +37,9 @@ export default function PaymentTable({ studentId, paymentNumber, onClassAdded }:
                 classDate: date_expected,
                 attendanceCheck: attendance_check,
                 attendedDate: date_attended,
-                checkIn: convertTo12Hour(check_in),
+                checkIn: check_in === null ? "" : convertTo12Hour(check_in),
                 makeupMins: makeup_mins,
-                checkOut: convertTo12Hour(check_out),
+                checkOut: check_out === null ? "" : convertTo12Hour(check_out),
                 notes: notes,
             }
         })

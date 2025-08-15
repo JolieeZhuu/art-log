@@ -174,15 +174,19 @@ const timeExpectedOptions = [
   { value: "6:15 PM", label: "6:15 PM", },
   { value: "6:30 PM", label: "6:30 PM", },
   { value: "6:45 PM", label: "6:45 PM", },
+  { value: "7:00 PM", label: "7:00 PM", },
+  { value: "7:15 PM", label: "7:15 PM", },
+  { value: "7:30 PM", label: "7:30 PM", },
 ]
 
 // Defining the type and expected props passed
 interface DialogStudentFormProps {
     onStudentCreated: () => void
+    dayOfWeek: string
 }
 
 // Receives props matching DialogStudentFormProps interface
-export function DialogStudentForm({ onStudentCreated }: DialogStudentFormProps) {
+export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudentFormProps) {
 
     // Variable initializations
     const studentUrl = "http://localhost:8080/student/"

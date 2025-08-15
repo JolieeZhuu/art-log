@@ -3,10 +3,10 @@ import * as React from "react"
 // Internal imports
 import { columns, type Student } from "@/components/student-tables/student-columns"
 import { DataTable } from "@/components/student-tables/student-data-table"
-import { getByDayAndExpectedTimeEnding } from "@/restAPI/entities"
+import { getByDayAndExpectedTime } from "@/restAPI/entities"
 import { type Checkout } from "@/components/checkout-tables/checkout-columns"
 
-export default function StudentTable({ dayOfWeek, substring, setSelectedStudents, selectedStudents } : { dayOfWeek: string; substring: string; setSelectedStudents: (selected: Checkout[]) => void; selectedStudents: Checkout[] }) {
+export default function StudentTable({ dayOfWeek, setSelectedStudents, selectedStudents } : { dayOfWeek: string; setSelectedStudents: (selected: Checkout[]) => void; selectedStudents: Checkout[] }) {
 
     // variable initializations
     const studentUrl = "http://localhost:8080/student/"
@@ -14,7 +14,7 @@ export default function StudentTable({ dayOfWeek, substring, setSelectedStudents
 
     async function getData(): Promise<Student[]> {
         // Fetch data from API
-        const studentList = await getByDayAndExpectedTimeEnding(studentUrl, dayOfWeek, substring)
+        const studentList = await getByDayAndExpectedTime(studentUrl, dayOfWeek)
 
         // Store values to be used during editMode
         const studentValuesList: Student[] = studentList.map(({ student_id, first_name, last_name, payment_notes, notes } : { student_id: number, first_name: string, last_name: string, payment_notes: string, notes: string}) => {
@@ -33,7 +33,7 @@ export default function StudentTable({ dayOfWeek, substring, setSelectedStudents
 
     React.useEffect(() => {
         getData().then((data) => setData(data))
-    }, [dayOfWeek, substring])
+    }, [dayOfWeek])
 
     async function handleNewData() {
         const newData = await getData()
@@ -62,6 +62,7 @@ export default function StudentTable({ dayOfWeek, substring, setSelectedStudents
                 onDelete: handleDeleteStudent,
             })} 
             data={data} 
+            dayOfWeek={dayOfWeek}
             onSelectionChange={setSelectedStudents} 
             selectedStudents={selectedStudents} 
             onStudentCreated={handleNewData}

@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from "sonner"
+import { Separator } from "../ui/separator"
 
 type Student = {
     student_id: number
@@ -44,6 +45,7 @@ type Student = {
     class_id: string
     phone_number: string
     time_expected: string
+    class_hours: number
 }
 
 export function PaymentsPage() {
@@ -107,7 +109,6 @@ export function PaymentsPage() {
                             <CardDescription>
                                 <div className="flex gap-2 mt-2">
                                     <Badge variant="secondary">{student.total_classes} classes</Badge>
-                                    <Badge variant="secondary">{student.class_hours} h/class</Badge>
                                     <Badge variant="secondary">{student.payment_notes}</Badge>
                                 </div>
                             </CardDescription>
@@ -132,35 +133,43 @@ export function PaymentsPage() {
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                            <BreadcrumbLink asChild>
-                                <Link to="/students">Students</Link>
-                            </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                            <BreadcrumbPage>{`${student?.first_name} ${student?.last_name}`}</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
+                    <div className="flex gap-5">
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                <BreadcrumbLink asChild>
+                                    <Link to="/students">Students</Link>
+                                </BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator />
+                                <BreadcrumbItem>
+                                <BreadcrumbPage>{`${student?.first_name} ${student?.last_name}`}</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                        <Separator
+                            orientation="vertical"
+                            className="data-[orientation=vertical]:h-5"
+                        />
+                        <p className="text-sm">Go to <Link to={`/day/${student?.day}`}>{student?.day} Checkout</Link></p>
+                    </div>
                     <div className="mt-4">
                         <SiteHeader heading={`${student?.first_name} ${student?.last_name}`}/>
                         <div className="flex justify-between items-center gap-4 pt-4">
                             <div className="flex gap-4">
                                 <Badge variant="secondary">{student?.day[0]}{student?.day.substring(1)}</Badge>
                                 <Badge variant="secondary">{convertTo12Hour(student?.time_expected)}</Badge>
+                                <Badge variant="secondary">{student?.class_hours} hrs/class</Badge>
                                 <Badge variant="secondary">{student?.class_id}</Badge>
                                 <Badge variant="secondary">{student?.phone_number}</Badge>
                             </div>
                             <div className="flex gap-4">
                                 <DialogPaymentForm id={id} onPaymentAdded={loadCards}/>
                                 <Button variant="outline" size="icon" asChild>
-                                    <a href={`#/students/${id}/archives`}>
+                                    <Link to={`/students/${id}/archives`}>
                                         <Archive className="h-[1.2rem] w-[1.2rem]"/>
                                         <span className="sr-only">Payment table archives</span>
-                                    </a>
+                                    </Link>
                                 </Button>
                             </div>
                         </div>

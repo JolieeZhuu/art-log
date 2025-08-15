@@ -32,10 +32,9 @@ public class StudentController extends AbstractController<Student, Integer> {
     	return ResponseEntity.ok().body(studentService.getByDay(day)); 
     }
     
-    @GetMapping("/day-string/{day}/{substring}")
-    public ResponseEntity<List<Student>> getByDayAndTimeOrderedByTimeAndName(@PathVariable("day") String day, 
-    																      @PathVariable("substring") String substring) {
-    	System.out.println("getting by day and expected time substring works");
-    	return ResponseEntity.ok().body(studentService.getByDayAndTimeOrderedByTimeAndName(day, substring));
+    @GetMapping("/day-string/{day}")
+    public ResponseEntity<List<Student>> getByDayAndTimeOrderedByTimeAndName(@PathVariable("day") String day) {
+    	System.out.println("getting by day and ordered by expected time works");
+    	return ResponseEntity.ok().body(studentService.getByDayAndTimeOrderedByTimeAndName(day));
     }
 }
