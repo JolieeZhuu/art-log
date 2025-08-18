@@ -44,7 +44,7 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div className="mb-4">
+        <div>
             <ScrollArea className="h-[535px] rounded-md border">
                 <Table>
                     {/* Table header doesn't move with scroll */}

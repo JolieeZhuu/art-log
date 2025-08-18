@@ -36,6 +36,11 @@ import {
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from "sonner"
 import { Separator } from "../ui/separator"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 type Student = {
     student_id: number
@@ -108,8 +113,22 @@ export function PaymentsPage() {
                             <CardTitle>Payment Table {num - index}</CardTitle>
                             <CardDescription>
                                 <div className="flex gap-2 mt-2">
-                                    <Badge variant="secondary">{student.total_classes} classes</Badge>
-                                    <Badge variant="secondary">{student.payment_notes}</Badge>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Badge variant="secondary">{student.total_classes} classes</Badge>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Total classes for this table</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Badge variant="destructive">{student.payment_notes}</Badge>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Payment notes for student</p>
+                                        </TooltipContent>
+                                    </Tooltip>
                                 </div>
                             </CardDescription>
                             <CardAction>
@@ -159,9 +178,9 @@ export function PaymentsPage() {
                             <div className="flex gap-4">
                                 <Badge variant="secondary">{student?.day[0]}{student?.day.substring(1)}</Badge>
                                 <Badge variant="secondary">{convertTo12Hour(student?.time_expected)}</Badge>
-                                <Badge variant="secondary">{student?.class_hours} hrs/class</Badge>
+                                <Badge variant="secondary">{student?.class_hours} hr/class</Badge>
                                 <Badge variant="secondary">{student?.class_id}</Badge>
-                                <Badge variant="secondary">{student?.phone_number}</Badge>
+                                <Badge variant="secondary">{student?.phone_number ? `(${student.phone_number.slice(0, 3)})-${student.phone_number.slice(3, 6)}-${student.phone_number.slice(6)}` : ""}</Badge>
                             </div>
                             <div className="flex gap-4">
                                 <DialogPaymentForm id={id} onPaymentAdded={loadCards}/>

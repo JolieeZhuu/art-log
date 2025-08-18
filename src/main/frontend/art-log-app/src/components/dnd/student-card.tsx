@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 // Internal imports
 import type { Student } from "./types"
 import { getById } from "@/restAPI/entities";
+import { convertTo12Hour } from "../payment-tables/payment-funcs";
 
 // UI Components
 import {
@@ -87,10 +88,10 @@ export function StudentCard({ student }: StudentCardProps) {
                                     <div className="space-y-1">
                                         <h4 className="text-sm font-semibold">{student.name}</h4>
                                         <p className="text-sm">
-                                            {thisStudent?.phone_number}
+                                            {thisStudent?.phone_number ? `(${thisStudent.phone_number.slice(0, 3)})-${thisStudent.phone_number.slice(3, 6)}-${thisStudent.phone_number.slice(6)}` : ""}
                                         </p>
                                         <div className="text-muted-foreground text-xs">
-                                            {thisStudent?.class_id}, {thisStudent?.time_expected}
+                                            {thisStudent?.class_id}, {convertTo12Hour(thisStudent?.time_expected)}
                                         </div>
                                     </div>
                                 </div>
@@ -106,10 +107,10 @@ export function StudentCard({ student }: StudentCardProps) {
                                     <div className="space-y-1">
                                         <h4 className="text-sm font-semibold">{student.name}</h4>
                                         <p className="text-sm">
-                                            {thisStudent?.phone_number}
+                                            {thisStudent?.phone_number ? `(${thisStudent.phone_number.slice(0, 3)})-${thisStudent.phone_number.slice(3, 6)}-${thisStudent.phone_number.slice(6)}` : ""}
                                         </p>
                                         <div className="text-muted-foreground text-xs">
-                                            {thisStudent?.class_id}, {thisStudent?.time_expected}
+                                            {thisStudent?.class_id}, {convertTo12Hour(thisStudent?.time_expected)}
                                         </div>
                                     </div>
                                 </div>

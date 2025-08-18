@@ -6,6 +6,13 @@ import { convertTo12Hour } from "../payment-tables/payment-funcs"
 
 // UI Components
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Card } from "@/components/ui/card"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 const weekendTimes = [
 "9:15-9:30", "9:30-9:45", "9:45-10:00", "10:00-10:15", "10:15-10:30",
@@ -118,119 +125,145 @@ export function AvailabilityChart({ dayOfWeek }: { dayOfWeek: string }) {
 
     return (
         <div>
-            <h2>{dayOfWeek}</h2>
-            <div className="flex border pt-2 pb-2 pl-2 pr-2">
-                <div className="w-36 shrink-0">
-                    <div className="border-b mb-2">
-                        <h2 className="mt-4 mb-5">Time slots</h2>
-                        <h2 className="mb-4">No. of Students</h2>
+            <h2 className="font-semibold">{dayOfWeek}</h2>
+            <Card className="py-4 pl-6 pr-6">
+                <div className="flex">
+                    <div className="w-36 shrink-0">
+                        <div className="pt-3 space-y-6 font-medium">
+                            <h2>Time slots</h2>
+                            <h2 className="mb-4">No. of Students</h2>
+                        </div>
+                        { /* Student names */}
+                        {
+                            /*
+                            <Accordion type="single" collapsible>
+                                <AccordionItem value="item-1">
+                                    <AccordionTrigger>View Students</AccordionTrigger>
+                                    <AccordionContent>
+                                        {
+                                            chartData.map((row: any, index) => (
+                                                <div key={index} className="py-3">
+                                                    {row.get("student")}
+                                                </div>
+                                            ))
+                                        }
+                                    </AccordionContent>
+                                </AccordionItem>
+                            </Accordion>
+                            */
+                        }
                     </div>
-                    {
-                        chartData.map((row: any, index) => (
-                            <div key={index} className="py-2">
-                                {row.get("student")}
-                            </div>
-                        ))
-                    }
-                </div>
 
-                { /* Second column for time slots and boxes */}
-                <div className="flex-1">
-                    <ScrollArea className="w-250 ml-6">
-                        { /* Time slots */}
-                        <div className="flex mb-2 min-w-max border-b">
-                            {
-                                dayOfWeek.toLowerCase() === "sunday" || dayOfWeek.toLowerCase() === "saturday" ? (
-                                    <>
-                                        {
-                                            weekendTimes.map((slot: string, index: number) => (
-                                                <div key={index} className="w-16 text-center font-medium text-gray-600 py-2 flex-shrink-0">
-                                                    <div>
-                                                        {slot.split('-')[0]}
+                    { /* Second column for time slots and boxes */}
+                    <div className="flex-1">
+                        <ScrollArea className="w-247">
+                            { /* Time slots */}
+                            <div className="flex pt-1 mb-2 min-w-max border-b">
+                                {
+                                    dayOfWeek.toLowerCase() === "sunday" || dayOfWeek.toLowerCase() === "saturday" ? (
+                                        <>
+                                            {
+                                                weekendTimes.map((slot: string, index: number) => (
+                                                    <div key={index} className="w-16 font-medium text-center font-medium text-sm text-gray-600 py-3 border-t flex-shrink-0 bg-secondary">
+                                                        <div>
+                                                            {slot.split('-')[0]}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))
-                                        }
-                                    </>
-                                    ) : (
-                                    <>
-                                        {
-                                            weekdayTimes.map((slot: string, index: number) => (
-                                                <div key={index} className="w-16 text-center font-medium text-gray-600 py-2 flex-shrink-0">
-                                                    <div>
-                                                        {slot.split('-')[0]}
+                                                ))
+                                            }
+                                        </>
+                                        ) : (
+                                        <>
+                                            {
+                                                weekdayTimes.map((slot: string, index: number) => (
+                                                    <div key={index} className="w-16 font-medium text-center font-medium text-sm text-gray-600 py-3 border-t flex-shrink-0 bg-secondary">
+                                                        <div>
+                                                            {slot.split('-')[0]}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))
-                                        }
-                                    </>
+                                                ))
+                                            }
+                                        </>
+                                        
+                                    )
                                     
-                                )
-                                
-                            }
-                        </div>
-                        { /* Availability counter */}
-                        <div className="flex pb-2 mb-2 min-w-max border-b">
+                                }
+                            </div>
+                            { /* Availability counter */}
+                            <div className="flex min-w-max">
+                                {
+                                    availability.map(({ slot, numOfStudents }: { slot: string, numOfStudents: number}) => (
+                                        <div key={slot} className="w-16 text-center text-sm font-medium text-gray-600 py-2 flex-shrink-0">
+                                            {numOfStudents}
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                            { /* Boxes colour coded for availability */ }
                             {
-                                availability.map(({ slot, numOfStudents }: { slot: string, numOfStudents: number}) => (
-                                    <div key={slot} className="w-16 text-center font-medium text-gray-600 py-2 flex-shrink-0">
-                                        {numOfStudents}
-                                    </div>
-                                ))
+                                /*
+                                <Accordion type="single" collapsible>
+                                    <AccordionItem value="item-1">
+                                        <AccordionTrigger>View chart</AccordionTrigger>
+                                        <AccordionContent>
+                                            <div>
+                                                {
+                                                    chartData.map((row: any, index) => (
+                                                        <div key={index} className="flex py-2">
+                                                            {
+                                                                dayOfWeek.toLowerCase() === "sunday" || dayOfWeek.toLowerCase() === "saturday" ? (
+                                                                    <>
+                                                                        {
+                                                                            weekendTimes.map((slot) => {
+                                                                                const isThere = row.get(slot)
+                                                                                
+                                                                                return (
+                                                                                    <div
+                                                                                        key={slot}
+                                                                                        className={`w-16 h-6 border flex-shrink-0 ${
+                                                                                            isThere ? 'bg-purple-300' : 'bg-white'
+                                                                                        }`}
+                                                                                    />
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        {
+                                                                            weekdayTimes.map((slot) => {
+                                                                                const isThere = row.get(slot)
+                                                                                
+                                                                                return (
+                                                                                    <div
+                                                                                        key={slot}
+                                                                                        className={`w-16 h-6 border flex-shrink-0 ${
+                                                                                            isThere ? 'bg-purple-300' : 'bg-white'
+                                                                                        }`}
+                                                                                    />
+                                                                                )
+                                                                            })                                                    
+                                                                        }
+                                                                    </>
+                                                                )
+                                                                
+                                                            }
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                </Accordion>
+                                */
                             }
-                        </div>
-                        { /* Boxes colour coded for availability */ }
-                        <div>
-                            {
-                                chartData.map((row: any, index) => (
-                                    <div key={index} className="flex py-2">
-                                        {
-                                            dayOfWeek.toLowerCase() === "sunday" || dayOfWeek.toLowerCase() === "saturday" ? (
-                                                <>
-                                                    {
-                                                        weekendTimes.map((slot) => {
-                                                            const isThere = row.get(slot)
-                                                            
-                                                            return (
-                                                                <div
-                                                                    key={slot}
-                                                                    className={`w-16 h-6 border flex-shrink-0 ${
-                                                                        isThere ? 'bg-purple-300' : 'bg-white'
-                                                                    }`}
-                                                                />
-                                                            )
-                                                        })
-                                                    }
-                                                </>
-                                            ) : (
-                                                <>
-                                                    {
-                                                        weekdayTimes.map((slot) => {
-                                                            const isThere = row.get(slot)
-                                                            
-                                                            return (
-                                                                <div
-                                                                    key={slot}
-                                                                    className={`w-16 h-6 border flex-shrink-0 ${
-                                                                        isThere ? 'bg-purple-300' : 'bg-white'
-                                                                    }`}
-                                                                />
-                                                            )
-                                                        })                                                    
-                                                    }
-                                                </>
-                                            )
-                                            
-                                        }
-                                    </div>
-                                ))
-                            }
-                        </div>
-                        <ScrollBar orientation="horizontal"/>
-                    </ScrollArea>
+                            
+                            <ScrollBar orientation="horizontal"/>
+                        </ScrollArea>
+                    </div>
                 </div>
-            </div>
 
+            </Card>
         </div>
     )
 };
@@ -332,56 +365,66 @@ export function AvailabilitySlots({ dayOfWeek, header }: { dayOfWeek: string, he
     return (
         <div>
             <h2>{header}</h2>
-            <div className="flex border pl-2 pr-2">
-                { /* Second column for time slots and boxes */}
-                <div className="flex-1">
-                    <ScrollArea className="w-290">
-                        { /* Time slots */}
-                        <div className="flex mb-2 min-w-max border-b justify-center">
-                            {
-                                dayOfWeek.toLowerCase() === "sunday" || dayOfWeek.toLowerCase() === "saturday" ? (
-                                    <>
-                                        {
-                                            weekendTimes.map((slot: string, index: number) => (
-                                                <div key={index} className="w-16 text-center font-medium text-gray-600 py-2 flex-shrink-0">
-                                                    <div>
-                                                        {slot.split('-')[0]}
+            <Card className="py-4 pl-6 pr-6">
+                <div className="flex">
+                    <div className="w-36 shrink-0">
+                        <div className="pt-3 space-y-6 font-medium">
+                            <h2>Time slots</h2>
+                            <h2 className="mb-4">No. of Students</h2>
+                        </div>
+                    </div>
+
+                    { /* Second column for time slots and boxes */}
+                    <div className="flex-1">
+                        <ScrollArea className="w-247">
+                            { /* Time slots */}
+                            <div className="flex pt-1 mb-2 min-w-max border-b">
+                                {
+                                    dayOfWeek.toLowerCase() === "sunday" || dayOfWeek.toLowerCase() === "saturday" ? (
+                                        <>
+                                            {
+                                                weekendTimes.map((slot: string, index: number) => (
+                                                    <div key={index} className="w-16 font-medium text-center text-sm text-gray-600 py-3 border-t flex-shrink-0 bg-secondary">
+                                                        <div>
+                                                            {slot.split('-')[0]}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))
-                                        }
-                                    </>
-                                    ) : (
-                                    <>
-                                        {
-                                            weekdayTimes.map((slot: string, index: number) => (
-                                                <div key={index} className="w-16 text-center font-medium text-gray-600 py-2 flex-shrink-0">
-                                                    <div>
-                                                        {slot.split('-')[0]}
+                                                ))
+                                            }
+                                        </>
+                                        ) : (
+                                        <>
+                                            {
+                                                weekdayTimes.map((slot: string, index: number) => (
+                                                    <div key={index} className="w-16 font-medium text-center text-sm text-gray-600 py-3 border-t flex-shrink-0 bg-secondary">
+                                                        <div>
+                                                            {slot.split('-')[0]}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))
-                                        }
-                                    </>
+                                                ))
+                                            }
+                                        </>
+                                        
+                                    )
                                     
-                                )
-                                
-                            }
-                        </div>
-                        { /* Availability counter */}
-                        <div className="flex pb-2 mb-2 min-w-max justify-center">
-                            {
-                                availability.map(({ slot, numOfStudents }: { slot: string, numOfStudents: number}) => (
-                                    <div key={slot} className="w-16 text-center font-medium text-gray-600 py-2 flex-shrink-0">
-                                        {numOfStudents}
-                                    </div>
-                                ))
-                            }
-                        </div>
-                        <ScrollBar orientation="horizontal"/>
-                    </ScrollArea>
+                                }
+                            </div>
+                            { /* Availability counter */}
+                            <div className="flex min-w-max">
+                                {
+                                    availability.map(({ slot, numOfStudents }: { slot: string, numOfStudents: number}) => (
+                                        <div key={slot} className="w-16 text-center text-sm text-gray-600 py-2 flex-shrink-0">
+                                            {numOfStudents}
+                                        </div>
+                                    ))
+                                }
+                            </div>                            
+                            <ScrollBar orientation="horizontal"/>
+                        </ScrollArea>
+                    </div>
                 </div>
-            </div>
+
+            </Card>
         </div>
     )
 

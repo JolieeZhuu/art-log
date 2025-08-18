@@ -45,7 +45,7 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div className="mb-4">
+        <div>
             <div className="flex justify-between gap-4 py-4">
                 {/* Search bar for filtering students by name */}
                 <Input

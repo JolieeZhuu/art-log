@@ -207,7 +207,7 @@ export function DataTable<TData extends Student, TValue>({
     })
 
     return (
-        <div className="mb-4">
+        <div className="">
             <div>
                 <AlertDialog open={alertDialogOpen} onOpenChange={setAlertDialogOpen}>
                     <AlertDialogContent>
@@ -224,7 +224,7 @@ export function DataTable<TData extends Student, TValue>({
                 </AlertDialog>
             </div>
 
-            <div className="flex justify-between gap-4 py-4">
+            <div className="flex justify-between pb-4">
                 <Input
                     placeholder="Search students..."
                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}

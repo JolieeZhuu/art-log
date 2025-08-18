@@ -55,6 +55,7 @@ const editSchema = z.object({
     }),
     paymentNotes: z.string(),
     notes: z.string(),
+    phoneNumber: z.string().length(10)
 })
 
 // Define expected valid types for the form fields
@@ -86,6 +87,10 @@ const formFieldEditOptions: {
         name: "notes",
         label: "Notes",
     },
+    {
+        name: "phoneNumber",
+        label: "Phone Number",
+    },
 ]
 
 export type Student = {
@@ -93,6 +98,7 @@ export type Student = {
     name: string
     paymentNotes: string
     notes: string
+    phoneNumber: string
     checkIn: string
 }
 
@@ -150,6 +156,15 @@ export const columns = ({
         }
     },
     {
+        accessorKey: "phoneNumber",
+        header: "Phone Number",
+        cell: ({ row }) => {
+            const unformatted = row.getValue("phoneNumber") as string
+            const formatted = `(${unformatted.slice(0, 3)})-${unformatted.slice(3, 6)}-${unformatted.slice(6)}`
+            return <div>{formatted}</div>
+        }
+    },
+    {
         id: "actions",
         cell: ({ row }) => {
             const student = row.original
@@ -166,7 +181,8 @@ export const columns = ({
                     firstName: student.name.split(" ")[0],
                     lastName: student.name.split(" ")[1],
                     paymentNotes: student.paymentNotes,
-                    notes: student.notes
+                    notes: student.notes,
+                    phoneNumber: student.phoneNumber,
                 },
             })
             
@@ -197,7 +213,7 @@ export const columns = ({
                     last_name: values.lastName,
                     class_id: storeStudent.class_id,
                     day: storeStudent.day,
-                    phone_number: storeStudent.phone_number,
+                    phone_number: values.phoneNumber,
                     payment_notes: values.paymentNotes,
                     notes: values.notes,
                     payment_number: storeStudent.payment_number,
@@ -210,6 +226,7 @@ export const columns = ({
                     name: values.firstName + " " + values.lastName,
                     paymentNotes: values.paymentNotes,
                     notes: values.notes,
+                    phoneNumber: values.phoneNumber,
                     checkIn: "",
                 }
 

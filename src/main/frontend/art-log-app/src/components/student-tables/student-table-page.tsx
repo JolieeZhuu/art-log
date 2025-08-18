@@ -17,12 +17,13 @@ export default function StudentTable({ dayOfWeek, setSelectedStudents, selectedS
         const studentList = await getByDayAndExpectedTime(studentUrl, dayOfWeek)
 
         // Store values to be used during editMode
-        const studentValuesList: Student[] = studentList.map(({ student_id, first_name, last_name, payment_notes, notes } : { student_id: number, first_name: string, last_name: string, payment_notes: string, notes: string}) => {
+        const studentValuesList: Student[] = studentList.map(({ student_id, first_name, last_name, payment_notes, notes, phone_number } : { student_id: number, first_name: string, last_name: string, payment_notes: string, notes: string, phone_number: string}) => {
             return {
                 id: student_id,
                 name: `${first_name} ${last_name}`,
                 paymentNotes: payment_notes,
                 notes: notes,
+                phoneNumber: phone_number,
             }
         })
         console.log(studentValuesList)
