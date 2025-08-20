@@ -24,16 +24,46 @@ export function ComboboxOptions({
   commandEmpty,
   value,
   onChange,
+  onKeyDown,
+  autoFocus
 }: {
   options: { value: string; label: string }[]
   selectPhrase: string
   commandEmpty: string
   value: string
   onChange: (value: string) => void
+  onKeyDown?: (e: React.KeyboardEvent) => void,
+  autoFocus?: boolean
 }) {
   const [open, setOpen] = React.useState(false)
-
   const selectedLabel = options.find((opt) => opt.value === value)?.label
+  const triggerRef = React.useRef<HTMLButtonElement>(null)
+
+  // Handle autofocus
+  React.useEffect(() => {
+    if (autoFocus && triggerRef.current) {
+      // Small delay to ensure the component is fully rendered
+      setTimeout(() => {
+        triggerRef.current?.click() // Open the popover
+      }, 50)
+    }
+  }, [autoFocus])
+
+  React.useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (open && onKeyDown) {
+        onKeyDown(e as any);
+      }
+    }
+
+    if (open) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open, onKeyDown]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

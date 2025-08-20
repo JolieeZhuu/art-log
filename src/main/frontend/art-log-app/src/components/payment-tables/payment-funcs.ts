@@ -139,6 +139,9 @@ export async function addClass(paymentNum: number, id: number) {
     }
 
     await edit(studentUrl, data2)
+
+    const toSend = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, paymentNum, id, totalClasses + 1)
+    return toSend
 }
 
 export function convertTo24Hour(timeStr: string | undefined) {

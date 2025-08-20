@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { Archive } from "lucide-react"
+import { Archive, Pencil } from "lucide-react"
 
 // External imports
 import { useParams } from "react-router-dom"
@@ -12,6 +12,7 @@ import { SiteHeader } from "@/components/navbar/site-header"
 import { getById } from "@/restAPI/entities"
 import { getPaymentNum, addClass, convertTo12Hour } from "@/components/payment-tables/payment-funcs"
 import PaymentTable from "@/components/payment-tables/payments-table-page"
+import EditableText from "@/components/form-features/editable-text"
 
 // UI components
 import {
@@ -36,11 +37,6 @@ import {
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from "sonner"
 import { Separator } from "../ui/separator"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 
 type Student = {
     student_id: number
@@ -51,6 +47,7 @@ type Student = {
     phone_number: string
     time_expected: string
     class_hours: number
+    total_classes: number
 }
 
 export function PaymentsPage() {
@@ -87,6 +84,9 @@ export function PaymentsPage() {
             tableRefreshFunctions.current[paymentNumber]();
         }
 
+        getStudent()
+        loadCards()
+
         // Add toaster
         toast(`New class was created in Payment Table ${paymentNumber}`)
     }
@@ -113,22 +113,14 @@ export function PaymentsPage() {
                             <CardTitle>Payment Table {num - index}</CardTitle>
                             <CardDescription>
                                 <div className="flex gap-2 mt-2">
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Badge variant="secondary">{student.total_classes} classes</Badge>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Total classes for this table</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Badge variant="destructive">{student.payment_notes}</Badge>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Payment notes for student</p>
-                                        </TooltipContent>
-                                    </Tooltip>
+                                    <EditableText
+                                        initialText={student.total_classes + " classes"}
+                                        index={5}
+                                    />
+                                    <EditableText
+                                        initialText={student.payment_notes}
+                                        index={6}
+                                    />
                                 </div>
                             </CardDescription>
                             <CardAction>
@@ -176,11 +168,26 @@ export function PaymentsPage() {
                         <SiteHeader heading={`${student?.first_name} ${student?.last_name}`}/>
                         <div className="flex justify-between items-center gap-4 pt-4">
                             <div className="flex gap-4">
-                                <Badge variant="secondary">{student?.day[0]}{student?.day.substring(1)}</Badge>
-                                <Badge variant="secondary">{convertTo12Hour(student?.time_expected)}</Badge>
-                                <Badge variant="secondary">{student?.class_hours} hr/class</Badge>
-                                <Badge variant="secondary">{student?.class_id}</Badge>
-                                <Badge variant="secondary">{student?.phone_number ? `(${student.phone_number.slice(0, 3)})-${student.phone_number.slice(3, 6)}-${student.phone_number.slice(6)}` : ""}</Badge>
+                                <EditableText
+                                    initialText={`${student?.day[0]}${student?.day.substring(1)}`}
+                                    index={0}
+                                />
+                                <EditableText
+                                    initialText={convertTo12Hour(student?.time_expected)}
+                                    index={1}
+                                />
+                                <EditableText
+                                    initialText={`${student?.class_hours} hr/class`}
+                                    index={2}
+                                />
+                                <EditableText
+                                    initialText={`${student?.class_id}`}
+                                    index={3}
+                                />
+                                <EditableText
+                                    initialText={student?.phone_number ? `(${student.phone_number.slice(0, 3)})-${student.phone_number.slice(3, 6)}-${student.phone_number.slice(6)}` : ""}
+                                    index={4}
+                                />
                             </div>
                             <div className="flex gap-4">
                                 <DialogPaymentForm id={id} onPaymentAdded={loadCards}/>

@@ -43,9 +43,23 @@ export default function PaymentTable({ studentId, paymentNumber, onClassAdded }:
                 notes: notes,
             }
         })
+
+        console.log(attendanceValuesList)
         
         setData(attendanceValuesList) // Update state directly
     }, [studentId, paymentNumber])
+
+    function onClassEdited(updatedClass: Attendance) {
+        setData((prev) =>
+            prev.map((attendance) =>
+                attendance.id === updatedClass.id ? updatedClass : attendance
+            )
+        )
+    }
+
+    function onHoliday(addedClass: Attendance) {
+        setData([...data, addedClass])
+    }
 
     React.useEffect(() => {
         getData() // Call the function that updates state
@@ -58,6 +72,12 @@ export default function PaymentTable({ studentId, paymentNumber, onClassAdded }:
     }, [onClassAdded, getData]) // Add getData as dependency
 
     return (
-        <DataTable columns={columns} data={data}/>
+        <DataTable 
+            columns={columns({ 
+                onUpdate: onClassEdited,
+                onAdded: onHoliday
+            })} 
+            data={data}
+        />
     )
 }
