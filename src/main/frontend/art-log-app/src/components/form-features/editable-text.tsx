@@ -7,6 +7,8 @@ import { z } from "zod" // Used for input validation
 
 // Internal imports
 import { dayOptions, classIdOptions, timeExpectedOptions } from "./options";
+import { getById, edit } from "@/restAPI/entities";
+import { convertTo24Hour } from "../payment-tables/payment-funcs";
 
 // UI Components
 import { Input } from "@/components/ui/input";
@@ -61,10 +63,11 @@ function useOutsideAlerter(ref: any, setText: (value: React.SetStateAction<strin
 }
 
 
-export default function EditableText({ initialText, index, optionalEnding }: { initialText: string, index: number, optionalEnding: string }) {
+export default function EditableText({ initialText, index, optionalEnding, id, getStudent }: { initialText: string, index: number, optionalEnding: string, id: number, getStudent: () => void }) {
     const [isEditing, setIsEditing] = React.useState(false)
     const [text, setText] = React.useState<string | number>(initialText)
     const isNumberField = index === 2 || index === 5; // classHours and totalClasses
+    const studentUrl = "http://localhost:8080/student/"
 
     const form = useForm<z.infer<typeof editSchema>>({
         resolver: zodResolver(editSchema),
@@ -116,6 +119,7 @@ export default function EditableText({ initialText, index, optionalEnding }: { i
     function handleComboboxChange(value: string) {
         console.log("in comboboxchange", value)
         form.setValue("input", value);
+        onSubmit(form.getValues())
         setText(value);
         setIsEditing(false);
     }
@@ -172,16 +176,50 @@ export default function EditableText({ initialText, index, optionalEnding }: { i
         }
     }
 
-    function onSubmit(values: z.infer<typeof editSchema>) {
+    async function onSubmit(values: z.infer<typeof editSchema>) {
         console.log(values)
+        const student = await getById(studentUrl, id)
         
         if (isNumberField) {
+            const data = {
+                student_id: id,
+                first_name: student.first_name,
+                last_name: student.last_name,
+                class_id: student.class_id,
+                day: student.day,
+                phone_number: student.phone_number,
+                time_expected: student.time_expected,
+                payment_notes: student.payment_notes,
+                notes: student.notes,
+                payment_number: student.payment_number,
+                class_number: student.class_number, 
+                total_classes: index == 5 ? values.inputNumber : student.total_classes, //
+                class_hours: index == 2 ? values.inputNumber : student.class_hours, //
+            }
+            await edit(studentUrl, data)
             console.log("Setting number:", values.inputNumber)
             setText(values.inputNumber ?? 1);
         } else {
+            const data = {
+                student_id: id,
+                first_name: student.first_name,
+                last_name: student.last_name,
+                class_id: index == 3 ? values.input : student.class_id,
+                day: index == 0 ? values.input : student.day,
+                phone_number: index == 4 ? values.input: student.phone_number,
+                time_expected: index == 1 ? convertTo24Hour(values.input) : student.time_expected,
+                payment_notes: index == 6 ? values.input : student.payment_notes,
+                notes: student.notes,
+                payment_number: student.payment_number,
+                class_number: student.class_number, 
+                total_classes: index == 2 ? values.inputNumber : student.total_classes, //
+                class_hours: index == 5 ? values.inputNumber : student.class_hours, //
+            }
+            await edit(studentUrl, data)
             console.log("Setting string:", values.input)
             setText(values.input ?? "");
         }
+        getStudent()
         setIsEditing(false);
     }
 
@@ -421,7 +459,7 @@ export default function EditableText({ initialText, index, optionalEnding }: { i
                         {inputsToDisplay[index]}
                     </div>
                 ) : (
-                    <Badge variant="secondary" className="cursor-pointer text-[14px]">
+                    <Badge variant="secondary" className="cursor-pointer text-[14px] font-normal">
                         {`${text}${optionalEnding}` || "Click to add text"}
                     </Badge>
                 )

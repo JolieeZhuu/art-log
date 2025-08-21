@@ -13,11 +13,14 @@ import { Column } from "@/components/dnd/column"
 import Layout from "@/components/navbar/layout"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
 import { SiteHeader } from "../navbar/site-header"
+import { useStudents } from "../student-context"
 
 export function Students() {
 
-    const [students, setStudents] = React.useState<Student[]>([])
+
+    const { students, setStudents, refresh } = useStudents();
     const studentUrl = "http://localhost:8080/student/"
+
 
     React.useEffect(() => {
         async function getStudents() {
@@ -65,7 +68,7 @@ export function Students() {
             day: newDay
         } : student))
 
-        editStudentWithDay(studentId, newDay)
+        editStudentWithDay(studentId, newDay).then(refresh);
     }
 
     async function editStudentWithDay(studentId: string, newDay: Student["day"]) {
@@ -84,6 +87,7 @@ export function Students() {
             payment_number: student.payment_number,
             class_number: student.class_number,
             total_classes: student.total_classes,
+            class_hours: student.class_hours,
         }
 
         await edit(studentUrl, data)

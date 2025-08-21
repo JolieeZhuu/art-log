@@ -116,11 +116,15 @@ export function PaymentsPage() {
                                         initialText={student.total_classes}
                                         index={5}
                                         optionalEnding=" classes"
+                                        id={id}
+                                        getStudent={getStudent}
                                     />
                                     <EditableText
                                         initialText={student.payment_notes}
                                         index={6}
                                         optionalEnding=""
+                                        id={id}
+                                        getStudent={getStudent}
                                     />
                                 </div>
                             </CardDescription>
@@ -173,26 +177,36 @@ export function PaymentsPage() {
                                     initialText={`${student?.day[0]}${student?.day.substring(1)}`}
                                     index={0}
                                     optionalEnding=""
+                                    id={id}
+                                    getStudent={getStudent}
                                 />
                                 <EditableText
                                     initialText={convertTo12Hour(student?.time_expected)}
                                     index={1}
                                     optionalEnding=""
+                                    id={id}
+                                    getStudent={getStudent}
                                 />
                                 <EditableText
                                     initialText={`${student?.class_hours}`}
                                     index={2}
                                     optionalEnding=" hr/class"
+                                    id={id}
+                                    getStudent={getStudent}
                                 />
                                 <EditableText
                                     initialText={`${student?.class_id}`}
                                     index={3}
                                     optionalEnding=""
+                                    id={id}
+                                    getStudent={getStudent}
                                 />
                                 <EditableText
                                     initialText={student?.phone_number ? `(${student.phone_number.slice(0, 3)})-${student.phone_number.slice(3, 6)}-${student.phone_number.slice(6)}` : ""}
                                     index={4}
                                     optionalEnding=""
+                                    id={id}
+                                    getStudent={getStudent}
                                 />
                             </div>
                             <div className="flex gap-4">
