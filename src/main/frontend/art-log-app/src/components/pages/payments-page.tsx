@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { Archive, Pencil } from "lucide-react"
+import { Archive } from "lucide-react"
 
 // External imports
 import { useParams } from "react-router-dom"
@@ -24,7 +24,6 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { DialogPaymentForm } from "@/components/form-features/dialog-payment-form"
 import {
   Breadcrumb,
@@ -114,12 +113,14 @@ export function PaymentsPage() {
                             <CardDescription>
                                 <div className="flex gap-2 mt-2">
                                     <EditableText
-                                        initialText={student.total_classes + " classes"}
+                                        initialText={student.total_classes}
                                         index={5}
+                                        optionalEnding=" classes"
                                     />
                                     <EditableText
                                         initialText={student.payment_notes}
                                         index={6}
+                                        optionalEnding=""
                                     />
                                 </div>
                             </CardDescription>
@@ -171,22 +172,27 @@ export function PaymentsPage() {
                                 <EditableText
                                     initialText={`${student?.day[0]}${student?.day.substring(1)}`}
                                     index={0}
+                                    optionalEnding=""
                                 />
                                 <EditableText
                                     initialText={convertTo12Hour(student?.time_expected)}
                                     index={1}
+                                    optionalEnding=""
                                 />
                                 <EditableText
-                                    initialText={`${student?.class_hours} hr/class`}
+                                    initialText={`${student?.class_hours}`}
                                     index={2}
+                                    optionalEnding=" hr/class"
                                 />
                                 <EditableText
                                     initialText={`${student?.class_id}`}
                                     index={3}
+                                    optionalEnding=""
                                 />
                                 <EditableText
                                     initialText={student?.phone_number ? `(${student.phone_number.slice(0, 3)})-${student.phone_number.slice(3, 6)}-${student.phone_number.slice(6)}` : ""}
                                     index={4}
+                                    optionalEnding=""
                                 />
                             </div>
                             <div className="flex gap-4">

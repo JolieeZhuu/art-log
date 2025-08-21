@@ -206,7 +206,7 @@ export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudent
                                                     value={field.value?.toString() || ""}
                                                     onChange={(e) => {
                                                         const value = e.target.value
-                                                        field.onChange(value === "" ? "" : Number(value))
+                                                        field.onChange(value === "" ? "" : Number(value.split))
                                                     }}
                                                     type="number" 
                                                     step="any" 

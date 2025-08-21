@@ -17,55 +17,95 @@ import {
     FormControl,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
 } from "@/components/ui/form"
 
 const editSchema = z.object({
     input: z.string().min(1, {
         message: "This field cannot be empty."
-    })
+    }).optional(),
+    inputNumber: z.number().min(1, {
+        message: "This field cannot be empty."
+    }).optional(),
 })
 
-export default function EditableText({ initialText, index }: { initialText: string, index: number }) {
-    const [isEditing, setIsEditing] = React.useState(false)
-    const [text, setText] = React.useState(initialText)
-    const containerRef = React.useRef<HTMLDivElement>(null)
-
-    const form = useForm<z.infer<typeof editSchema>>({
-        resolver: zodResolver(editSchema),
-        defaultValues: {
-            input: initialText
-        },
-    })
-
-    // Update form and local state when initialText changes
+/**
+ * Hook that alerts clicks outside of the passed ref
+*/
+function useOutsideAlerter(ref: any, setText: (value: React.SetStateAction<string | number>) => void, initialText: string | number, setIsEditing: (value: React.SetStateAction<boolean>) => void) {
     React.useEffect(() => {
-        setText(initialText);
-        form.setValue("input", initialText);
-    }, [initialText, form.setValue]);
-
-    // Handle click outside to cancel editing
-    React.useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-                if (isEditing) {
-                    // Cancel editing and revert to original text
+        /**
+         * Alert if clicked on outside of element
+         */
+        function handleClickOutside(event: any) {
+            if (ref.current && !ref.current.contains(event.target)) {
+                const isDropdownClick = event.target.closest('[role="option"]') || 
+                                       event.target.closest('[data-radix-popper-content-wrapper]') ||
+                                       event.target.closest('[cmdk-list]') ||
+                                       event.target.closest('.cmdk-list');
+                
+                if (!isDropdownClick) {
+                    console.log("in hook", initialText)
                     setText(initialText);
-                    form.reset({ input: initialText });
                     setIsEditing(false);
                 }
             }
         }
-
-        if (isEditing) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-
+        // Bind the event listener
+        document.addEventListener("mousedown", handleClickOutside);
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
         };
-    }, [isEditing, initialText, form]);
+    }, [ref, setText, initialText, setIsEditing]);
+}
+
+
+export default function EditableText({ initialText, index, optionalEnding }: { initialText: string, index: number, optionalEnding: string }) {
+    const [isEditing, setIsEditing] = React.useState(false)
+    const [text, setText] = React.useState<string | number>(initialText)
+    const isNumberField = index === 2 || index === 5; // classHours and totalClasses
+
+    const form = useForm<z.infer<typeof editSchema>>({
+        resolver: zodResolver(editSchema),
+        defaultValues: {
+            input: initialText,
+            inputNumber: isNumeric(initialText) ? toNumber(initialText) : 1
+        },
+    })
+
+    const wrapperRef = React.useRef(null)
+    useOutsideAlerter(wrapperRef, setText, initialText, setIsEditing)
+
+    // Update form and local state when initialText changes
+    React.useEffect(() => {
+        setText(initialText);
+        
+        if (isNumberField && isNumeric(initialText)) {
+            const numValue = toNumber(initialText);
+            form.setValue("inputNumber", numValue);
+        } else {
+            const stringValue = initialText;
+            form.setValue("input", stringValue);
+        }
+    }, [initialText, form, isNumberField]);
+
+
+    // Helper function to check if a value is numeric
+    function isNumeric(value: any): boolean {
+        if (typeof value === 'number') return !isNaN(value);
+        if (typeof value === 'string') {
+            const num = Number(value);
+            return !isNaN(num) && !isNaN(parseFloat(value)) && value.trim() !== '';
+        }
+        return false;
+    }
+
+    // Helper function to safely convert to number
+    function toNumber(value: string | number): number {
+        if (typeof value === 'number') return value;
+        return parseFloat(value);
+    }
 
     function handleOnBlur() {
         setText(initialText)
@@ -74,6 +114,7 @@ export default function EditableText({ initialText, index }: { initialText: stri
 
     // Handle combobox selection and auto-submit
     function handleComboboxChange(value: string) {
+        console.log("in comboboxchange", value)
         form.setValue("input", value);
         setText(value);
         setIsEditing(false);
@@ -82,225 +123,294 @@ export default function EditableText({ initialText, index }: { initialText: stri
     function handleDoubleClick() {
         setIsEditing(true)
         // Reset form with current text value when starting to edit
-        form.reset({ input: text });
+        if (isNumberField && isNumeric(text)) {
+            form.reset({ 
+                input: "",
+                inputNumber: toNumber(text)
+            });
+        } else {
+            form.reset({ 
+                input: typeof text === 'number' ? text.toString() : text,
+                inputNumber: 1
+            });
+        }
     }
 
     function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
         if (e.key === "Enter") {
             e.preventDefault();
-            form.handleSubmit(onSubmit)();
+            
+            // Get the current form values
+            // Check because of aync issues
+            const currentValues = form.getValues();
+            console.log("Current form values:", currentValues);
+            
+            // Validate and submit
+            const isValid = form.formState.isValid;
+            console.log("Form is valid:", isValid);
+            
+            if (isNumberField) {
+                const numValue = currentValues.inputNumber;
+                if (numValue && numValue >= 1) {
+                    onSubmit(currentValues);
+                } else {
+                    console.log("Invalid number value:", numValue);
+                }
+            } else {
+                const stringValue = currentValues.input;
+                if (stringValue && stringValue.trim() !== '') {
+                    onSubmit(currentValues);
+                } else {
+                    console.log("Invalid string value:", stringValue);
+                }
+            }
         }
         if (e.key === "Escape") {
             // Cancel editing and revert to original text
             setIsEditing(false);
-            form.reset({ input: text });
+            setText(initialText);
         }
     }
 
     function onSubmit(values: z.infer<typeof editSchema>) {
-        console.log(values.input)
-        setText(values.input);
+        console.log(values)
+        
+        if (isNumberField) {
+            console.log("Setting number:", values.inputNumber)
+            setText(values.inputNumber ?? 1);
+        } else {
+            console.log("Setting string:", values.input)
+            setText(values.input ?? "");
+        }
         setIsEditing(false);
     }
 
     // dayOfWeek, timeExpected, classHours, classId, phoneNumber, totalClasses, paymentNotes
     const inputsToDisplay = [
-        <Form {...form}>
-            { /* dayOfWeek */}
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-                <FormField
-                    control={form.control}
-                    name="input"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <ComboboxOptions
-                                    options={dayOptions}
-                                    value={String(field.value)} 
-                                    onChange={handleComboboxChange} 
-                                    selectPhrase="Select..."
-                                    commandEmpty="Selection not found."
-                                    autoFocus={true}
-                                    onKeyDown={(e) => {
-                                        if (e.key === "Escape") {
-                                            setText(initialText);
-                                            form.reset({ input: initialText });
-                                            setIsEditing(false);
-                                        }
-                                    }}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </form>
-        </Form>,
-        <Form {...form}>
-            { /* timeExpected */}
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-                <FormField
-                    control={form.control}
-                    name="input"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <ComboboxOptions
-                                    options={timeExpectedOptions}
-                                    value={String(field.value)} 
-                                    onChange={handleComboboxChange} 
-                                    selectPhrase="Select..."
-                                    commandEmpty="Selection not found."
-                                    autoFocus={true}
-                                    onKeyDown={(e) => {
-                                        if (e.key === "Escape") {
-                                            setText(initialText);
-                                            form.reset({ input: initialText });
-                                            setIsEditing(false);
-                                        }
-                                    }}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </form>
-        </Form>,
-        <Form {...form} >
-            { /* classHours */}
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-                <FormField
-                    control={form.control}
-                    name="input"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <Input {...field} 
-                                    value={field.value?.toString() || ""}
-                                    onChange={(e) => {
-                                        const value = e.target.value
-                                        field.onChange(value === "" ? "" : Number(value))
-                                    }}
-                                    type="number" 
-                                    step="any" 
-                                    min="1"
-                                    onKeyDown={handleKeyDown}
-                                    onBlur={handleOnBlur}
-                                    autoFocus
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </form>
-        </Form>,
-        <Form {...form}>
-            { /* classId */}
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-                <FormField
-                    control={form.control}
-                    name="input"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <ComboboxOptions
-                                    options={classIdOptions}
-                                    value={String(field.value)} 
-                                    onChange={handleComboboxChange} 
-                                    selectPhrase="Select..."
-                                    commandEmpty="Selection not found."
-                                    autoFocus={true}
-                                    onKeyDown={(e) => {
-                                        if (e.key === "Escape") {
-                                            setText(initialText);
-                                            form.reset({ input: initialText });
-                                            setIsEditing(false);
-                                        }
-                                    }}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </form>
-        </Form>,
-        <Form {...form}>
-            { /* phoneNumber */}
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-                <FormField
-                    control={form.control}
-                    name="input"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <Input {...field} 
-                                    type="text"
-                                    onKeyDown={handleKeyDown}
-                                    onBlur={handleOnBlur}
-                                    autoFocus
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </form>
-        </Form>,
-        <Form {...form}>
-            { /* totalClasses */}
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-                <FormField
-                    control={form.control}
-                    name="input"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <Input {...field} 
-                                    value={field.value?.toString() || ""}
-                                    onChange={(e) => {
-                                        const value = e.target.value
-                                        field.onChange(value === "" ? undefined : Number(value))
-                                    }}
-                                    className="w-full" 
-                                    placeholder="ex: 10"
-                                    type="number"
-                                    min="1"
-                                    onKeyDown={handleKeyDown}
-                                    onBlur={handleOnBlur}
-                                    autoFocus
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </form>
-        </Form>,
-        <Form {...form}>
-            { /* paymentNotes */}
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-                <FormField
-                    control={form.control}
-                    name="input"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormControl>
-                                <Input {...field} 
-                                    type="text"
-                                    onKeyDown={handleKeyDown}
-                                    onBlur={handleOnBlur}
-                                    autoFocus
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-            </form>
-        </Form>,
+        <div key={0} ref={wrapperRef}>
+            <Form {...form}>
+                { /* dayOfWeek */}
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FormField
+                        control={form.control}
+                        name="input"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <ComboboxOptions
+                                        options={dayOptions}
+                                        value={String(field.value)} 
+                                        onChange={handleComboboxChange} 
+                                        selectPhrase="Select..."
+                                        commandEmpty="Selection not found."
+                                        autoFocus={true}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Escape") {
+                                                setText(initialText);
+                                                form.reset({ input: initialText });
+                                                setIsEditing(false);
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </form>
+            </Form>
+        </div>,
+        <div key={1} ref={wrapperRef}>
+            <Form {...form}>
+                { /* timeExpected */}
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FormField
+                        control={form.control}
+                        name="input"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <ComboboxOptions
+                                        options={timeExpectedOptions}
+                                        value={String(field.value)} 
+                                        onChange={handleComboboxChange} 
+                                        selectPhrase="Select..."
+                                        commandEmpty="Selection not found."
+                                        autoFocus={true}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Escape") {
+                                                setText(initialText);
+                                                form.reset({ input: initialText });
+                                                setIsEditing(false);
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </form>
+            </Form>
+        </div>,
+        <div key={2} ref={wrapperRef}>
+            <Form {...form} >
+                { /* classHours */}
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FormField
+                        control={form.control}
+                        name="inputNumber"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Input 
+                                        {...field} 
+                                        value={field.value?.toString() || ""}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            if (value === "") {
+                                                field.onChange("");
+                                            } else {
+                                                const numValue = parseFloat(value);
+                                                field.onChange(isNaN(numValue) ? "" : numValue);
+                                            }
+                                        }}
+                                        type="number" 
+                                        step="0.5" 
+                                        min="1"
+                                        placeholder="Enter hours (e.g., 1.5)"
+                                        onKeyDown={handleKeyDown}
+                                        onBlur={handleOnBlur}
+                                        autoFocus
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </form>
+            </Form>
+        </div>,
+        <div key={3} ref={wrapperRef}>
+            <Form {...form}>
+                { /* classId */}
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FormField
+                        control={form.control}
+                        name="input"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <ComboboxOptions
+                                        options={classIdOptions}
+                                        value={String(field.value)} 
+                                        onChange={handleComboboxChange} 
+                                        selectPhrase="Select..."
+                                        commandEmpty="Selection not found."
+                                        autoFocus={true}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Escape") {
+                                                setText(initialText);
+                                                form.reset({ input: initialText });
+                                                setIsEditing(false);
+                                            }
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </form>
+            </Form>
+        </div>,
+        <div key={4} ref={wrapperRef}>
+            <Form {...form}>
+                { /* phoneNumber */}
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FormField
+                        control={form.control}
+                        name="input"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Input {...field} 
+                                        type="text"
+                                        onKeyDown={handleKeyDown}
+                                        onBlur={handleOnBlur}
+                                        autoFocus
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </form>
+            </Form>
+        </div>,
+        <div key={5} ref={wrapperRef}>
+            <Form {...form}>
+                { /* totalClasses */}
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FormField
+                        control={form.control}
+                        name="inputNumber"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Input 
+                                        {...field} 
+                                        value={field.value?.toString() || ""}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            if (value === "") {
+                                                field.onChange(10);
+                                            } else {
+                                                const numValue = parseInt(value);
+                                                field.onChange(isNaN(numValue) ? 10 : numValue);
+                                            }
+                                        }}
+                                        className="w-full"
+                                        type="number"
+                                        step="1"
+                                        min="1"
+                                        placeholder="Total classes (e.g., 10)"
+                                        onKeyDown={handleKeyDown}
+                                        onBlur={handleOnBlur}
+                                        autoFocus
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </form>
+            </Form>
+        </div>,
+        <div key={6} ref={wrapperRef}>
+            <Form {...form}>
+                { /* paymentNotes */}
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FormField
+                        control={form.control}
+                        name="input"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Input {...field} 
+                                        type="text"
+                                        onKeyDown={handleKeyDown}
+                                        onBlur={handleOnBlur}
+                                        autoFocus
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </form>
+            </Form>
+        </div>,
     ]
 
     return (
@@ -311,8 +421,8 @@ export default function EditableText({ initialText, index }: { initialText: stri
                         {inputsToDisplay[index]}
                     </div>
                 ) : (
-                    <Badge variant="secondary" className="cursor-pointer">
-                        {text || "Click to add text"}
+                    <Badge variant="secondary" className="cursor-pointer text-[14px]">
+                        {`${text}${optionalEnding}` || "Click to add text"}
                     </Badge>
                 )
             }

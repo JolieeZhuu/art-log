@@ -79,6 +79,7 @@ button:focus-visible {
 
 input {
     field-sizing: content;
+    min-width: 70px;
 }
 
 @media (prefers-color-scheme: light) {
