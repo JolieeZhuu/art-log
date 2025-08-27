@@ -2,8 +2,8 @@
 import Layout from "@/components/navbar/layout"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
 import { SiteHeader } from "../navbar/site-header"
-
 import { AvailabilityChart } from "@/components/chart/availability-chart"
+import { Card } from "@/components/ui/card"
 
 export function Summary() {
     
@@ -16,14 +16,13 @@ export function Summary() {
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>
-                    <div className="space-y-5 mt-5">
-                        <AvailabilityChart dayOfWeek="Monday"/>
-                        <AvailabilityChart dayOfWeek="Tuesday"/>
-                        <AvailabilityChart dayOfWeek="Wednesday"/>
-                        <AvailabilityChart dayOfWeek="Thursday"/>
-                        <AvailabilityChart dayOfWeek="Friday"/>
-                        <AvailabilityChart dayOfWeek="Saturday"/>
-                        <AvailabilityChart dayOfWeek="Sunday"/>
+                    <div className="w-full max-w-3xl mt-4">
+                        <Card>
+                            <div className="space-y-5 pl-5 pr-5">
+                                <AvailabilityChart type="Weekday"/>
+                                <AvailabilityChart type="Weekend"/>
+                            </div>
+                        </Card>
                     </div>
                 </div>
             )}

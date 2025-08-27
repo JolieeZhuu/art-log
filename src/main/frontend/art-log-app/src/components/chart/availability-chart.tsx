@@ -7,12 +7,13 @@ import { convertTo12Hour } from "../payment-tables/payment-funcs"
 // UI Components
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Card } from "@/components/ui/card"
+/*
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@/components/ui/accordion"*/
 
 const weekendTimes = [
     "9:15-9:30", "9:30-9:45", "9:45-10:00", "10:00-10:15", "10:15-10:30",
@@ -29,109 +30,144 @@ const weekdayTimes = [
     "6:30-6:45", "6:45-7:00", "7:00-7:15", "7:15-7:30"
 ]
 
-export function AvailabilityChart({ dayOfWeek }: { dayOfWeek: string }) {
+export function AvailabilityChart({ type }: { type: string }) {
 
     // Initializations
     const [chartData, setChartData] = React.useState([])
-    const [availability, setAvailability] = React.useState<{ slot: string; numOfStudents: number }[]>([])
+    const [availability, setAvailability] = React.useState<{ slot: string; numOfStudents: number }[][]>([])
+
+    const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    const weekends = ["Saturday", "Sunday"]
 
     React.useEffect(() => {
         createScheduleData()
-    }, [dayOfWeek])
+    }, [type])
 
     React.useEffect(() => {
         const newAvailability = calculateStudentsPerSlot()
         setAvailability(newAvailability)
-    }, [dayOfWeek, chartData])
+    }, [type, chartData])
 
     async function createScheduleData() {
         // initializations
         const studentUrl = "http://localhost:8080/student/"
+        const collectData: any = []
+        let myArr = []
+        if (type.toLowerCase() === "weekday")
+            myArr = weekdays
+        else
+            myArr = weekends
 
-        const studentsByDay = await getByDay(studentUrl, dayOfWeek)
+        const storeResults = await Promise.all(
+            myArr.map(async dayOfWeek => {
+                const studentsByDay = await getByDay(studentUrl, dayOfWeek)
 
-        const formattedData: [] = studentsByDay.map(({ student_id, first_name, last_name, time_expected, class_hours }: { student_id: number, first_name: string, last_name: string, time_expected: string, class_hours: number }) => {
-            const [formattedTime] = convertTo12Hour(time_expected).split(" ")
-            
-            const tempMap = new Map()
-            tempMap.set("student_id", student_id)
-            tempMap.set("student", first_name + " " + last_name)
-            let mins = 0
-            if (class_hours % 1 == 0) {
-                mins = Math.floor(class_hours) * 60 // convert to minutes
-            } else {
-                mins = Math.floor(class_hours) * 60 + 30 // convert to minutes, assuming 30 minutes for decimals
-            }
+                const formattedData: [] = studentsByDay.map(({ student_id, first_name, last_name, time_expected, class_hours }: { student_id: number, first_name: string, last_name: string, time_expected: string, class_hours: number }) => {
+                    const [formattedTime] = convertTo12Hour(time_expected).split(" ")
+                    
+                    const tempMap = new Map()
+                    tempMap.set("student_id", student_id)
+                    tempMap.set("student", first_name + " " + last_name)
+                    let mins = 0
+                    if (class_hours % 1 == 0) {
+                        mins = Math.floor(class_hours) * 60 // convert to minutes
+                    } else {
+                        mins = Math.floor(class_hours) * 60 + 30 // convert to minutes, assuming 30 minutes for decimals
+                    }
 
-            if (dayOfWeek.toLowerCase() === "sunday" || dayOfWeek.toLowerCase() === "saturday") {
-                const startIndex = weekendTimes.findIndex((slot: string) => slot.startsWith(formattedTime))
-                const endIndex = startIndex + Math.ceil(mins / 15)
+                    if (dayOfWeek.toLowerCase() === "sunday" || dayOfWeek.toLowerCase() === "saturday") {
+                        const startIndex = weekendTimes.findIndex((slot: string) => slot.startsWith(formattedTime))
+                        const endIndex = startIndex + Math.ceil(mins / 15)
 
-                // Fill slots before class
-                for (let i = 0; i < startIndex; i++) {
-                    tempMap.set(weekendTimes[i], false)
-                }
+                        // Fill slots before class
+                        for (let i = 0; i < startIndex; i++) {
+                            tempMap.set(weekendTimes[i], false)
+                        }
 
-                // Fill slots during class
-                for (let i = startIndex; i < endIndex; i++) {
-                    tempMap.set(weekendTimes[i], true)
-                }
+                        // Fill slots during class
+                        for (let i = startIndex; i < endIndex; i++) {
+                            tempMap.set(weekendTimes[i], true)
+                        }
 
-                // Fill slots after class
-                for (let i = endIndex; i < weekendTimes.length; i++) {
-                    tempMap.set(weekendTimes[i], false)
-                }
-            } else {
-                const startIndex = weekdayTimes.findIndex((slot: string) => slot.startsWith(formattedTime))
-                const endIndex = startIndex + Math.ceil(mins / 15)
+                        // Fill slots after class
+                        for (let i = endIndex; i < weekendTimes.length; i++) {
+                            tempMap.set(weekendTimes[i], false)
+                        }
+                    } else {
+                        const startIndex = weekdayTimes.findIndex((slot: string) => slot.startsWith(formattedTime))
+                        const endIndex = startIndex + Math.ceil(mins / 15)
 
-                // Fill slots before class
-                for (let i = 0; i < startIndex; i++) {
-                    tempMap.set(weekdayTimes[i], false)
-                }
+                        // Fill slots before class
+                        for (let i = 0; i < startIndex; i++) {
+                            tempMap.set(weekdayTimes[i], false)
+                        }
 
-                // Fill slots during class
-                for (let i = startIndex; i < endIndex; i++) {
-                    tempMap.set(weekdayTimes[i], true)
-                }
+                        // Fill slots during class
+                        for (let i = startIndex; i < endIndex; i++) {
+                            tempMap.set(weekdayTimes[i], true)
+                        }
 
-                // Fill slots after class
-                for (let i = endIndex; i < weekdayTimes.length; i++) {
-                    tempMap.set(weekdayTimes[i], false)
-                }
-            }
+                        // Fill slots after class
+                        for (let i = endIndex; i < weekdayTimes.length; i++) {
+                            tempMap.set(weekdayTimes[i], false)
+                        }
+                    }
 
-            return tempMap
-        })
-        setChartData(formattedData)
+                    return tempMap
+                })
+                collectData.push(formattedData)     
+            })
+        )
+        setChartData(collectData)
     }
 
     // Calculate availability per time slot
     function calculateStudentsPerSlot() {
-        if (dayOfWeek.toLowerCase() === "sunday" || dayOfWeek.toLowerCase() === "saturday") {
-            return weekendTimes.map((slot: string) => {
-                // count the number of students who have the slot set as true
-                const numOfStudents = chartData.filter((row: any) => row.get(slot)).length
-                return { slot, numOfStudents }
+        if (type.toLowerCase() === "weekend") {
+            return chartData.map((dayOfWeek: any) => {
+                return weekendTimes.map((slot: string) => {
+                    const numOfStudents = dayOfWeek.filter((row: any) => row.get(slot)).length
+                    return { slot, numOfStudents }
+                })
             })
+            
         } else {
-            return weekdayTimes.map((slot: string) => {
-                // count the number of students who have the slot set as true
-                const numOfStudents = chartData.filter((row: any) => row.get(slot)).length
-                return { slot, numOfStudents }
+            return chartData.map((dayOfWeek: any) => {
+                return weekdayTimes.map((slot: string) => {
+                    const numOfStudents = dayOfWeek.filter((row: any) => row.get(slot)).length
+                    return { slot, numOfStudents }
+                })
             })
         }
     }
 
     return (
         <div>
-            <h2 className="font-semibold">{dayOfWeek}</h2>
+            <h2 className="font-semibold mb-2">{type}</h2>
             <Card className="py-4 pl-6 pr-6">
                 <div className="flex">
-                    <div className="w-36 shrink-0">
-                        <div className="pt-3 space-y-6 font-medium">
+                    <div className="w-30 shrink-0">
+                        <div className="pt-4 space-y-6 font-medium">
                             <h2>Time slots</h2>
-                            <h2 className="mb-4">No. of Students</h2>
+                            {
+                                type.toLowerCase() === "weekend" ? (
+                                    <>
+                                        {
+                                            weekends.map((dayOfWeek, index) => (
+                                                <h2 key={index} className="mb-3">{dayOfWeek}</h2>
+                                            ))
+                                        }
+                                    </>
+                                ) : (
+                                    <>
+                                        {
+                                            weekdays.map((dayOfWeek, index) => (
+                                                <h2 key={index} className="mb-3">{dayOfWeek}</h2>
+                                            ))
+                                        }
+                                    </>
+                                )
+                            }
                         </div>
                         { /* Student names */}
                         {
@@ -156,15 +192,15 @@ export function AvailabilityChart({ dayOfWeek }: { dayOfWeek: string }) {
 
                     { /* Second column for time slots and boxes */}
                     <div className="flex-1">
-                        <ScrollArea className="w-247">
+                        <ScrollArea className="w-140">
                             { /* Time slots */}
-                            <div className="flex pt-1 mb-2 min-w-max border-b">
+                            <div className="flex pt-1 mb-2 min-w-max">
                                 {
-                                    dayOfWeek.toLowerCase() === "sunday" || dayOfWeek.toLowerCase() === "saturday" ? (
+                                    type.toLowerCase() === "weekend" ? (
                                         <>
                                             {
                                                 weekendTimes.map((slot: string, index: number) => (
-                                                    <div key={index} className="w-16 font-medium text-center font-medium text-sm text-gray-600 py-3 border-t flex-shrink-0 bg-secondary">
+                                                    <div key={index} className="w-16 font-medium text-center font-medium text-sm text-gray-600 py-3 border-t border-b flex-shrink-0 bg-secondary">
                                                         <div>
                                                             {slot.split('-')[0]}
                                                         </div>
@@ -176,7 +212,7 @@ export function AvailabilityChart({ dayOfWeek }: { dayOfWeek: string }) {
                                         <>
                                             {
                                                 weekdayTimes.map((slot: string, index: number) => (
-                                                    <div key={index} className="w-16 font-medium text-center font-medium text-sm text-gray-600 py-3 border-t flex-shrink-0 bg-secondary">
+                                                    <div key={index} className="w-16 font-medium text-center text-sm text-gray-600 py-3 border-t border-b flex-shrink-0 bg-secondary">
                                                         <div>
                                                             {slot.split('-')[0]}
                                                         </div>
@@ -190,6 +226,22 @@ export function AvailabilityChart({ dayOfWeek }: { dayOfWeek: string }) {
                                 }
                             </div>
                             { /* Availability counter */}
+                            <div>
+                                {
+                                    availability.map((row, index) => (
+                                        <div key={index} className="flex min-w-max">
+                                            {
+                                                row.map(({ slot, numOfStudents }: { slot: string, numOfStudents: number}) => (
+                                                    <div key={slot} className="w-16 text-center text-sm font-medium text-gray-600 py-2 flex-shrink-0">
+                                                        {numOfStudents}
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                            {/*
                             <div className="flex min-w-max">
                                 {
                                     availability.map(({ slot, numOfStudents }: { slot: string, numOfStudents: number}) => (
@@ -198,7 +250,9 @@ export function AvailabilityChart({ dayOfWeek }: { dayOfWeek: string }) {
                                         </div>
                                     ))
                                 }
-                            </div>
+                            </div>*/
+
+                            }
                             { /* Boxes colour coded for availability */ }
                             {
                                 /*
@@ -367,24 +421,28 @@ export function AvailabilitySlots({ dayOfWeek, header }: { dayOfWeek: string, he
             <h2>{header}</h2>
             <Card className="py-4 pl-6 pr-6">
                 <div className="flex">
-                    <div className="w-36 shrink-0">
-                        <div className="pt-3 space-y-6 font-medium">
-                            <h2>Time slots</h2>
-                            <h2 className="mb-4">No. of Students</h2>
-                        </div>
-                    </div>
+                    {
+                        /*
+                        <div className="w-36 shrink-0">
+                            <div className="pt-3 space-y-6 font-medium">
+                                <h2>Time slots</h2>
+                                <h2 className="mb-4">No. of Students</h2>
+                            </div>
+                        </div>*/
+
+                    }
 
                     { /* Second column for time slots and boxes */}
                     <div className="flex-1">
-                        <ScrollArea className="w-247">
+                        <ScrollArea className="w-283">
                             { /* Time slots */}
-                            <div className="flex pt-1 mb-2 min-w-max border-b">
+                            <div className="flex pt-1 mb-2 min-w-max justify-center">
                                 {
                                     dayOfWeek.toLowerCase() === "sunday" || dayOfWeek.toLowerCase() === "saturday" ? (
                                         <>
                                             {
                                                 weekendTimes.map((slot: string, index: number) => (
-                                                    <div key={index} className="w-16 font-medium text-center text-sm text-gray-600 py-3 border-t flex-shrink-0 bg-secondary">
+                                                    <div key={index} className="w-16 font-medium text-center text-sm text-gray-600 py-3 border-t border-b flex-shrink-0 bg-secondary">
                                                         <div>
                                                             {slot.split('-')[0]}
                                                         </div>
@@ -396,7 +454,7 @@ export function AvailabilitySlots({ dayOfWeek, header }: { dayOfWeek: string, he
                                         <>
                                             {
                                                 weekdayTimes.map((slot: string, index: number) => (
-                                                    <div key={index} className="w-16 font-medium text-center text-sm text-gray-600 py-3 border-t flex-shrink-0 bg-secondary">
+                                                    <div key={index} className="w-16 font-medium text-center text-sm text-gray-600 py-3 border-t border-b flex-shrink-0 bg-secondary">
                                                         <div>
                                                             {slot.split('-')[0]}
                                                         </div>
@@ -410,7 +468,7 @@ export function AvailabilitySlots({ dayOfWeek, header }: { dayOfWeek: string, he
                                 }
                             </div>
                             { /* Availability counter */}
-                            <div className="flex min-w-max">
+                            <div className="flex min-w-max justify-center">
                                 {
                                     availability.map(({ slot, numOfStudents }: { slot: string, numOfStudents: number}) => (
                                         <div key={slot} className="w-16 text-center text-sm text-gray-600 py-2 flex-shrink-0">

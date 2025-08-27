@@ -30,13 +30,14 @@ export function StudentsProvider({ children }: { children: React.ReactNode }) {
 
     return (
         <StudentsContext.Provider value={{ students, setStudents, refresh }}>
-        {children}
+            {children}
         </StudentsContext.Provider>
     );
 }
 
 export function useStudents() {
     const ctx = useContext(StudentsContext);
-    if (!ctx) throw new Error("useStudents must be used within StudentsProvider");
+    if (!ctx) 
+        throw new Error("useStudents must be used within StudentsProvider");
     return ctx;
 }
