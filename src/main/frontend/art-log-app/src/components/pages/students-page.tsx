@@ -82,8 +82,7 @@ export function Students() {
             day: newDay[0] + newDay.slice(1).toLowerCase(), // Convert to lowercase except for first letter
             phone_number: student.phone_number,
             time_expected: student.time_expected,
-            notes: student.notes,
-            payment_notes: student.payment_notes,
+            general_notes: student.general_notes,
             payment_number: student.payment_number,
             class_number: student.class_number,
             total_classes: student.total_classes,

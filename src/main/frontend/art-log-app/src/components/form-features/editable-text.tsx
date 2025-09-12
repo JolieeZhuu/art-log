@@ -7,7 +7,7 @@ import { z } from "zod" // Used for input validation
 
 // Internal imports
 import { dayOptions, classIdOptions, timeExpectedOptions } from "./options";
-import { getById, edit } from "@/restAPI/entities";
+import { getById, edit, getByPaymentNumberAndStudentIdAndClassNumber } from "@/restAPI/entities";
 import { convertTo24Hour } from "../payment-tables/payment-funcs";
 
 // UI Components
@@ -67,7 +67,9 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
     const [isEditing, setIsEditing] = React.useState(false)
     const [text, setText] = React.useState<string | number>(initialText)
     const isNumberField = index === 2 || index === 5; // classHours and totalClasses
+    
     const studentUrl = "http://localhost:8080/student/"
+    const attendanceUrl = "http://localhost:8080/attendance/"
 
     const form = useForm<z.infer<typeof editSchema>>({
         resolver: zodResolver(editSchema),
@@ -189,8 +191,7 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
                 day: student.day,
                 phone_number: student.phone_number,
                 time_expected: student.time_expected,
-                payment_notes: student.payment_notes,
-                notes: student.notes,
+                general_notes: student.general_notes,
                 payment_number: student.payment_number,
                 class_number: student.class_number, 
                 total_classes: index == 5 ? values.inputNumber : student.total_classes, //
@@ -200,7 +201,10 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
             console.log("Setting number:", values.inputNumber)
             setText(values.inputNumber ?? 1);
         } else {
-            const data = {
+            console.log(student.payment_number, id, student.class_number)
+            const storeClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, student.payment_number, id, student.class_number)
+            console.log(storeClass)
+            const data1 = {
                 student_id: id,
                 first_name: student.first_name,
                 last_name: student.last_name,
@@ -208,14 +212,28 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
                 day: index == 0 ? values.input : student.day,
                 phone_number: index == 4 ? values.input: student.phone_number,
                 time_expected: index == 1 ? convertTo24Hour(values.input) : student.time_expected,
-                payment_notes: index == 6 ? values.input : student.payment_notes,
-                notes: student.notes,
+                general_notes: index == 8 ? values.input : student.general_notes,
                 payment_number: student.payment_number,
                 class_number: student.class_number, 
                 total_classes: index == 2 ? values.inputNumber : student.total_classes, //
                 class_hours: index == 5 ? values.inputNumber : student.class_hours, //
             }
-            await edit(studentUrl, data)
+            const data2 = {
+                attendance_id: storeClass.attendance_id,
+                studentId: id,
+                classNumber: storeClass.class_number,
+                paymentNumber: storeClass.payment_number,
+                classDate: storeClass.date_expected,
+                attendanceCheck: storeClass.attendance_check,
+                attendedDate: storeClass.date_attended,
+                checkIn: storeClass.check_in,
+                checkOut: storeClass.check_out,
+                payment_notes: index == 6 ? values.input : storeClass.payment_notes,
+                term_notes: index == 7 ? values.input : storeClass.term_notes,
+                notes: storeClass.notes,
+            }
+            await edit(studentUrl, data1)
+            await edit(attendanceUrl, data2)
             console.log("Setting string:", values.input)
             setText(values.input ?? "");
         }
@@ -428,6 +446,54 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
         <div key={6} ref={wrapperRef}>
             <Form {...form}>
                 { /* paymentNotes */}
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FormField
+                        control={form.control}
+                        name="input"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Input {...field} 
+                                        type="text"
+                                        onKeyDown={handleKeyDown}
+                                        onBlur={handleOnBlur}
+                                        autoFocus
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </form>
+            </Form>
+        </div>,
+        <div key={7} ref={wrapperRef}>
+            <Form {...form}>
+                { /* termNotes */}
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FormField
+                        control={form.control}
+                        name="input"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Input {...field} 
+                                        type="text"
+                                        onKeyDown={handleKeyDown}
+                                        onBlur={handleOnBlur}
+                                        autoFocus
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </form>
+            </Form>
+        </div>,
+        <div key={8} ref={wrapperRef}>
+            <Form {...form}>
+                { /* generalNotes */}
                 <form onSubmit={form.handleSubmit(onSubmit)}>
                     <FormField
                         control={form.control}

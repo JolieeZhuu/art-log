@@ -145,6 +145,8 @@ export function DataTable<TData extends Student, TValue>({
                             hours: 1, // fix
                             //check_out: "7:00 AM", // fix back to checkOutTime
                             check_out: convertTo24Hour(checkOutTime), // fix back to checkOutTime
+                            payment_notes: foundAttendance.payment_notes,
+                            term_notes: foundAttendance.term_notes,
                             notes: foundAttendance.notes,
                         }
 
@@ -166,6 +168,8 @@ export function DataTable<TData extends Student, TValue>({
                             hours: 1, // fix
                             // check_out: "7:00 AM", // fix back to checkOutTime
                             check_out: convertTo24Hour(checkOutTime), // fix back to checkOutTime
+                            payment_notes: foundAbsent.payment_notes,
+                            term_notes: foundAbsent.term_notes,
                             notes: foundAbsent.notes,
                         }
                         

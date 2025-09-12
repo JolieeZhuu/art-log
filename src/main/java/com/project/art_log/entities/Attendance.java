@@ -27,6 +27,8 @@ public class Attendance {
 	private LocalTime checkIn;
 	private Integer hours;
 	private LocalTime checkOut;
+	private String paymentNotes;
+	private String termNotes;
 	private String notes;
 
 	public Attendance() {
@@ -35,7 +37,7 @@ public class Attendance {
 	
 	public Attendance(Integer attendanceId, Integer studentId, Integer paymentNumber, Integer classNumber,
 			LocalDate dateExpected, String attendanceCheck, LocalDate dateAttended, LocalTime checkIn, Integer hours,
-			LocalTime checkOut, String notes) {
+			LocalTime checkOut, String paymentNotes, String termNotes, String notes) {
 		super();
 		this.attendanceId = attendanceId;
 		this.studentId = studentId;
@@ -47,6 +49,8 @@ public class Attendance {
 		this.checkIn = checkIn;
 		this.hours = hours;
 		this.checkOut = checkOut;
+		this.paymentNotes = paymentNotes;
+		this.termNotes = termNotes;
 		this.notes = notes;
 	}
 
@@ -111,6 +115,19 @@ public class Attendance {
 	public void setCheckOut(LocalTime checkOut) {
 		this.checkOut = checkOut;
 	}
+	public String getPaymentNotes() {
+		return paymentNotes;
+	}
+	public void setPaymentNotes(String paymentNotes) {
+		this.paymentNotes = paymentNotes;
+	}
+	public String getTermNotes() {
+		return termNotes;
+	}
+	public void setTermNotes(String termNotes) {
+		this.termNotes = termNotes;
+	}
+
 	public String getNotes() {
 		return notes;
 	}

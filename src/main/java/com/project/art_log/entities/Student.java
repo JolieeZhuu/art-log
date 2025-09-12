@@ -23,8 +23,7 @@ public class Student {
     private String day;
     private String phoneNumber;
 	private LocalTime timeExpected;
-	private String paymentNotes;
-	private String notes;
+	private String generalNotes;
     private Integer paymentNumber;
 	private Integer classNumber;
 	private Integer totalClasses;
@@ -35,7 +34,7 @@ public class Student {
 	} // equivalent to no args constructor
 	    
 	public Student(Integer studentId, String firstName, String lastName, String classId, String day, String phoneNumber,
-			LocalTime timeExpected, String paymentNotes, String notes, Integer paymentNumber, Integer classNumber,
+			LocalTime timeExpected, String generalNotes, Integer paymentNumber, Integer classNumber,
 			Integer totalClasses, Double classHours) {
 		super();
 		this.studentId = studentId;
@@ -45,8 +44,7 @@ public class Student {
 		this.day = day;
 		this.phoneNumber = phoneNumber;
 		this.timeExpected = timeExpected;
-		this.paymentNotes = paymentNotes;
-		this.notes = notes;
+		this.generalNotes = generalNotes;
 		this.paymentNumber = paymentNumber;
 		this.classNumber = classNumber;
 		this.totalClasses = totalClasses;
@@ -94,18 +92,12 @@ public class Student {
 	}
 	public void setTimeExpected(LocalTime timeExpected) {
 		this.timeExpected = timeExpected;
-	}	
-	public String getPaymentNotes() {
-		return paymentNotes;
 	}
-	public void setPaymentNotes(String paymentNotes) {
-		this.paymentNotes = paymentNotes;
+	public String getGeneralNotes() {
+		return generalNotes;
 	}
-	public String getNotes() {
-		return notes;
-	}
-	public void setNotes(String notes) {
-		this.notes = notes;
+	public void setGeneralNotes(String generalNotes) {
+		this.generalNotes = generalNotes;
 	}
     public Integer getPaymentNumber() {
 		return paymentNumber;

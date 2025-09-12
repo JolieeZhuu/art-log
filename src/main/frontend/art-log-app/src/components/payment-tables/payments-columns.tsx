@@ -62,6 +62,8 @@ const editSchema = z.object({
     checkIn: z.optional(z.string()),
     makeupMins: z.optional(z.string()),
     checkOut: z.optional(z.string()),
+    paymentNotes: z.optional(z.string()),
+    termNotes: z.optional(z.string()),
     notes: z.optional(z.string()),
 })
 
@@ -101,6 +103,18 @@ const attendanceCheckOptions = [
         value: "Holiday",
         label: "Holiday",
     },
+    {
+        value: "Pushback",
+        label: "Pushback",
+    },
+    {
+        value: "Used",
+        label: "Used",
+    },
+    {
+        value: "Expired",
+        label: "Expired",
+    },
 ]
 
 
@@ -115,6 +129,8 @@ export type Attendance = {
     checkIn: string
     makeupMins: string
     checkOut: string
+    paymentNotes: string
+    termNotes: string
     notes: string
 }
 
@@ -192,6 +208,8 @@ export const columns = ({
                     checkIn: attendance.checkIn ? attendance.checkIn : "",
                     makeupMins: attendance.makeupMins ? attendance.makeupMins : "",
                     checkOut: attendance.checkOut ? attendance.checkOut : "",
+                    paymentNotes: attendance.paymentNotes ? attendance.paymentNotes : "",
+                    termNotes: attendance.termNotes ? attendance.termNotes : "",
                     notes: attendance.notes ? attendance.notes : "",
                 },
             })
@@ -228,6 +246,8 @@ export const columns = ({
                                 check_in: values.checkIn == "" ? null : convertTo24Hour(values.checkIn),
                                 hours: 0, // fix makeup minds and hours confusion
                                 check_out: values.checkOut == "" ? null : convertTo24Hour(values.checkOut),
+                                payment_notes: values.paymentNotes,
+                                term_notes: values.termNotes,
                                 notes: values.notes,
                             }
                             await edit(attendanceUrl, data)
@@ -243,6 +263,8 @@ export const columns = ({
                                 checkIn: values.checkIn == undefined ? "" : values.checkIn,
                                 makeupMins: "", // fix makeup minds and hours confusion
                                 checkOut: values.checkOut == undefined ? "" : values.checkOut,
+                                paymentNotes: values.paymentNotes == undefined ? "" : values.paymentNotes,
+                                termNotes: values.termNotes == undefined ? "" : values.termNotes,
                                 notes: values.notes == undefined ? "" : values.notes,
                             }
                             onUpdate(dataToUpdate)
@@ -260,6 +282,8 @@ export const columns = ({
                                 check_in: null,
                                 hours: 0, // fix makeup mins and hours confusion
                                 check_out: null,
+                                payment_notes: "",
+                                term_notes: "",
                                 notes: "",
                             }
                             await edit(attendanceUrl, data)
@@ -275,6 +299,8 @@ export const columns = ({
                                 checkIn: "",
                                 makeupMins: "", // fix makeup minds and hours confusion
                                 checkOut: "",
+                                paymentNotes: "",
+                                termNotes: "",
                                 notes: "",
                             }
                             onUpdate(dataToUpdate)
@@ -282,7 +308,7 @@ export const columns = ({
                     }
 
                     // Check if holiday (will need to add a new class to the end of the list)
-                    if (values.attendanceCheck === "Holiday" && values.attendanceCheck !== attendance.attendanceCheck) {
+                    if ((values.attendanceCheck === "Holiday" || values.attendanceCheck === "Pushback") && values.attendanceCheck !== attendance.attendanceCheck) {
                         const response = await addClass(attendance.paymentNumber, attendance.studentId)
                         const dataToUpdate: Attendance = {
                             id: response.attendance_id,
@@ -295,6 +321,8 @@ export const columns = ({
                             checkIn: "",
                             makeupMins: "", // fix makeup minds and hours confusion
                             checkOut: "",
+                            paymentNotes: "",
+                            termNotes: "",
                             notes: "",
                         }
                         onAdded(dataToUpdate)
@@ -314,24 +342,11 @@ export const columns = ({
                         check_in: values.checkIn == "" ? null : convertTo24Hour(values.checkIn),
                         hours: 0, // fix makeup minds and hours confusion
                         check_out: values.checkOut == "" ? null : convertTo24Hour(values.checkOut),
+                        payment_notes: values.paymentNotes,
+                        term_notes: values.termNotes,
                         notes: values.notes,
                     }
                     await edit(attendanceUrl, data)
-
-                    const dataToUpdate: Attendance = {
-                        id: attendance.id,
-                        studentId: attendance.studentId,
-                        classNumber: attendance.classNumber,
-                        paymentNumber: attendance.classNumber,
-                        classDate: dayjs(values.dateExpected.toString()).format("MMMM D, YYYY"),
-                        attendanceCheck: values.attendanceCheck,
-                        attendedDate: values.dateAttended !== undefined ? dayjs(values.dateAttended?.toString()).format("MMMM D, YYYY") : "",
-                        checkIn: values.checkIn == undefined ? "" : values.checkIn,
-                        makeupMins: "", // fix makeup minds and hours confusion
-                        checkOut: values.checkOut == undefined ? "" : values.checkOut,
-                        notes: values.notes == undefined ? "" : values.notes,
-                    }
-                    onUpdate(dataToUpdate)
 
                     /* !!!!!!
                     for holiday attendance check, holidays should be a customized list from the user, 
@@ -340,8 +355,8 @@ export const columns = ({
                     */
 
                     // Check if holiday (will need to add a new class to the end of the list)
-                    console.log("checking holiday", values.attendanceCheck === "Holiday") // DEBUG
-                    if (values.attendanceCheck === "Holiday" && values.attendanceCheck !== attendance.attendanceCheck) {
+                    console.log("checking holiday", (values.attendanceCheck === "Holiday" || values.attendanceCheck === "Pushback")) // DEBUG
+                    if ((values.attendanceCheck === "Holiday" || values.attendanceCheck === "Pushback") && values.attendanceCheck !== attendance.attendanceCheck) {
                         const response = await addClass(attendance.paymentNumber, attendance.studentId)
                         const dataToUpdate: Attendance = {
                             id: response.attendance_id,
@@ -354,10 +369,29 @@ export const columns = ({
                             checkIn: "",
                             makeupMins: "", // fix makeup minds and hours confusion
                             checkOut: "",
+                            paymentNotes: "",
+                            termNotes: "",
                             notes: "",
                         }
                         onAdded(dataToUpdate)
                     }
+
+                    const dataToUpdate: Attendance = {
+                        id: attendance.id,
+                        studentId: attendance.studentId,
+                        classNumber: attendance.classNumber,
+                        paymentNumber: attendance.classNumber,
+                        classDate: dayjs(values.dateExpected.toString()).format("MMMM D, YYYY"),
+                        attendanceCheck: values.attendanceCheck,
+                        attendedDate: values.dateAttended !== undefined ? dayjs(values.dateAttended?.toString()).format("MMMM D, YYYY") : "",
+                        checkIn: values.checkIn == undefined ? "" : values.checkIn,
+                        makeupMins: "", // fix makeup minds and hours confusion
+                        checkOut: values.checkOut == undefined ? "" : values.checkOut,
+                        paymentNotes: values.paymentNotes == undefined ? "" : values.paymentNotes,
+                        termNotes: values.termNotes == undefined ? "" : values.termNotes,
+                        notes: values.notes == undefined ? "" : values.notes,
+                    }
+                    onUpdate(dataToUpdate)
                 }
                 setIsEditDialogOpen(false)
                 console.log("edited")

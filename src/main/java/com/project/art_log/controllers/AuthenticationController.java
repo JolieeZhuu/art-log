@@ -40,7 +40,7 @@ public class AuthenticationController {
 	    }
 	}
 	
-	@PostMapping("/login")
+	@PostMapping({"/login", "/login/"})
 	public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto) {
 		try {
 			User authenticatedUser = authenticationService.authenticate(loginUserDto);

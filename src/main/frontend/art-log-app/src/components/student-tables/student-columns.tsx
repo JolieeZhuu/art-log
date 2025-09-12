@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
 
 // Internal imports
-import { getById, edit, deleteById, deleteByStudentId } from "@/restAPI/entities";
+import { getById, edit, deleteById, deleteByStudentId, getByPaymentNumberAndStudentIdAndClassNumber } from "@/restAPI/entities";
 
 // UI components
 import type { ColumnDef } from "@tanstack/react-table";
@@ -138,10 +138,12 @@ export const columns = ({
         header: "Payment Notes",
         cell: ({ row }) => {
             const phrase = row.getValue("paymentNotes") as string
-            if (phrase.length > 20) {
-                const formatted = phrase.substring(0, 17) + "..."
-                return <div>{formatted}</div>
-            } return <div>{phrase}</div>
+            console.log("phrase", phrase)
+            if (phrase !== undefined && phrase !== null) {
+                if (phrase.substring(0, 2) === "np") {
+                    return <div>{phrase}</div>
+                } return
+            } return
         }
     },
     {
@@ -149,10 +151,12 @@ export const columns = ({
         header: "Notes",
         cell: ({ row }) => {
             const phrase = row.getValue("notes") as string
-            if (phrase.length > 15) {
-                const formatted = phrase.substring(0, 12) + "..."
-                return <div>{formatted}</div>
-            } return <div>{phrase}</div>
+            if (phrase !== undefined && phrase !== null) {
+                if (phrase.length > 15) {
+                    const formatted = phrase.substring(0, 12) + "..."
+                    return <div>{formatted}</div>
+                } return <div>{phrase}</div>
+            } return
         }
     },
     {
@@ -204,21 +208,37 @@ export const columns = ({
             async function editStudent(values: z.infer<typeof editSchema>) {
 
                 const storeStudent = await getById(studentUrl, student.id)
+                const storeClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, storeStudent.payment_number, student.id, storeStudent.class_number)
 
                 console.log("edit clicked")
                 console.log(values)
-                const data = {
+                const data1 = {
                     student_id: student.id,
                     first_name: values.firstName,
                     last_name: values.lastName,
                     class_id: storeStudent.class_id,
                     day: storeStudent.day,
                     phone_number: values.phoneNumber,
-                    payment_notes: values.paymentNotes,
-                    notes: values.notes,
+                    general_notes: values.notes,
                     payment_number: storeStudent.payment_number,
                     class_number: storeStudent.class_number,
                     time_expected: storeStudent.time_expected
+                }
+
+                const data2 = {
+                    attendance_id: storeClass.attendance_id,
+                    student_id: storeClass.student_id,
+                    payment_number: storeClass.payment_number,
+                    class_number: storeClass.class_number,
+                    date_expected: storeClass.date_expected,
+                    attendance_check: storeClass.attendance_check,
+                    date_attended: storeClass.date_attended,
+                    check_in: storeClass.check_in,
+                    hours: storeClass.hours,
+                    check_out: storeClass.check_out,
+                    payment_notes: values.paymentNotes,
+                    term_notes: storeClass.term_notes,
+                    notes: storeClass.notes
                 }
 
                 const updatedStudent = {
@@ -232,7 +252,8 @@ export const columns = ({
 
                 onUpdate(updatedStudent) // Update the student in the parent component so no need to refresh the page
 
-                await edit(studentUrl, data)
+                await edit(studentUrl, data1)
+                await edit(attendanceUrl, data2)
                 setIsEditDialogOpen(false)
                 toast(`${values.firstName} ${values.lastName} has been edited.`)
             }

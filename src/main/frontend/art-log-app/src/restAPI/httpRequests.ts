@@ -1,4 +1,4 @@
-// GET REQUEST -------------------------------------------------------
+/*// GET REQUEST -------------------------------------------------------
 export class GetHTTP {
 	async get(url: string) {
 		const response = await fetch(url, {
@@ -74,4 +74,4 @@ export class DeleteHTTP {
         const resData = 'resource deleted';  // awaits response.json()  
         return resData; 
     } 
-}
+}*/

@@ -3,33 +3,47 @@ import * as React from "react"
 // Internal imports
 import { columns, type Student } from "@/components/student-tables/student-columns"
 import { DataTable } from "@/components/student-tables/student-data-table"
-import { getByDayAndExpectedTime } from "@/restAPI/entities"
+import { getByDayAndExpectedTime, getByPaymentNumberAndStudentIdAndClassNumber } from "@/restAPI/entities"
 import { type Checkout } from "@/components/checkout-tables/checkout-columns"
 
 export default function StudentTable({ dayOfWeek, setSelectedStudents, selectedStudents } : { dayOfWeek: string; setSelectedStudents: (selected: Checkout[]) => void; selectedStudents: Checkout[] }) {
 
     // variable initializations
     const studentUrl = "http://localhost:8080/student/"
+    const attendanceUrl = "http://localhost:8080/attendance/"
     const [data, setData] = React.useState<Student[]>([]) // Used to handle async function with useEffect
 
     async function getData(): Promise<Student[]> {
-        // Fetch data from API
-        const studentList = await getByDayAndExpectedTime(studentUrl, dayOfWeek)
+        try {
+            // Fetch data from API
+            const studentList = await getByDayAndExpectedTime(studentUrl, dayOfWeek)
+            console.log("studentList:", studentList)
 
-        // Store values to be used during editMode
-        const studentValuesList: Student[] = studentList.map(({ student_id, first_name, last_name, payment_notes, notes, phone_number } : { student_id: number, first_name: string, last_name: string, payment_notes: string, notes: string, phone_number: string}) => {
-            return {
-                id: student_id,
-                name: `${first_name} ${last_name}`,
-                paymentNotes: payment_notes,
-                notes: notes,
-                phoneNumber: phone_number,
+            if (!Array.isArray(studentList)) {
+                console.error("Data fetched is not an array:", studentList)
+                return []
             }
-        })
-        console.log(studentValuesList)
-        
+            // Store values to be used during editMode
+            const studentValuesList: Student[] = await Promise.all(studentList.map(async ({ student_id, first_name, last_name, general_notes, phone_number, payment_number, class_number } : { student_id: number, first_name: string, last_name: string, general_notes: string, phone_number: string, payment_number: number, class_number: number }) => {
+                const attendanceClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, payment_number, student_id, class_number) // could be null
+                return {
+                    id: student_id,
+                    name: `${first_name} ${last_name}`,
+                    paymentNotes: attendanceClass !== null ? attendanceClass.payment_notes : "",
+                    notes: general_notes,
+                    phoneNumber: phone_number,
+                    checkIn: "",
+                }
+            }))
+            console.log(studentValuesList)
+            
 
-        return studentValuesList
+            return studentValuesList
+
+        } catch (error) {
+            console.error("Error fetching student data:", error)
+            return []
+        }
     }
 
     React.useEffect(() => {

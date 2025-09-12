@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
+import authService from "@/authService"
 
 // Internal imports
 import { useNavigate } from "react-router-dom"
@@ -56,28 +57,20 @@ export function LoginPage() {
     // Define submit handler, parameter values are the form values
     async function onSubmit(values: z.infer<typeof loginSchema>) {
         console.log(values)
-
         setSubmitError("") // Reset error message
 
-        try {
-            const response = await fetch('http://localhost:8080/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(values)
-            })
-            
-            if (response.ok) {
-                // Success - redirect to summary page
-                navigate('/summary')
-            } else {
-                // Get error message from backend
-                const errorMsg = await response.text()
-                setSubmitError(errorMsg)
-            }
-        } catch (error: any) {
-            setSubmitError('Failed to login. Please try again.')
+        const result = await authService.login({ 
+            email: values.email, 
+            password: values.password 
+        });
+
+        console.log("Login result:", result); // Add this line to debug
+
+        if (result.success) {
+            navigate("/summary");
+            console.log("Login successful");
+        } else {
+            setSubmitError(result.message || "Login failed");
         }
     }
 

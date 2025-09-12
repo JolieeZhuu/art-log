@@ -47,6 +47,7 @@ type Student = {
     time_expected: string
     class_hours: number
     total_classes: number
+    general_notes: string
 }
 
 export function PaymentsPage() {
@@ -120,8 +121,15 @@ export function PaymentsPage() {
                                         getStudent={getStudent}
                                     />
                                     <EditableText
-                                        initialText={student.payment_notes}
+                                        initialText={student.payment_notes === undefined ? "Payment Notes" : student.term_notes}
                                         index={6}
+                                        optionalEnding=""
+                                        id={id}
+                                        getStudent={getStudent}
+                                    />
+                                    <EditableText
+                                        initialText={student.term_notes === undefined ? "Term Notes" : student.term_notes}
+                                        index={7}
                                         optionalEnding=""
                                         id={id}
                                         getStudent={getStudent}
@@ -204,6 +212,13 @@ export function PaymentsPage() {
                                 <EditableText
                                     initialText={student?.phone_number ? `(${student.phone_number.slice(0, 3)})-${student.phone_number.slice(3, 6)}-${student.phone_number.slice(6)}` : ""}
                                     index={4}
+                                    optionalEnding=""
+                                    id={id}
+                                    getStudent={getStudent}
+                                />
+                                <EditableText
+                                    initialText={student?.general_notes ? student.general_notes : "General Notes"}
+                                    index={8}
                                     optionalEnding=""
                                     id={id}
                                     getStudent={getStudent}

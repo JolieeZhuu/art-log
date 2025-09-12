@@ -27,8 +27,8 @@ export default function PaymentTable({ studentId, paymentNumber, onClassAdded }:
         // Variable to store JSX code
         // Deconstruct attendance object and specify which properties to use
         const attendanceValuesList: Attendance[] = attendances.map((
-            { attendance_id, student_id, class_number, payment_number, date_expected, date_attended, attendance_check, check_in, makeup_mins, check_out, notes } : 
-            { attendance_id: number, student_id: number, class_number: number, payment_number: number, date_expected: Date, date_attended: Date, attendance_check: string, check_in: string, makeup_mins: string, check_out: string, notes: string }) => {
+            { attendance_id, student_id, class_number, payment_number, date_expected, date_attended, attendance_check, check_in, makeup_mins, check_out, payment_notes, term_notes, notes } : 
+            { attendance_id: number, student_id: number, class_number: number, payment_number: number, date_expected: Date, date_attended: Date, attendance_check: string, check_in: string, makeup_mins: string, check_out: string, payment_notes: string, term_notes: string, notes: string }) => {
             return {
                 id: attendance_id,
                 studentId: student_id,
@@ -40,6 +40,8 @@ export default function PaymentTable({ studentId, paymentNumber, onClassAdded }:
                 checkIn: check_in === null ? "" : convertTo12Hour(check_in),
                 makeupMins: makeup_mins,
                 checkOut: check_out === null ? "" : convertTo12Hour(check_out),
+                payment_notes: payment_notes,
+                term_notes: term_notes,
                 notes: notes,
             }
         })

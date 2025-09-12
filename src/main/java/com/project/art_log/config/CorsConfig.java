@@ -44,6 +44,8 @@ public class CorsConfig {
         corsConfiguration.setAllowedHeaders(List.of("*")); // Simplified
         corsConfiguration.setAllowedMethods(List.of(GET.name(), POST.name(), PUT.name(), PATCH.name(), DELETE.name(), OPTIONS.name()));
         
+        corsConfiguration.setExposedHeaders(List.of("Authorization"));
+        
         // Applies the CORS configuration to all URL patterns, through /**
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         

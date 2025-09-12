@@ -16,12 +16,30 @@ export function StudentsProvider({ children }: { children: React.ReactNode }) {
     const studentUrl = "http://localhost:8080/student/";
 
     async function refresh() {
-        const data = await getAll(studentUrl);
-        setStudents(data.map((s: any) => ({
-        id: s.student_id.toString(),
-        day: s.day.toUpperCase(),
-        name: `${s.first_name} ${s.last_name}`,
-        })));
+        try {
+            const data = await getAll(studentUrl);
+            
+            if (!Array.isArray(data)) {
+                console.error("Data fetched is not an array:", data);
+                setStudents([]);
+                return;
+            }
+
+            setStudents(data.map((s: any) => ({
+                id: s.student_id.toString(),
+                day: s.day.toUpperCase(),
+                name: `${s.first_name} ${s.last_name}`,
+                phone_number: s.phone_number,
+                class_id: s.class_id,
+                time_expected: s.time_expected,
+                class_hours: s.class_hours,
+                total_classes: s.total_classes
+            })));
+
+        } catch (error) {
+            console.error("Error fetching student data:", error);
+            setStudents([]);
+        }
     }
 
     useEffect(() => {

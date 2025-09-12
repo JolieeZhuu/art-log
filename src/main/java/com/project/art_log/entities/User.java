@@ -77,7 +77,7 @@ public class User implements UserDetails { // integrates with Spring Security th
 	}
 
 	public String getUsername() {
-		return username;
+		return email; // for authentication to work
 	}
 
 	public void setUsername(String username) {

@@ -36,8 +36,16 @@ public abstract class AbstractController<T, ID> {
 
     @PostMapping("/")
     public ResponseEntity<T> save(@RequestBody T entity) {
-    	System.out.println("posting works");
-        return ResponseEntity.ok().body(service.save(entity));
+    	try {
+        	System.out.println("posting works");
+            System.out.println("=== POST REQUEST RECEIVED ===");
+            System.out.println("Request body: " + entity);
+            System.out.println("==========================");
+            return ResponseEntity.ok().body(service.save(entity));
+    	} catch (Exception e) {
+            System.out.println("=== Error creating student: " + e.getMessage() + " ===");
+            return ResponseEntity.status(500).build();
+    	}
     }
 
     @PutMapping("/")
@@ -52,4 +60,34 @@ public abstract class AbstractController<T, ID> {
     	service.deleteById(id);
         return ResponseEntity.ok().body("Deleted student successfully");
     }
+    
+    // debug
+    @PostMapping("/debug")
+    public ResponseEntity<String> debugRaw(@RequestBody String raw) {
+        System.out.println("=== RAW BODY RECEIVED ===");
+        System.out.println(raw);
+        System.out.println("=========================");
+        return ResponseEntity.ok("Got raw: " + raw);
+    }
 }
+
+/*
+{
+    "first_name": "Emma",
+    "last_name": "Stone",
+    "class_hours": 1,
+    "class_id": "PRE-U",
+    "class_number": 0,
+    "day": "Monday",
+    "general_notes": "",
+    "payment_number": 0,
+    "phone_number": "1234567890",
+    "time_expected": "15:00:00",
+    "total_classes": 0
+}
+
+{
+	"email": "zhujolie973@gmail.com",
+	"password": "postgres"
+}
+*/

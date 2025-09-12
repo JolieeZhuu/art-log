@@ -12,6 +12,7 @@ import { Archives } from './components/pages/archives-page'
 import { HomePage } from './components/pages/home-page'
 import { SignupPage } from './components/pages/signup-page'
 import { VerificationPage } from './components/pages/verification-page'
+import { ProtectedRoute } from './components/protected-route'
 
 // Routing imports
 import {
@@ -30,12 +31,36 @@ function App() {
                     <Route path="/signup" element={<SignupPage/>}/>
                     <Route path="/verify" element={<VerificationPage/>}/>
                     <Route path="/login" element={<LoginPage/>}/>
-                    <Route path="/summary" element={<Summary/>}/>
-                    <Route path="/day/:day" element={<DayPage/>}/>
-                    <Route path="/settings" element={<Settings/>}/>
-                    <Route path="/students" element={<Students/>}/>
-                    <Route path="/students/:id" element={<PaymentsPage/>}/>
-                    <Route path="/students/:id/archives" element={<Archives/>}/>
+                    <Route path="/summary" element={
+                        <ProtectedRoute>
+                            <Summary/>
+                        </ProtectedRoute>
+                    }/>
+                    <Route path="/day/:day" element={
+                        <ProtectedRoute>
+                            <DayPage/>
+                        </ProtectedRoute>
+                    }/>
+                    <Route path="/settings" element={
+                        <ProtectedRoute>
+                            <Settings/>
+                        </ProtectedRoute>
+                    }/>
+                    <Route path="/students" element={
+                        <ProtectedRoute>
+                            <Students/>
+                        </ProtectedRoute>
+                    }/>
+                    <Route path="/students/:id" element={
+                        <ProtectedRoute>
+                            <PaymentsPage/>
+                        </ProtectedRoute>
+                    }/>
+                    <Route path="/students/:id/archives" element={
+                        <ProtectedRoute>
+                            <Archives/>
+                        </ProtectedRoute>
+                    }/>
                     <Route path="*" element={<Navigate to="/"/>}/>
                 </Routes>
             </Router>

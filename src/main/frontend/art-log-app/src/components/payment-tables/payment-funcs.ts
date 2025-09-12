@@ -26,8 +26,7 @@ export async function addPaymentNum(id: number) {
         day: student.day,
         phone_number: student.phone_number,
         time_expected: student.time_expected,
-        notes: student.notes,
-        payment_notes: student.payment_notes,
+        general_notes: student.general_notes,
         payment_number: currentPaymentNum,
         class_number: 0,
         total_classes: student.total_classes,
@@ -43,14 +42,11 @@ export async function addNewPaymentTable(id: number, date: Date, paymentNum: num
 
     const data1 = {
         student_id: id,
+        payment_number: paymentNum,
         class_number: 1,
         date_expected: date,
-        date_attended: null,
-        check_in: null,
-        hours: 1,
-        check_out: null,
-        payment_number: paymentNum
-    } // Make changes to Student entity
+        hours: 1
+    } // Make changes to Attendance entity
 
     const data2 = {
         student_id: id,
@@ -60,13 +56,12 @@ export async function addNewPaymentTable(id: number, date: Date, paymentNum: num
         day: student.day,
         phone_number: student.phone_number,
         time_expected: student.time_expected,
-        payment_notes: student.payment_notes,
-        notes: student.notes,
+        general_notes: student.general_notes,
         payment_number: student.payment_number,
         class_number: student.class_number,
         total_classes: numOfClasses,
         class_hours: student.class_hours
-    } // Make changes to Attendance entity
+    } // Make changes to Student entity
     
     await add(attendanceUrl, data1)
     await generateClasses(id, date.toString(), paymentNum, numOfClasses) // generates remaining 
@@ -83,10 +78,7 @@ async function generateClasses(id: number, date: string, paymentNum: number, num
             student_id: id,
             class_number: i,
             date_expected: nextClassDate,
-            date_attended: null,
-            check_in: null,
             hours: 1,
-            check_out: null,
             payment_number: paymentNum
         }
 
@@ -112,10 +104,7 @@ export async function addClass(paymentNum: number, id: number) {
         student_id: id,
         class_number: totalClasses + 1,
         date_expected: nextClassDate,
-        date_attended: null,
-        check_in: null,
         hours: 1,
-        check_out: null,
         payment_number: paymentNum,
     }
 
@@ -130,8 +119,7 @@ export async function addClass(paymentNum: number, id: number) {
         day: student.day,
         phone_number: student.phone_number,
         time_expected: student.time_expected,
-        payment_notes: student.payment_notes,
-        notes: student.notes,
+        generate_notes: student.general_notes,
         payment_number: student.payment_number,
         class_number: student.class_number,
         total_classes: totalClasses + 1,

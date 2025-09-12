@@ -3,6 +3,7 @@ package com.project.art_log.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,10 +25,11 @@ public class SecurityConfiguration {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
+        	.cors(Customizer.withDefaults()) // Add this line - uses the CORS filter you defined
 			.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(authorize -> authorize
-					.requestMatchers("/student/**").permitAll()  // Endpoints that are allowed to be exposed
-					.requestMatchers("/attendance/**").permitAll()  // Allow access to student endpoints
+					//.requestMatchers("/student/**").permitAll()  // Endpoints that are allowed to be exposed
+					//.requestMatchers("/attendance/**").permitAll()
 					.requestMatchers("/auth/**").permitAll()
 					.requestMatchers("/user/**").permitAll()
 					.anyRequest().authenticated()
