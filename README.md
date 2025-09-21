@@ -20,6 +20,10 @@ Art Log is a project I initially took up as my IB HL CS IA, but I decided I shou
 - **Time slot schedule:** Users will be able to see a visualization of how many students are expected to have class at specific time intervals (15 mins each) every day, helping admins see if the studio is full or vacant.
 ### Planned
 - **History:** I would like users to be able to see who made changes and what those were. Version history would be my aim for this feature.
-- **Easier editing:** I would like users to have an easier time to edit students/classes by double clicking, rather than clicking the triple dots.
 - **Payments:** I would like users to be alerted about which students are reaching a payment deadline (or a new payment for a new set of classes).
 - **Holidays:** I would like users to be able to add their own list of holidays which would automatically update all students' classes who occur on those particular days. Implementing a calendar is an option too.
+- **Data transfer:** I would like the admins to be able to data transfer from spreadsheets into the web app so no information is being lost.
+- **UI/UX:** Based on what the admins would like, I will need to change colours and font for readability and usability. For now, I need to allow users to have an easier time to edit students/classes by double clicking, rather than clicking the triple dots.
+
+## Goal
+I hope to complete this by the end of next month (October) and deploy it!
