@@ -1,5 +1,5 @@
 > This project is currently a work in progress!
-# Art Log: An Attendance and Payment Tracker for Art Classes
+# Art Log: An Attendance and Payment Tracker
 Art Log is a full-stack web application I developed on my own that efficiently manages student attendances and class payments for an art studio.
 
 ## Overview
