@@ -22,6 +22,22 @@ import { Toaster } from "@/components/ui/sonner"
 import { SiteHeader } from "@/components/navbar/site-header"
 import { AvailabilitySlots } from "../chart/availability-chart"
 
+import { AppSidebar } from "@/components/navbar/app-sidebar"
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import { Separator } from "@/components/ui/separator"
+import {
+    SidebarInset,
+    SidebarProvider,
+    SidebarTrigger,
+} from "@/components/ui/sidebar"
+
 export function DayPage() {
 
     const { day } = useParams<{ day?: string }>()
@@ -212,42 +228,50 @@ export function DayPage() {
     }
 
     return (
-        <Layout
-            children={(
-                <div className="p-[2rem]">
-                    <SiteHeader heading={day[0].toUpperCase() + day.substring(1)} />
-                    <div className="pt-4">
-                        <AvailabilitySlots dayOfWeek={day[0].toUpperCase() + day.substring(1)} header=""/>
-                    </div>
-                    <div className="flex flex-wrap gap-7 pt-4">
-                        <div className="absolute top-4 right-4">
-                            <ModeToggle/>
+        <SidebarProvider>
+            <AppSidebar/>
+            <SidebarInset>
+                <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+                    <p className="text-base font-medium">{day[0].toUpperCase() + day.substring(1)}</p>
+                </header>
+                <div className="flex flex-1 flex-col gap-4 p-4">
+                    {/* Display student list cards */}
+                    <div className="flex flex-col gap-y-5">
+                        <div className="shrink md:shrink-0 min-w-0">
+                            <AvailabilitySlots dayOfWeek={day[0].toUpperCase() + day.substring(1)} header=""/>
                         </div>
-                        {/* Display student list cards */}
-                        <div className="w-full max-w-7xl">
+
+                        <div className="shrink md:shrink-0 min-w-0">
                             <Card>
                                 <CardHeader className="justify-items-start">
                                     <CardTitle>Student List</CardTitle>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="overflow-x-auto">
                                     <StudentTable dayOfWeek={day} setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents}/>
                                 </CardContent>
                             </Card>
                         </div>
-                        <div className="w-full max-w-7xl">
+
+                        <div className="shrink md:shrink-0 min-w-0">
                             <Card>
                                 <CardHeader className="justify-items-start">
                                     <CardTitle>Checkout List</CardTitle>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="overflow-x-auto">
                                     <CheckoutTable checkoutData={checkoutData}/>
                                 </CardContent>
                             </Card>
                         </div>
                     </div>
+
+                    <div className="gap-7 pt-4">
+                        <div className="absolute top-4 right-4">
+                            <ModeToggle/>
+                        </div>
+                    </div>
                     <Toaster/>
                 </div>
-            )}
-        />
+            </SidebarInset>
+        </SidebarProvider>
     )
 }

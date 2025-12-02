@@ -13,6 +13,12 @@ export function Summary() {
                 <div className="w-full p-[2rem]">
                     <SiteHeader heading="Summary"/>
 
+                    <div>
+                        <Card>
+                            
+                        </Card>
+                    </div>
+
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>

@@ -180,7 +180,7 @@ export function PaymentsPage() {
                     <div className="mt-4">
                         <SiteHeader heading={`${student?.first_name} ${student?.last_name}`}/>
                         <div className="flex justify-between items-center gap-4 pt-4">
-                            <div className="flex gap-4">
+                            <div className="flex gap-4 flex-wrap">
                                 <EditableText
                                     initialText={`${student?.day[0]}${student?.day.substring(1)}`}
                                     index={0}

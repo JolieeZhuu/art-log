@@ -13,7 +13,6 @@ import { HomePage } from './components/pages/home-page'
 import { SignupPage } from './components/pages/signup-page'
 import { VerificationPage } from './components/pages/verification-page'
 import { ProtectedRoute } from './components/protected-route'
-
 // Routing imports
 import {
     HashRouter as Router,

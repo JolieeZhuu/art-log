@@ -126,7 +126,7 @@ export function AvailabilityChart({ type }: { type: string }) {
                         return tempMap
                     })
                     return formattedData   
-                } 
+                } return []
             })
         )
         setChartData(storeResults)
