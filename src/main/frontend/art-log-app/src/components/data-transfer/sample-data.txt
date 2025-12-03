@@ -1,0 +1,5 @@
+#STUDENT
+{"first_name": "Jolie", "last_name": "Zhu", "class_id": "INTE-1", "day": "Monday", "phone_number": "1234567890", "time_expected": "12:00:00", "general_notes": "", "payment_number": 0, "class_number": 0, "total_classes": 0, "class_hours": 2}
+{"first_name": "Humpty", "last_name": "Dumpty", "class_id": "INTE-1", "day": "Monday", "phone_number": "9876543210", "time_expected": "12:00:00", "general_notes": "", "payment_number": 0, "class_number": 0, "total_classes": 0, "class_hours": 2}
+
+#ATTENDANCE
