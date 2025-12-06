@@ -45,8 +45,9 @@ const dataSchema = z.object({
 export default function DataButton() {
 
     // variable initializations
-    const studentUrl = "http://localhost:8080/student/"
-    const [open, setOpen] = React.useState(false)
+    const studentUrl = "http://localhost:8080/student/";
+    const attendanceUrl = "http://localhost:8080/attendance/";
+    const [open, setOpen] = React.useState(false);
 
     // Define form
     const form = useForm<z.infer<typeof dataSchema>>({
@@ -58,23 +59,41 @@ export default function DataButton() {
     })
 
     async function onSubmit(values: z.infer<typeof dataSchema>) {
-        console.log(values.student_data);
+        console.log(values.student_data); // debug
         const studentData = values.student_data;
-        const jsonList = studentData.split("\n");
-        console.log(jsonList)
+        const attendanceData = values.attendance_data;
+        const jsonStudentList = studentData.split("\n");
+        const jsonAttendaceList = attendanceData.split("\n");
+        console.log(jsonStudentList) // debug
 
-        jsonList.forEach(async (jsonString: string) => {
-            console.log(jsonString)
-            const jsonBody = JSON.parse(jsonString);
-            console.log(jsonBody)
-            await add(studentUrl, jsonBody);
+        let currMessage = `All data was added.`;
+
+        jsonStudentList.forEach(async (jsonString: string) => {
+            try {
+                // for student data
+                console.log(jsonString) // debug
+                const jsonBody = JSON.parse(jsonString);
+                console.log(jsonBody) // debug
+                await add(studentUrl, jsonBody);
+            } catch (Error) {
+                currMessage = `Data is either not in correct form, or is empty.`;
+            }
         })
+
+        jsonAttendaceList.forEach(async (jsonString: string) => {
+            try {
+                // for attendance data
+                console.log(jsonString) // debug
+                const jsonBody = JSON.parse(jsonString);
+                console.log(jsonBody) // debug
+                await add(attendanceUrl, jsonBody);
+            } catch (Error) {
+                currMessage = `Data is either not in correct form, or is empty.`;
+            }
+        })
+        toast(currMessage);
         setOpen(false);
         form.reset();
-        toast(`All data has been added. Please refresh the page.`);
-
-        // later: add a try catch block to ensure data given is in JSON form
-        // later: add attendance data transfer
     }
 
     return (
