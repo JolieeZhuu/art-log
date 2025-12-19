@@ -237,19 +237,21 @@ export function DayPage() {
                 <div className="flex flex-1 flex-col gap-4 p-4">
                     {/* Display student list cards */}
                     <div className="flex flex-col gap-y-5">
-                        <div className="shrink md:shrink-0 min-w-0">
-                            <AvailabilitySlots dayOfWeek={day[0].toUpperCase() + day.substring(1)} header=""/>
-                        </div>
+                        <div className="flex gap-5">
+                            <div className="shrink md:shrink-0 min-w-0">
+                                <AvailabilitySlots dayOfWeek={day[0].toUpperCase() + day.substring(1)} header=""/>
+                            </div>
 
-                        <div className="shrink md:shrink-0 min-w-0">
-                            <Card>
-                                <CardHeader className="justify-items-start">
-                                    <CardTitle>Student List</CardTitle>
-                                </CardHeader>
-                                <CardContent className="overflow-x-auto">
-                                    <StudentTable dayOfWeek={day} setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents}/>
-                                </CardContent>
-                            </Card>
+                            <div className="flex-1 shrink md:shrink-0 min-w-0">
+                                <Card>
+                                    <CardHeader className="justify-items-start">
+                                        <CardTitle>Student List</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="overflow-x-auto">
+                                        <StudentTable dayOfWeek={day} setSelectedStudents={setSelectedStudents} selectedStudents={selectedStudents}/>
+                                    </CardContent>
+                                </Card>
+                            </div>
                         </div>
 
                         <div className="shrink md:shrink-0 min-w-0">

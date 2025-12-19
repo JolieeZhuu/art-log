@@ -13,23 +13,14 @@ export function Summary() {
                 <div className="w-full p-[2rem]">
                     <SiteHeader heading="Summary"/>
 
-                    <div>
-                        <Card>
-                            
-                        </Card>
-                    </div>
-
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>
                     <div className="w-full max-w-3xl mt-4">
                         <Card>
                             <div className="space-y-5 pl-5 pr-5">
-                                {
-                                    /*
-                                    <AvailabilityChart type="Weekday"/>
-                                    <AvailabilityChart type="Weekend"/>*/
-                                }
+                                <AvailabilityChart type="Weekday"/>
+                                <AvailabilityChart type="Weekend"/>
                             </div>
                         </Card>
                     </div>
