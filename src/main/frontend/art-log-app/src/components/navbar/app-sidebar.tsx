@@ -1,6 +1,3 @@
-import { CalendarDays, Home, LogOut, Settings, Table } from "lucide-react"
-import { useNavigate } from "react-router-dom"
-
 // UI components
 import {
   Sidebar,
@@ -85,7 +82,7 @@ const data = [
 export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar {...props}>
-            <SidebarHeader>
+            <SidebarHeader className="pl-4 pt-4">
                 <p>Art Log</p>
             </SidebarHeader>
             <SidebarContent>
