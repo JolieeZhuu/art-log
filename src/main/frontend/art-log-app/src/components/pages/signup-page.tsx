@@ -17,6 +17,7 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
+    CardFooter,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
@@ -183,10 +184,19 @@ export function SignupPage() {
                             {submitError && (
                                 <FormMessage>{submitError}</FormMessage>
                             )}
-                            <Button type="submit" variant="outline">Sign Up</Button>
+                            <Button className="w-full" type="submit" variant="outline">Sign Up</Button>
                         </form>
                     </Form>
                 </CardContent>
+                <CardFooter>
+                    <div className="w-full flex justify-center">
+                        <p className="text-sm">Already have an account? <span/>
+                            <a href="#/login">
+                                Login
+                            </a>
+                        </p>
+                    </div>
+                </CardFooter>
             </Card>
         </div>
     )

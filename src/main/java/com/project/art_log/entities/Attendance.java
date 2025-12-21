@@ -27,8 +27,8 @@ public class Attendance {
 	private LocalTime checkIn;
 	private Integer hours;
 	private LocalTime checkOut;
-	private String paymentNotes;
-	private String termNotes;
+	private String paymentNotes; // About payments, will also appear in the student tables on day-page.tsx
+	private String termNotes; // About the payment table, only appears in the payments-page.tsx
 	private String notes;
 
 	public Attendance() {

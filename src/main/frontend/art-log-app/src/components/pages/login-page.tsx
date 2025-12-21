@@ -16,6 +16,7 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
+    CardFooter,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
@@ -79,7 +80,7 @@ export function LoginPage() {
 
             <Card className="w-full max-w-sm">
                 <CardHeader>
-                    <CardTitle>Login to ART.LOG</CardTitle>
+                    <CardTitle>Login to Art Log</CardTitle>
                     <CardDescription>Enter your email and password to access the application.</CardDescription>
                 </CardHeader>
                 <CardContent className="break-words">                    
@@ -115,10 +116,19 @@ export function LoginPage() {
                             {submitError && (
                                 <FormMessage>{submitError}</FormMessage>
                             )}
-                            <Button type="submit" variant="outline">Submit</Button>
+                            <Button className="w-full" type="submit" variant="outline">Login</Button>
                         </form>
                     </Form>
                 </CardContent>
+                <CardFooter>
+                    <div className="w-full flex justify-center">
+                        <p className="text-sm">Don't have an account? <span/>
+                            <a href="#/signup">
+                                Signup
+                            </a>
+                        </p>
+                    </div>
+                </CardFooter>
             </Card>
         </div>
     )

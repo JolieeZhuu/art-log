@@ -525,7 +525,7 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
                         {inputsToDisplay[index]}
                     </div>
                 ) : (
-                    <Badge variant="secondary" className="cursor-pointer text-[14px] font-normal">
+                    <Badge variant="secondary" className="cursor-pointer text-sm font-normal py-2 px-3">
                         {`${text}${optionalEnding}` || "Click to add text"}
                     </Badge>
                 )

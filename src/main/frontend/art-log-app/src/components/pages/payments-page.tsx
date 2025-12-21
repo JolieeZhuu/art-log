@@ -182,13 +182,13 @@ export function PaymentsPage() {
                         <p className="text-base font-medium">{student?.first_name} {student?.last_name}</p>
                     </div>
                 </header>
-                <div className="w-full px-4">
+                <div className="w-full p-4">
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>
                     <div>
-                        <div className="flex justify-between items-center gap-4 pt-4">
-                            <div className="flex gap-4 flex-wrap">
+                        <div className="flex justify-between items-center gap-4">
+                            <div className="flex gap-2 flex-wrap">
                                 <EditableText
                                     initialText={`${student?.day[0]}${student?.day.substring(1)}`}
                                     index={0}
