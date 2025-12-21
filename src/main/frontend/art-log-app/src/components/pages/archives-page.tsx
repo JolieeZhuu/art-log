@@ -9,8 +9,6 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 
-import Layout from "@/components/navbar/layout"
-import { SiteHeader } from "@/components/navbar/site-header"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
 
 import { getById } from "@/restAPI/entities"
@@ -30,6 +28,11 @@ import {
 } from "@/components/ui/breadcrumb"
 
 import { Separator } from "../ui/separator"
+import { AppSidebar } from "@/components/navbar/app-sidebar"
+import {
+    SidebarInset,
+    SidebarProvider,
+} from "@/components/ui/sidebar"
 
 type Student = {
     student_id: number
@@ -67,7 +70,7 @@ export function Archives() {
         const num = await getPaymentNum(id)
         const cards = Array.from({length: num}).map((_, index) => {
             return (
-                <div key={index} className="w-full max-w-7xl">
+                <div key={index} className="w-full">
                     <Card>
                         <CardHeader className="justify-items-start">
                             <CardTitle>Payment Table {num - index}</CardTitle>
@@ -83,39 +86,44 @@ export function Archives() {
     }
 
     return (
-        <Layout
-            children={(
-                <div className="w-full p-[2rem]">
-                    <div className="flex gap-5">
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem>
-                                <BreadcrumbLink asChild>
-                                    <Link to="/students">Students</Link>
-                                </BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator />
-                                <BreadcrumbItem>
-                                <BreadcrumbLink asChild>
-                                    <Link to={`/students/${id}`}>{`${student?.first_name} ${student?.last_name}`}</Link>
-                                </BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator />
-                                <BreadcrumbItem>
-                                <BreadcrumbPage>Archives</BreadcrumbPage>
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
-                        <Separator
-                            orientation="vertical"
-                            className="data-[orientation=vertical]:h-5"
-                        />
-                        <p className="text-sm">Go to <Link to={`/day/${student?.day}`}>{student?.day} Checkout</Link></p>
+        <SidebarProvider>
+            <AppSidebar/>
+            <SidebarInset>
+                <header className="flex h-20 shrink-0 items-center gap-2 border-b px-4">
+                    <div className="space-y-2">
+                        <div className="flex gap-5">
+                            <Breadcrumb>
+                                <BreadcrumbList>
+                                    <BreadcrumbItem>
+                                    <BreadcrumbLink asChild>
+                                        <Link to="/students">Students</Link>
+                                    </BreadcrumbLink>
+                                    </BreadcrumbItem>
+                                    <BreadcrumbSeparator />
+                                    <BreadcrumbItem>
+                                    <BreadcrumbLink asChild>
+                                        <Link to={`/students/${id}`}>{`${student?.first_name} ${student?.last_name}`}</Link>
+                                    </BreadcrumbLink>
+                                    </BreadcrumbItem>
+                                    <BreadcrumbSeparator />
+                                    <BreadcrumbItem>
+                                    <BreadcrumbPage>Archives</BreadcrumbPage>
+                                    </BreadcrumbItem>
+                                </BreadcrumbList>
+                            </Breadcrumb>
+                            <Separator
+                                orientation="vertical"
+                                className="data-[orientation=vertical]:h-5"
+                            />
+                            <p className="text-sm">Go to <Link to={`/day/${student?.day}`}>{student?.day} Checkout</Link></p>
+                        </div>
+                        <p className="text-base font-medium">Archived Payment Tables for {student?.first_name} {student?.last_name}</p>
                     </div>
-                    <div className="mt-4">
-                        <SiteHeader heading={`Archived Payment Tables for ${student?.first_name} ${student?.last_name}`}/>
+                </header>
+                <div className="p-4">
+                    <div>
 
-                        <div className="flex flex-wrap gap-4 pt-4">
+                        <div className="flex flex-wrap gap-4">
                             {cardList}
                             <div className="absolute top-4 right-4">
                                 <ModeToggle/>
@@ -123,7 +131,7 @@ export function Archives() {
                         </div>
                     </div>
                 </div>
-            )}
-        />
+            </SidebarInset>
+        </SidebarProvider>
     )
 }

@@ -77,47 +77,24 @@ export function StudentCard({ student }: StudentCardProps) {
         >
             {/* Student content - not draggable, can contain interactive elements */}
             <div className="flex-1 text-sm">
-                {
-                    student.name.length > 8 ? (
-                        <HoverCard>
-                            <HoverCardTrigger asChild>
-                                <Button className="m-0" variant="link" onClick={() => navigate(`/students/${student.id}`)}>{student.name.slice(0,6)}...</Button>
-                            </HoverCardTrigger>
-                            <HoverCardContent className="w-50">
-                                <div className="flex justify-between gap-4">
-                                    <div className="space-y-1">
-                                        <h4 className="text-sm font-semibold">{student.name}</h4>
-                                        <p className="text-sm">
-                                            {thisStudent?.phone_number ? `(${thisStudent.phone_number.slice(0, 3)})-${thisStudent.phone_number.slice(3, 6)}-${thisStudent.phone_number.slice(6)}` : ""}
-                                        </p>
-                                        <div className="text-muted-foreground text-xs">
-                                            {thisStudent?.class_id}, {convertTo12Hour(thisStudent?.time_expected)}
-                                        </div>
-                                    </div>
+                <HoverCard>
+                    <HoverCardTrigger asChild>
+                        <Button className="m-0" variant="link" onClick={() => navigate(`/students/${student.id}`)}>{student.name}</Button>
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-50">
+                        <div className="flex justify-between gap-4">
+                            <div className="space-y-1">
+                                <h4 className="text-sm font-semibold">{student.name}</h4>
+                                <p className="text-sm">
+                                    {thisStudent?.phone_number ? `(${thisStudent.phone_number.slice(0, 3)})-${thisStudent.phone_number.slice(3, 6)}-${thisStudent.phone_number.slice(6)}` : ""}
+                                </p>
+                                <div className="text-muted-foreground text-xs">
+                                    {thisStudent?.class_id}, {convertTo12Hour(thisStudent?.time_expected)}
                                 </div>
-                            </HoverCardContent>
-                        </HoverCard>
-                    ) : (
-                        <HoverCard>
-                            <HoverCardTrigger asChild>
-                                <Button className="m-0" variant="link" onClick={() => navigate(`/students/${student.id}`)}>{student.name}</Button>
-                            </HoverCardTrigger>
-                            <HoverCardContent className="w-50">
-                                <div className="flex justify-between gap-4">
-                                    <div className="space-y-1">
-                                        <h4 className="text-sm font-semibold">{student.name}</h4>
-                                        <p className="text-sm">
-                                            {thisStudent?.phone_number ? `(${thisStudent.phone_number.slice(0, 3)})-${thisStudent.phone_number.slice(3, 6)}-${thisStudent.phone_number.slice(6)}` : ""}
-                                        </p>
-                                        <div className="text-muted-foreground text-xs">
-                                            {thisStudent?.class_id}, {convertTo12Hour(thisStudent?.time_expected)}
-                                        </div>
-                                    </div>
-                                </div>
-                            </HoverCardContent>
-                        </HoverCard>
-                    )
-                }
+                            </div>
+                        </div>
+                    </HoverCardContent>
+                </HoverCard>
             </div>
 
             {/* Drag Handle - only this part is draggable */}

@@ -6,15 +6,14 @@ import { useParams } from "react-router-dom"
 import { Link } from "react-router-dom"
 
 // Internal imports
-import Layout from "@/components/navbar/layout"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
-import { SiteHeader } from "@/components/navbar/site-header"
 import { getById } from "@/restAPI/entities"
 import { getPaymentNum, addClass, convertTo12Hour } from "@/components/payment-tables/payment-funcs"
 import PaymentTable from "@/components/payment-tables/payments-table-page"
 import EditableText from "@/components/form-features/editable-text"
 
 // UI components
+import { AppSidebar } from "@/components/navbar/app-sidebar"
 import {
     Card,
     CardDescription,
@@ -36,6 +35,10 @@ import {
 import { Toaster } from '@/components/ui/sonner'
 import { toast } from "sonner"
 import { Separator } from "../ui/separator"
+import {
+    SidebarInset,
+    SidebarProvider,
+} from "@/components/ui/sidebar"
 
 type Student = {
     student_id: number
@@ -107,7 +110,7 @@ export function PaymentsPage() {
         }
         const cards = Array.from({length: tempNum}).map((_, index) => {
             return (
-                <div key={index} className="w-full max-w-7xl">
+                <div key={index} className="w-full">
                     <Card>
                         <CardHeader className="justify-items-start">
                             <CardTitle>Payment Table {num - index}</CardTitle>
@@ -151,34 +154,39 @@ export function PaymentsPage() {
     }
 
     return (
-        <Layout
-            children={(
-                <div className="max-w-screen p-[2rem]">
+        <SidebarProvider>
+            <AppSidebar/>
+            <SidebarInset>
+                <header className="flex h-20 shrink-0 items-center gap-2 border-b px-4">
+                    <div className="space-y-2">
+                        <div className="flex gap-5">
+                            <Breadcrumb>
+                                <BreadcrumbList>
+                                    <BreadcrumbItem>
+                                    <BreadcrumbLink asChild>
+                                        <Link to="/students">Students</Link>
+                                    </BreadcrumbLink>
+                                    </BreadcrumbItem>
+                                    <BreadcrumbSeparator />
+                                    <BreadcrumbItem>
+                                    <BreadcrumbPage>{`${student?.first_name} ${student?.last_name}`}</BreadcrumbPage>
+                                    </BreadcrumbItem>
+                                </BreadcrumbList>
+                            </Breadcrumb>
+                            <Separator
+                                orientation="vertical"
+                                className="data-[orientation=vertical]:h-5"
+                            />
+                            <p className="text-sm">Go to <Link to={`/day/${student?.day}`}>{student?.day} Checkout</Link></p>
+                        </div>
+                        <p className="text-base font-medium">{student?.first_name} {student?.last_name}</p>
+                    </div>
+                </header>
+                <div className="w-full px-4">
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>
-                    <div className="flex gap-5">
-                        <Breadcrumb>
-                            <BreadcrumbList>
-                                <BreadcrumbItem>
-                                <BreadcrumbLink asChild>
-                                    <Link to="/students">Students</Link>
-                                </BreadcrumbLink>
-                                </BreadcrumbItem>
-                                <BreadcrumbSeparator />
-                                <BreadcrumbItem>
-                                <BreadcrumbPage>{`${student?.first_name} ${student?.last_name}`}</BreadcrumbPage>
-                                </BreadcrumbItem>
-                            </BreadcrumbList>
-                        </Breadcrumb>
-                        <Separator
-                            orientation="vertical"
-                            className="data-[orientation=vertical]:h-5"
-                        />
-                        <p className="text-sm">Go to <Link to={`/day/${student?.day}`}>{student?.day} Checkout</Link></p>
-                    </div>
-                    <div className="mt-4">
-                        <SiteHeader heading={`${student?.first_name} ${student?.last_name}`}/>
+                    <div>
                         <div className="flex justify-between items-center gap-4 pt-4">
                             <div className="flex gap-4 flex-wrap">
                                 <EditableText
@@ -234,13 +242,13 @@ export function PaymentsPage() {
                                 </Button>
                             </div>
                         </div>
-                        <div className="flex flex-wrap gap-4 pt-4">
+                        <div className="flex flex-wrap gap-4 pt-4 w-full">
                             {cardList}
                         </div>
                     </div>
                     <Toaster/>
                 </div>
-            )}
-        />
+            </SidebarInset>
+        </SidebarProvider>
     )
 }

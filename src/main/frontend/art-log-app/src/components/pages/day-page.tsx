@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom"
 import axios from "axios"
 
 // Internal imports
-import Layout from "@/components/navbar/layout"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
 import { type Checkout } from "@/components/checkout-tables/checkout-columns"
 import CheckoutTable from "@/components/checkout-tables/checkout-table-page"
@@ -19,23 +18,12 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Toaster } from "@/components/ui/sonner"
-import { SiteHeader } from "@/components/navbar/site-header"
 import { AvailabilitySlots } from "../chart/availability-chart"
 
 import { AppSidebar } from "@/components/navbar/app-sidebar"
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
-import {
     SidebarInset,
     SidebarProvider,
-    SidebarTrigger,
 } from "@/components/ui/sidebar"
 
 export function DayPage() {

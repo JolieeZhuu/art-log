@@ -10,14 +10,15 @@ import { COLUMNS } from "@/components/dnd/data"
 import { Column } from "@/components/dnd/column"
 
 // UI Components
-import Layout from "@/components/navbar/layout"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
-import { SiteHeader } from "../navbar/site-header"
 import { useStudents } from "../student-context"
+import { AppSidebar } from "@/components/navbar/app-sidebar"
+import {
+    SidebarInset,
+    SidebarProvider,
+} from "@/components/ui/sidebar"
 
 export function Students() {
-
-
     const { students, setStudents, refresh } = useStudents();
     const studentUrl = "http://localhost:8080/student/"
 
@@ -93,14 +94,17 @@ export function Students() {
     }
 
     return (
-        <Layout
-            children={(
-                <div className="w-full p-[2rem]">
-                    <SiteHeader heading="Students"/>
+         <SidebarProvider>
+            <AppSidebar/>
+            <SidebarInset>
+                <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+                    <p className="text-base font-medium">Students</p>
+                </header>
+                <div className="p-4">
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>
-                    <div className="pt-4">
+                    <div>
                         <div className="flex gap-4">
                             <DndContext onDragEnd={handleDragEnd}>
                                 {COLUMNS.map((column) => {
@@ -116,7 +120,7 @@ export function Students() {
                         </div>
                     </div>
                 </div>
-            )}
-        />
+            </SidebarInset>
+        </SidebarProvider>
     )
 }

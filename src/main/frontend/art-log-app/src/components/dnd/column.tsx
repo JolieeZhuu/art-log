@@ -16,7 +16,7 @@ export function Column({ column, students }: ColumnProps) {
     })
 
     return (
-        <div className="flex w-39 flex-col rounded-lg p-4 border">
+        <div className="flex w-full flex-col rounded-lg p-4 border">
             <h2 className="mb-4 font-semibold">{column.title} ({students.length})</h2>
             <div ref={setNodeRef} className="flex flex-1 flex-col gap-4">
                 {students.map(student => {

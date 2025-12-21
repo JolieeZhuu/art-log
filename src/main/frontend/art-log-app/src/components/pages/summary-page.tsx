@@ -1,22 +1,27 @@
 // UI Components
-import Layout from "@/components/navbar/layout"
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
-import { SiteHeader } from "../navbar/site-header"
 import { AvailabilityChart } from "@/components/chart/availability-chart"
 import { Card } from "@/components/ui/card"
+import { AppSidebar } from "@/components/navbar/app-sidebar"
+import {
+    SidebarInset,
+    SidebarProvider,
+} from "@/components/ui/sidebar"
 
 export function Summary() {
     
     return (
-        <Layout
-            children={(
-                <div className="w-full p-[2rem]">
-                    <SiteHeader heading="Summary"/>
-
+         <SidebarProvider>
+            <AppSidebar/>
+            <SidebarInset>
+                <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+                    <p className="text-base font-medium">Summary</p>
+                </header>
+                <div className="p-4">
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>
-                    <div className="w-full max-w-3xl mt-4">
+                    <div className="max-w-3xl">
                         <Card>
                             <div className="space-y-5 pl-5 pr-5">
                                 <AvailabilityChart type="Weekday"/>
@@ -25,7 +30,7 @@ export function Summary() {
                         </Card>
                     </div>
                 </div>
-            )}
-        />
+            </SidebarInset>
+        </SidebarProvider>
     )
 }
