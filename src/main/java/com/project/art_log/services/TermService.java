@@ -18,4 +18,7 @@ public class TermService extends AbstractService<Term, Integer> {
 	}
 	
 	// Term specific service functions (from TermRepo)
+	public Term getByStudentIdAndTableNum(Integer studentId, Integer tableNum) {
+		return termRepo.findByStudentIdAndTableNum(studentId, tableNum);
+	}
 }

@@ -1,10 +1,4 @@
-//import {GetHTTP, PostHTTP, PutHTTP, DeleteHTTP} from "@/restAPI/httpRequests";
 import axiosInstance from "@/axiosConfig";
-
-/*const httpGet = new GetHTTP()
-const httpPost = new PostHTTP()
-const httpPut = new PutHTTP()
-const httpDelete = new DeleteHTTP()*/
 
 export async function getAll(url: string) {
     try {
@@ -58,6 +52,7 @@ export async function deleteById(url: string, id: number) {
     }
 }
 
+// Student controller methods
 export async function getByDay(url: string, day: string) {
     try {
         const response = await axiosInstance.get(url + "day/" + day);
@@ -67,7 +62,6 @@ export async function getByDay(url: string, day: string) {
         throw error
     }
 }
-
 export async function getByDayAndExpectedTime(url: string, day: string) {    
     try {
         const response = await axiosInstance.get(url + "day-string/" + day);
@@ -78,18 +72,19 @@ export async function getByDayAndExpectedTime(url: string, day: string) {
     }
 }
 
-export async function getByStudentIdAndPaymentNumber(url: string, studentId: number, paymentNumber: number) {
+// Attendance controller methods
+export async function getByStudentIdAndPaymentNumber(url: string, studentId: number, currTermId: number) {
     try {
-        const response = await axiosInstance.get(url + "student/" + studentId + "/" + paymentNumber);
+        const response = await axiosInstance.get(url + "student/" + studentId + "/" + currTermId);
         return response.data;
     } catch (error) {
         console.error('Error:', error);
     }
 }
 
-export async function getByPaymentNumberAndStudentIdAndClassNumber(url: string, paymentNumber: number, studentId: number, classNumber: number) { 
+export async function getByPaymentNumberAndStudentIdAndClassNumber(url: string, currTermId: number, studentId: number, classNumber: number) { 
     try {
-        const response = await axiosInstance.get(url + "class/" + paymentNumber + "/" + studentId + "/" + classNumber)
+        const response = await axiosInstance.get(url + "class/" + currTermId + "/" + studentId + "/" + classNumber)
         return response.data
     } catch (error) {
         console.error('Error:', error);
@@ -105,13 +100,13 @@ export async function deleteByStudentId(url: string, studentId: number) {
     }
 }
 
-export async function getByDateExpectedAndStudentIdAndPaymentNumber(url: string, dateExpected: string, studentId: number, paymentNumber: number) {
+export async function getByDateExpectedAndStudentIdAndPaymentNumber(url: string, dateExpected: string, studentId: number, termId: number) {
     try {
         const response = await axiosInstance.get(url + "date", {
             params: {
                 dateExpected: dateExpected,
                 studentId: studentId.toString(),
-                paymentNumber: paymentNumber.toString()
+                paymentNumber: termId.toString()
             }
         })
         return response.data || [];

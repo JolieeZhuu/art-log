@@ -14,6 +14,7 @@ public class Term {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer termId;
 	
+	private Integer studentId;
 	private Integer totalClasses;
 	private String paymentNotes;
 	private String termNotes;
@@ -23,10 +24,11 @@ public class Term {
 	public Term() {
 		
 	}	
-	public Term(Integer termId, Integer totalClasses, String paymentNotes, String termNotes, 
+	public Term(Integer termId, Integer studentId, Integer totalClasses, String paymentNotes, String termNotes, 
 			Integer tableNum, String attendanceIds) {
 		super();
 		this.termId = termId;
+		this.studentId = studentId;
 		this.totalClasses = totalClasses;
 		this.paymentNotes = paymentNotes;
 		this.termNotes = termNotes;
@@ -38,6 +40,12 @@ public class Term {
 	}
 	public void setTermId(Integer termId) {
 		this.termId = termId;
+	}
+	public Integer getStudentId() {
+		return studentId;
+	}
+	public void setStudentId(Integer studentId) {
+		this.studentId = studentId;
 	}
 	public Integer getTotalClasses() {
 		return totalClasses;
