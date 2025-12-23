@@ -14,24 +14,24 @@ import com.project.art_log.entities.Attendance;
 public interface AttendanceRepo extends JpaRepository<Attendance, Integer> {
 	
 	// Example of derived queries
-	List<Attendance> findByStudentIdAndPaymentNumber(Integer studentId, Integer paymentNumber);
+	List<Attendance> findByStudentIdAndTermId(Integer studentId, Integer termId);
 	
 	// Example of JPQL
-	@Query("SELECT a FROM Attendance a WHERE a.paymentNumber = :paymentNumber AND a.studentId = :studentId " + 
+	@Query("SELECT a FROM Attendance a WHERE a.termId = :termId AND a.studentId = :studentId " + 
 	"AND a.classNumber = :classNumber")
-	Attendance findByPaymentNumberAndStudentIdAndClassNumber(@Param("paymentNumber") Integer paymentNumber, 
-																	@Param("studentId") Integer studentId,
-																	@Param("classNumber") Integer classNumber);
+	Attendance findByTermIdAndStudentIdAndClassNumber(@Param("termId") Integer termId, 
+													@Param("studentId") Integer studentId,
+													@Param("classNumber") Integer classNumber);
 	
 	@Modifying // only for DELETE operations
 	@Query("DELETE FROM Attendance WHERE studentId = :studentId")
 	int deleteByStudentId(@Param("studentId") Integer studentId);
 	
 	@Query("SELECT a FROM Attendance a WHERE a.dateExpected = :dateExpected AND a.studentId = :studentId " + 
-	"AND a.paymentNumber = :paymentNumber")
-	Attendance findByDateExpectedAndStudentIdAndPaymentNumber(@Param("dateExpected") LocalDate dateExpected,
-																@Param("studentId") Integer studentId,
-																@Param("paymentNumber") Integer paymentNumber);
+	"AND a.termId = :termId")
+	Attendance findByDateExpectedAndStudentIdAndTermId(@Param("dateExpected") LocalDate dateExpected,
+														@Param("studentId") Integer studentId,
+														@Param("termId") Integer termId);
 	
 	@Query("SELECT a FROM Attendance a WHERE a.dateExpected >= :thirtyDaysAgo AND a.attendanceCheck = 'Absent' " +
 	" ORDER BY a.dateExpected ASC")

@@ -9,8 +9,7 @@ CREATE TABLE IF NOT EXISTS artlog.student (
     phone_number TEXT,
     time_expected TIME,
     general_notes TEXT DEFAULT 'General Notes',
-    payment_number INTEGER,
-    class_number INTEGER,
-    total_classes INTEGER,
+    curr_term_id INTEGER REFERENCES term(term_id),
+    curr_class INTEGER,
     class_hours FLOAT
 );

@@ -21,12 +21,12 @@ public class AttendanceService extends AbstractService<Attendance, Integer> {
 	
 	// Attendance specific service functions
 	
-	public List<Attendance> getByStudentIdAndPaymentNumber(Integer studentId, Integer paymentNumber) {
-		return attendanceRepo.findByStudentIdAndPaymentNumber(studentId, paymentNumber);
+	public List<Attendance> getByStudentIdAndTermId(Integer studentId, Integer termId) {
+		return attendanceRepo.findByStudentIdAndTermId(studentId, termId);
 	}
 	
-	public Attendance getByPaymentNumberAndStudentIdAndClassNumber(Integer paymentNumber, Integer studentId, Integer classNumber) {
-		return attendanceRepo.findByPaymentNumberAndStudentIdAndClassNumber(paymentNumber, studentId, classNumber);
+	public Attendance getByTermIdAndStudentIdAndClassNumber(Integer termId, Integer studentId, Integer classNumber) {
+		return attendanceRepo.findByTermIdAndStudentIdAndClassNumber(termId, studentId, classNumber);
 	}
 	
 	@Transactional
@@ -34,8 +34,8 @@ public class AttendanceService extends AbstractService<Attendance, Integer> {
 		return attendanceRepo.deleteByStudentId(studentId);
 	}
 	
-	public Attendance getByDateExpectedAndStudentIdAndPaymentNumber(LocalDate dateExpected, Integer studentId, Integer paymentNumber) {
-		return attendanceRepo.findByDateExpectedAndStudentIdAndPaymentNumber(dateExpected, studentId, paymentNumber);
+	public Attendance getByDateExpectedAndStudentIdAndTermId(LocalDate dateExpected, Integer studentId, Integer termId) {
+		return attendanceRepo.findByDateExpectedAndStudentIdAndTermId(dateExpected, studentId, termId);
 	}
 	
 	public Attendance getFirstAbsentInThirtyDays() {

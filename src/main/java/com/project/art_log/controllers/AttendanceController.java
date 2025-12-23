@@ -29,19 +29,19 @@ public class AttendanceController extends AbstractController<Attendance, Integer
 	
 	// Attendance specific controller functions
 	
-	@GetMapping("/student/{studentId}/{paymentNumber}")
+	@GetMapping("/student/{studentId}/{termId}")
 	public ResponseEntity<List<Attendance>> getByStudentId(@PathVariable("studentId") Integer studentId, 
-														   @PathVariable("paymentNumber") Integer paymentNumber) {
-		System.out.println("getting by student id and payment number works");
-		return ResponseEntity.ok().body(attendanceService.getByStudentIdAndPaymentNumber(studentId, paymentNumber));
+														   @PathVariable("termId") Integer termId) {
+		System.out.println("getting by student id and term id works");
+		return ResponseEntity.ok().body(attendanceService.getByStudentIdAndTermId(studentId, termId));
 	}
 	
-	@GetMapping("/class/{paymentNumber}/{studentId}/{classNumber}")
-	public ResponseEntity<Attendance> getLastClass(@PathVariable("paymentNumber") Integer paymentNumber, 
-															@PathVariable("studentId") Integer studentId, 
-															@PathVariable("classNumber") Integer classNumber) {
-		System.out.println("getting by payment number, student id, and class number works");
-		return ResponseEntity.ok().body(attendanceService.getByPaymentNumberAndStudentIdAndClassNumber(paymentNumber, studentId, classNumber));
+	@GetMapping("/class/{termId}/{studentId}/{classNumber}")
+	public ResponseEntity<Attendance> getLastClass(@PathVariable("termId") Integer termId, 
+													@PathVariable("studentId") Integer studentId, 
+													@PathVariable("classNumber") Integer classNumber) {
+		System.out.println("getting by term id, student id, and class number works");
+		return ResponseEntity.ok().body(attendanceService.getByTermIdAndStudentIdAndClassNumber(termId, studentId, classNumber));
 	}
 	
 	@DeleteMapping("/student/{studentId}")
@@ -54,9 +54,9 @@ public class AttendanceController extends AbstractController<Attendance, Integer
 	@GetMapping("/date")
 	public ResponseEntity<Attendance> getClassByDate(@RequestParam("dateExpected") LocalDate dateExpected,
 													@RequestParam("studentId") Integer studentId,
-													@RequestParam("paymentNumber") Integer paymentNumber) {
-		System.out.println("getting by date expected, student id, and payment number works");
-		return ResponseEntity.ok().body(attendanceService.getByDateExpectedAndStudentIdAndPaymentNumber(dateExpected, studentId, paymentNumber));
+													@RequestParam("termId") Integer termId) {
+		System.out.println("getting by date expected, student id, and term id works");
+		return ResponseEntity.ok().body(attendanceService.getByDateExpectedAndStudentIdAndTermId(dateExpected, studentId, termId));
 	}
 	
 	@GetMapping("/absent")

@@ -24,9 +24,8 @@ public class Student {
     private String phoneNumber;
 	private LocalTime timeExpected;
 	private String generalNotes;
-    private Integer paymentNumber;
-	private Integer classNumber;
-	private Integer totalClasses;
+    private Integer currTermId;
+	private Integer currClass;
 	private Double classHours;
     
 	public Student() {
@@ -34,8 +33,7 @@ public class Student {
 	} // equivalent to no args constructor
 	    
 	public Student(Integer studentId, String firstName, String lastName, String classId, String day, String phoneNumber,
-			LocalTime timeExpected, String generalNotes, Integer paymentNumber, Integer classNumber,
-			Integer totalClasses, Double classHours) {
+			LocalTime timeExpected, String generalNotes, Integer currTermId, Integer currClass, Double classHours) {
 		super();
 		this.studentId = studentId;
 		this.firstName = firstName;
@@ -45,9 +43,8 @@ public class Student {
 		this.phoneNumber = phoneNumber;
 		this.timeExpected = timeExpected;
 		this.generalNotes = generalNotes;
-		this.paymentNumber = paymentNumber;
-		this.classNumber = classNumber;
-		this.totalClasses = totalClasses;
+		this.currTermId = currTermId;
+		this.currClass = currClass;
 		this.classHours = classHours;
 	}
 
@@ -99,23 +96,17 @@ public class Student {
 	public void setGeneralNotes(String generalNotes) {
 		this.generalNotes = generalNotes;
 	}
-    public Integer getPaymentNumber() {
-		return paymentNumber;
+    public Integer getCurrTermId() {
+		return currTermId;
 	}
-	public void setPaymentNumber(Integer paymentNumber) {
-		this.paymentNumber = paymentNumber;
+	public void setCurrTermId(Integer currTermId) {
+		this.currTermId = currTermId;
 	}
-	public Integer getClassNumber() {
-		return classNumber;
+	public Integer getCurrClass() {
+		return currClass;
 	}
-	public void setClassNumber(Integer classNumber) {
-		this.classNumber = classNumber;
-	}
-	public Integer getTotalClasses() {
-		return totalClasses;
-	}
-	public void setTotalClasses(Integer totalClasses) {
-		this.totalClasses = totalClasses;
+	public void setClassNumber(Integer currClass) {
+		this.currClass = currClass;
 	}
 	public Double getClassHours() {
 		return classHours;

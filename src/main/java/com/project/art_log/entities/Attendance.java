@@ -19,7 +19,7 @@ public class Attendance {
 	private Integer attendanceId; // Identified through annotations as the primary key that is auto-generated
 	
 	private Integer studentId;
-	private Integer paymentNumber;
+	private Integer termId;
 	private Integer classNumber;
 	private LocalDate dateExpected;
 	private String attendanceCheck;
@@ -27,21 +27,19 @@ public class Attendance {
 	private LocalTime checkIn;
 	private Integer hours;
 	private LocalTime checkOut;
-	private String paymentNotes; // About payments, will also appear in the student tables on day-page.tsx
-	private String termNotes; // About the payment table, only appears in the payments-page.tsx
 	private String notes;
 
 	public Attendance() {
 		
 	} // equivalent to no args constructor
 	
-	public Attendance(Integer attendanceId, Integer studentId, Integer paymentNumber, Integer classNumber,
+	public Attendance(Integer attendanceId, Integer studentId, Integer termId, Integer classNumber,
 			LocalDate dateExpected, String attendanceCheck, LocalDate dateAttended, LocalTime checkIn, Integer hours,
-			LocalTime checkOut, String paymentNotes, String termNotes, String notes) {
+			LocalTime checkOut, String notes) {
 		super();
 		this.attendanceId = attendanceId;
 		this.studentId = studentId;
-		this.paymentNumber = paymentNumber;
+		this.termId = termId;
 		this.classNumber = classNumber;
 		this.dateExpected = dateExpected;
 		this.attendanceCheck = attendanceCheck;
@@ -49,15 +47,12 @@ public class Attendance {
 		this.checkIn = checkIn;
 		this.hours = hours;
 		this.checkOut = checkOut;
-		this.paymentNotes = paymentNotes;
-		this.termNotes = termNotes;
 		this.notes = notes;
 	}
 
 	public Integer getAttendanceId() {
 		return attendanceId;
 	}
-	
 	public void setAttendanceId(Integer attendanceId) {
 		this.attendanceId = attendanceId;
 	}
@@ -67,11 +62,11 @@ public class Attendance {
 	public void setStudentId(Integer studentId) {
 		this.studentId = studentId;
 	}
-	public Integer getPaymentNumber() {
-		return paymentNumber;
+	public Integer getTermId() {
+		return termId;
 	}
-	public void setPaymentNumber(Integer paymentNumber) {
-		this.paymentNumber = paymentNumber;
+	public void setTermId(Integer termId) {
+		this.termId = termId;
 	}
 	public Integer getClassNumber() {
 		return classNumber;
@@ -115,19 +110,6 @@ public class Attendance {
 	public void setCheckOut(LocalTime checkOut) {
 		this.checkOut = checkOut;
 	}
-	public String getPaymentNotes() {
-		return paymentNotes;
-	}
-	public void setPaymentNotes(String paymentNotes) {
-		this.paymentNotes = paymentNotes;
-	}
-	public String getTermNotes() {
-		return termNotes;
-	}
-	public void setTermNotes(String termNotes) {
-		this.termNotes = termNotes;
-	}
-
 	public String getNotes() {
 		return notes;
 	}
