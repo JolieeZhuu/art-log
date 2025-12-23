@@ -56,10 +56,10 @@ export async function deleteById(url: string, id: number) {
 export async function getByDay(url: string, day: string) {
     try {
         const response = await axiosInstance.get(url + "day/" + day);
-        return response.data
+        return response.data;
     } catch (error) {
         console.error('Error:', error);
-        throw error
+        throw error;
     }
 }
 export async function getByDayAndExpectedTime(url: string, day: string) {    
@@ -84,8 +84,8 @@ export async function getByStudentIdAndPaymentNumber(url: string, studentId: num
 
 export async function getByPaymentNumberAndStudentIdAndClassNumber(url: string, currTermId: number, studentId: number, classNumber: number) { 
     try {
-        const response = await axiosInstance.get(url + "class/" + currTermId + "/" + studentId + "/" + classNumber)
-        return response.data
+        const response = await axiosInstance.get(url + "class/" + currTermId + "/" + studentId + "/" + classNumber);
+        return response.data;
     } catch (error) {
         console.error('Error:', error);
     }
@@ -108,19 +108,29 @@ export async function getByDateExpectedAndStudentIdAndPaymentNumber(url: string,
                 studentId: studentId.toString(),
                 paymentNumber: termId.toString()
             }
-        })
+        });
         return response.data || [];
     } catch (error) {
-        console.error('Error:', error)
+        console.error('Error:', error);
         return [];
     }
 }
 
 export async function getFirstAbsentWithinThirtyDays(url: string) {
     try {
-        const response = await axiosInstance.get(url + "absent")
-        return response.data
+        const response = await axiosInstance.get(url + "absent");
+        return response.data;
     } catch (error) {
         console.error('Error:', error);
+    }
+}
+
+// Term controller methods
+export async function getTermTableByStudentIdAndTableNum(url: string, studentId: number, tableNum: number) {
+    try {
+        const response = await axiosInstance.get(url + studentId + "/" + tableNum);
+        return response.data;
+    } catch (error) {
+        console.log('Error:', error);
     }
 }

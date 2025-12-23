@@ -24,8 +24,8 @@ export default function StudentTable({ dayOfWeek, setSelectedStudents, selectedS
                 return []
             }
             // Store values to be used during editMode
-            const studentValuesList: Student[] = await Promise.all(studentList.map(async ({ student_id, first_name, last_name, general_notes, phone_number, payment_number, class_number } : { student_id: number, first_name: string, last_name: string, general_notes: string, phone_number: string, payment_number: number, class_number: number }) => {
-                const attendanceClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, payment_number, student_id, class_number) // could be null
+            const studentValuesList: Student[] = await Promise.all(studentList.map(async ({ student_id, first_name, last_name, general_notes, phone_number, curr_table, curr_class } : { student_id: number, first_name: string, last_name: string, general_notes: string, phone_number: string, curr_table: number, curr_class: number }) => {
+                const attendanceClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, curr_table, student_id, curr_class) // could be null
                 return {
                     id: student_id,
                     name: `${first_name} ${last_name}`,

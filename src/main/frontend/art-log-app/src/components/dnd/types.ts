@@ -10,7 +10,6 @@ export type Student = {
     class_id: string;
     time_expected: string;
     class_hours: number;
-    total_classes: number;
 };
 
 export type Column = {

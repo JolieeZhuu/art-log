@@ -100,9 +100,8 @@ export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudent
             phone_number: values.phoneNumber,
             time_expected: convertTo24Hour(values.timeExpected),
             general_notes: "",
-            payment_number: 0,
-            class_number: 0,
-            total_classes: 0,
+            curr_table: 0,
+            curr_class: 0,
             class_hours: values.hoursOfClass,
         }
 

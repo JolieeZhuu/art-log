@@ -220,8 +220,8 @@ export const columns = ({
                     day: storeStudent.day,
                     phone_number: values.phoneNumber,
                     general_notes: values.notes,
-                    payment_number: storeStudent.payment_number,
-                    class_number: storeStudent.class_number,
+                    curr_table: storeStudent.payment_number,
+                    curr_class: storeStudent.class_number,
                     time_expected: storeStudent.time_expected
                 }
 

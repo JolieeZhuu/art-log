@@ -49,7 +49,6 @@ type Student = {
     phone_number: string
     time_expected: string
     class_hours: number
-    total_classes: number
     general_notes: string
 }
 

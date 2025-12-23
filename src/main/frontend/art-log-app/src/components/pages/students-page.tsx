@@ -84,9 +84,8 @@ export function Students() {
             phone_number: student.phone_number,
             time_expected: student.time_expected,
             general_notes: student.general_notes,
-            payment_number: student.payment_number,
-            class_number: student.class_number,
-            total_classes: student.total_classes,
+            curr_table: student.curr_table,
+            curr_class: student.curr_class,
             class_hours: student.class_hours,
         }
 

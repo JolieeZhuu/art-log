@@ -254,7 +254,7 @@ export function DayPage() {
                         </div>
                     </div>
 
-                    <div className="gap-7 pt-4">
+                    <div className="">
                         <div className="absolute top-4 right-4">
                             <ModeToggle/>
                         </div>
