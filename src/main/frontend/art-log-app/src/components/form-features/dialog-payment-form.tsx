@@ -8,7 +8,7 @@ import { z } from "zod" // Used for input validation
 import dayjs from 'dayjs'
 
 // Internal imports
-import { addPaymentNum, addNewPaymentTable } from "@/components/payment-tables/payment-funcs"
+import { addTableNum, addNewPaymentTable } from "@/components/payment-tables/payment-funcs"
 
 // UI components
 import { Button } from "@/components/ui/button"
@@ -72,7 +72,7 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
         const formattedDate = dayjs(date).toDate() // Jan 1, 2025
         const classes = values.numOfClasses
 
-        const currentPaymentNum = await addPaymentNum(id);
+        const currentPaymentNum = await addTableNum(id);
         await addNewPaymentTable(id, formattedDate, currentPaymentNum, classes);
 
         setOpen(false);

@@ -3,14 +3,14 @@ import * as React from "react"
 // Internal imports
 import { columns, type Student } from "@/components/student-tables/student-columns"
 import { DataTable } from "@/components/student-tables/student-data-table"
-import { getByDayAndExpectedTime, getByPaymentNumberAndStudentIdAndClassNumber } from "@/restAPI/entities"
+import { getByDayAndExpectedTime, getTermTableByStudentIdAndTableNum } from "@/restAPI/entities"
 import { type Checkout } from "@/components/checkout-tables/checkout-columns"
 
 export default function StudentTable({ dayOfWeek, setSelectedStudents, selectedStudents } : { dayOfWeek: string; setSelectedStudents: (selected: Checkout[]) => void; selectedStudents: Checkout[] }) {
 
     // variable initializations
-    const studentUrl = "http://localhost:8080/student/"
-    const attendanceUrl = "http://localhost:8080/attendance/"
+    const studentUrl = "http://localhost:8080/student/";
+    const termUrl = "http://localhost:8080/term/";
     const [data, setData] = React.useState<Student[]>([]) // Used to handle async function with useEffect
 
     async function getData(): Promise<Student[]> {
@@ -24,12 +24,13 @@ export default function StudentTable({ dayOfWeek, setSelectedStudents, selectedS
                 return []
             }
             // Store values to be used during editMode
-            const studentValuesList: Student[] = await Promise.all(studentList.map(async ({ student_id, first_name, last_name, general_notes, phone_number, curr_table, curr_class } : { student_id: number, first_name: string, last_name: string, general_notes: string, phone_number: string, curr_table: number, curr_class: number }) => {
-                const attendanceClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, curr_table, student_id, curr_class) // could be null
+            const studentValuesList: Student[] = await Promise.all(studentList.map(async ({ student_id, first_name, last_name, general_notes, phone_number, curr_table } : { student_id: number, first_name: string, last_name: string, general_notes: string, phone_number: string, curr_table: number }) => {
+                const termTable = await getTermTableByStudentIdAndTableNum(termUrl, student_id, curr_table)
+                console.log(`${first_name}`, termTable.payment_notes) // DEBUG
                 return {
                     id: student_id,
                     name: `${first_name} ${last_name}`,
-                    paymentNotes: attendanceClass !== null ? attendanceClass.payment_notes : "",
+                    paymentNotes: termTable.payment_notes,
                     notes: general_notes,
                     phoneNumber: phone_number,
                     checkIn: "",

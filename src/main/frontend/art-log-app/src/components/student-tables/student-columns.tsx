@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
 
 // Internal imports
-import { getById, edit, deleteById, deleteByStudentId, getByPaymentNumberAndStudentIdAndClassNumber } from "@/restAPI/entities";
+import { getById, edit, deleteById, deleteByStudentId, getTermTableByStudentIdAndTableNum } from "@/restAPI/entities";
 
 // UI components
 import type { ColumnDef } from "@tanstack/react-table";
@@ -171,12 +171,13 @@ export const columns = ({
     {
         id: "actions",
         cell: ({ row }) => {
-            const student = row.original
-            const studentUrl = "http://localhost:8080/student/"
-            const attendanceUrl = "http://localhost:8080/attendance/"
+            const student = row.original;
+            const studentUrl = "http://localhost:8080/student/";
+            const attendanceUrl = "http://localhost:8080/attendance/";
+            const termUrl = "http://localhost:8080/term/";
 
-            const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false)
-            const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false)
+            const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
+            const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
             // Define form and default values
             const editForm = useForm<z.infer<typeof editSchema>>({
@@ -208,7 +209,7 @@ export const columns = ({
             async function editStudent(values: z.infer<typeof editSchema>) {
 
                 const storeStudent = await getById(studentUrl, student.id)
-                const storeClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, storeStudent.payment_number, student.id, storeStudent.class_number)
+                const storeTerm = await getTermTableByStudentIdAndTableNum(termUrl, student.id, storeStudent.curr_table)
 
                 console.log("edit clicked")
                 console.log(values)
@@ -220,27 +221,18 @@ export const columns = ({
                     day: storeStudent.day,
                     phone_number: values.phoneNumber,
                     general_notes: values.notes,
-                    curr_table: storeStudent.payment_number,
-                    curr_class: storeStudent.class_number,
+                    curr_table: storeStudent.curr_table,
+                    curr_class: storeStudent.curr_class,
                     time_expected: storeStudent.time_expected
                 }
-
                 const data2 = {
-                    attendance_id: storeClass.attendance_id,
-                    student_id: storeClass.student_id,
-                    payment_number: storeClass.payment_number,
-                    class_number: storeClass.class_number,
-                    date_expected: storeClass.date_expected,
-                    attendance_check: storeClass.attendance_check,
-                    date_attended: storeClass.date_attended,
-                    check_in: storeClass.check_in,
-                    hours: storeClass.hours,
-                    check_out: storeClass.check_out,
+                    term_id: storeTerm.term_id,
+                    student_id: student.id,
+                    total_classes: storeTerm.total_classes,
                     payment_notes: values.paymentNotes,
-                    term_notes: storeClass.term_notes,
-                    notes: storeClass.notes
+                    term_notes: storeTerm.term_notes,
+                    table_num: storeTerm.table_num
                 }
-
                 const updatedStudent = {
                     id: student.id,
                     name: values.firstName + " " + values.lastName,
@@ -253,7 +245,7 @@ export const columns = ({
                 onUpdate(updatedStudent) // Update the student in the parent component so no need to refresh the page
 
                 await edit(studentUrl, data1)
-                await edit(attendanceUrl, data2)
+                await edit(termUrl, data2)
                 setIsEditDialogOpen(false)
                 toast(`${values.firstName} ${values.lastName} has been edited.`)
             }
@@ -262,6 +254,7 @@ export const columns = ({
             async function deleteStudent() {
                 const storeStudent = await getById(studentUrl, student.id)
 
+                await deleteByStudentId(termUrl, student.id)
                 await deleteByStudentId(attendanceUrl, student.id)
 
                 await deleteById(studentUrl, student.id)

@@ -7,7 +7,7 @@ import { z } from "zod" // Used for input validation
 
 // Internal imports
 import { dayOptions, classIdOptions, timeExpectedOptions } from "./options";
-import { getById, edit, getByPaymentNumberAndStudentIdAndClassNumber } from "@/restAPI/entities";
+import { getById, edit, getByTermIdAndStudentIdAndClassNumber, getTermTableByStudentIdAndTableNum } from "@/restAPI/entities";
 import { convertTo24Hour } from "../payment-tables/payment-funcs";
 
 // UI Components
@@ -70,6 +70,7 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
     
     const studentUrl = "http://localhost:8080/student/"
     const attendanceUrl = "http://localhost:8080/attendance/"
+    const termUrl = "http://localhost:8080/term/"
 
     const form = useForm<z.infer<typeof editSchema>>({
         resolver: zodResolver(editSchema),
@@ -192,9 +193,8 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
                 phone_number: student.phone_number,
                 time_expected: student.time_expected,
                 general_notes: student.general_notes,
-                payment_number: student.payment_number,
-                class_number: student.class_number, 
-                total_classes: index == 5 ? values.inputNumber : student.total_classes, //
+                curr_table: student.curr_table,
+                curr_class: student.curr_class, 
                 class_hours: index == 2 ? values.inputNumber : student.class_hours, //
             }
             await edit(studentUrl, data)
@@ -202,7 +202,9 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
             setText(values.inputNumber ?? 1);
         } else {
             console.log(student.payment_number, id, student.class_number)
-            const storeClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, student.payment_number, id, student.class_number)
+            const termTable = await getTermTableByStudentIdAndTableNum(termUrl, id, student.curr_table)
+            console.log("term table HERE:", termTable)
+            const storeClass = await getByTermIdAndStudentIdAndClassNumber(attendanceUrl, termTable.term_id, id, student.class_number)
             console.log(storeClass)
             const data1 = {
                 student_id: id,
@@ -213,27 +215,20 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
                 phone_number: index == 4 ? values.input: student.phone_number,
                 time_expected: index == 1 ? convertTo24Hour(values.input) : student.time_expected,
                 general_notes: index == 8 ? values.input : student.general_notes,
-                payment_number: student.payment_number,
-                class_number: student.class_number, 
-                total_classes: index == 2 ? values.inputNumber : student.total_classes, //
+                curr_table: student.curr_table,
+                curr_class: student.curr_class, 
                 class_hours: index == 5 ? values.inputNumber : student.class_hours, //
             }
             const data2 = {
-                attendance_id: storeClass.attendance_id,
-                studentId: id,
-                classNumber: storeClass.class_number,
-                paymentNumber: storeClass.payment_number,
-                classDate: storeClass.date_expected,
-                attendanceCheck: storeClass.attendance_check,
-                attendedDate: storeClass.date_attended,
-                checkIn: storeClass.check_in,
-                checkOut: storeClass.check_out,
-                payment_notes: index == 6 ? values.input : storeClass.payment_notes,
-                term_notes: index == 7 ? values.input : storeClass.term_notes,
-                notes: storeClass.notes,
+                term_id: termTable.term_id,
+                student_id: id,
+                total_classes: termTable.total_classes,
+                payment_notes: index == 6 ? values.input : termTable.payment_notes,
+                term_notes: index == 7 ? values.input : termTable.term_notes,
+                table_num: termTable.table_num
             }
             await edit(studentUrl, data1)
-            await edit(attendanceUrl, data2)
+            await edit(termUrl, data2)
             console.log("Setting string:", values.input)
             setText(values.input ?? "");
         }

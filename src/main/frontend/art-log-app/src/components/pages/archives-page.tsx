@@ -15,7 +15,7 @@ import { getById } from "@/restAPI/entities"
 
 import PaymentTable from "@/components/payment-tables/payments-table-page"
 
-import { getPaymentNum } from "@/components/payment-tables/payment-funcs"
+import { getTableNum } from "@/components/payment-tables/payment-funcs"
 
 import { Link } from "react-router-dom"
 import {
@@ -67,7 +67,7 @@ export function Archives() {
     }
 
     async function loadCards() {
-        const num = await getPaymentNum(id)
+        const num = await getTableNum(id)
         const cards = Array.from({length: num}).map((_, index) => {
             return (
                 <div key={index} className="w-full">
@@ -76,7 +76,7 @@ export function Archives() {
                             <CardTitle>Payment Table {num - index}</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <PaymentTable studentId={id} paymentNumber={num - index}/>
+                            <PaymentTable studentId={id} tableNum={num - index}/>
                         </CardContent>
                     </Card>
                 </div>

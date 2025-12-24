@@ -2,6 +2,7 @@ package com.project.art_log.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,5 +28,12 @@ public class TermController extends AbstractController<Term, Integer> {
 	public ResponseEntity<Term> getTermTable(@PathVariable("studentId") Integer studentId, @PathVariable("tableNum") Integer tableNum) {
 		System.out.println("getting by student id and table num works");
 		return ResponseEntity.ok().body(termService.getByStudentIdAndTableNum(studentId, tableNum));
+	}
+	
+	@DeleteMapping("/student/{studentId}")
+	public ResponseEntity<String> deleteByStudentId(@PathVariable("studentId") Integer studentId) {
+		System.out.println("deleting all by student id works");
+		int deletedCount = termService.deleteByStudentId(studentId);
+        return ResponseEntity.ok().body("Deleted " + deletedCount + " attendance records from student");
 	}
 }

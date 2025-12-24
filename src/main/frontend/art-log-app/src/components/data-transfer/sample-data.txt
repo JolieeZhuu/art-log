@@ -1,5 +1,6 @@
 #STUDENT
 {"first_name": "Jolie", "last_name": "Zhu", "class_id": "INTE-1", "day": "Monday", "phone_number": "1234567890", "time_expected": "12:00:00", "general_notes": "", "curr_table": 0, "curr_class": 0,  "class_hours": 2}
 {"first_name": "Humpty", "last_name": "Dumpty", "class_id": "INTE-1", "day": "Monday", "phone_number": "9876543210", "time_expected": "12:00:00", "general_notes": "", "curr_table": 0, "curr_class": 0, "class_hours": 2}
+{"first_name": "Angelina", "last_name": "Jolie", "class_id": "LV1", "day": "Saturday", "phone_number": "6549871230", "time_expected": "09:00:00", "general_notes": "", "curr_table": 0, "curr_class": 0, "class_hours": 2}
 
 #ATTENDANCE

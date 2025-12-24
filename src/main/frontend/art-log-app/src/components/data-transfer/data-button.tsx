@@ -71,12 +71,14 @@ export default function DataButton() {
         jsonStudentList.forEach(async (jsonString: string) => {
             try {
                 // for student data
-                console.log(jsonString) // debug
-                const jsonBody = JSON.parse(jsonString);
-                console.log(jsonBody) // debug
-                await add(studentUrl, jsonBody);
+                if (jsonString.trim() != "") {
+                    console.log(jsonString) // debug
+                    const jsonBody = JSON.parse(jsonString);
+                    console.log(jsonBody) // debug
+                    await add(studentUrl, jsonBody);
+                }
             } catch (Error) {
-                currMessage = `Data is either not in correct form, or is empty.`;
+                currMessage = `Student data is either not in correct form, or is empty.`;
             }
         })
 
@@ -84,11 +86,13 @@ export default function DataButton() {
             try {
                 // for attendance data
                 console.log(jsonString) // debug
-                const jsonBody = JSON.parse(jsonString);
-                console.log(jsonBody) // debug
-                await add(attendanceUrl, jsonBody);
+                if (jsonString.trim() != "") {
+                    const jsonBody = JSON.parse(jsonString);
+                    console.log(jsonBody) // debug
+                    await add(attendanceUrl, jsonBody);
+                }
             } catch (Error) {
-                currMessage = `Data is either not in correct form, or is empty.`;
+                currMessage = `Attendance data is either not in correct form, or is empty.`;
             }
         })
         toast(currMessage);

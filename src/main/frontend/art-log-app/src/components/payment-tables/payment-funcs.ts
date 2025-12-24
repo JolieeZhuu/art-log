@@ -2,22 +2,23 @@
 import dayjs from 'dayjs'
 
 // Internal imports
-import { getById, edit, add, getByPaymentNumberAndStudentIdAndClassNumber, } from '@/restAPI/entities'
+import { getById, edit, add, getByTermIdAndStudentIdAndClassNumber, getTermTableByStudentIdAndTableNum } from '@/restAPI/entities'
 
 // Initializations
 const studentUrl = "http://localhost:8080/student/"
 const attendanceUrl = "http://localhost:8080/attendance/"
+const termUrl = "http://localhost:8080/term/"
 
-export async function getPaymentNum(id: number) {
+export async function getTableNum(id: number) {
 
     const student = await getById(studentUrl, id)
 
-    return student.payment_number
+    return student.curr_table
 }
 
-export async function addPaymentNum(id: number) {
+export async function addTableNum(id: number) {
     const student = await getById(studentUrl, id)
-    const currentPaymentNum = student.payment_number + 1 // Payment made, thus new table
+    const currTerm = student.curr_table + 1 // Payment made, thus new table
     const data = {
         student_id: student.student_id,
         first_name: student.first_name,
@@ -27,28 +28,36 @@ export async function addPaymentNum(id: number) {
         phone_number: student.phone_number,
         time_expected: student.time_expected,
         general_notes: student.general_notes,
-        payment_number: currentPaymentNum,
-        class_number: 0,
-        total_classes: student.total_classes,
+        curr_table: currTerm,
+        curr_class: 0,
         class_hours: student.class_hours,
     }
 
     await edit(studentUrl, data)
-    return currentPaymentNum
+    return currTerm
 }
 
-export async function addNewPaymentTable(id: number, date: Date, paymentNum: number, numOfClasses: number) {
+export async function addNewPaymentTable(id: number, date: Date, tableNum: number, numOfClasses: number) {
     const student = await getById(studentUrl, id)
 
     const data1 = {
         student_id: id,
-        payment_number: paymentNum,
+        total_classes: numOfClasses,
+        table_num: tableNum
+    } // Term entity
+
+    await add(termUrl, data1);
+    const termTable = await getTermTableByStudentIdAndTableNum(termUrl, id, tableNum);
+
+    const data2 = {
+        student_id: id,
+        term_id: termTable.term_id,
         class_number: 1,
         date_expected: date,
         hours: 1
-    } // Make changes to Attendance entity
+    } // create first class Attendance entity
 
-    const data2 = {
+    const data3 = {
         student_id: id,
         first_name: student.first_name,
         last_name: student.last_name,
@@ -57,29 +66,28 @@ export async function addNewPaymentTable(id: number, date: Date, paymentNum: num
         phone_number: student.phone_number,
         time_expected: student.time_expected,
         general_notes: student.general_notes,
-        payment_number: student.payment_number,
-        class_number: student.class_number,
-        total_classes: numOfClasses,
+        curr_table: student.curr_table,
+        curr_class: student.curr_class,
         class_hours: student.class_hours
     } // Make changes to Student entity
     
-    await add(attendanceUrl, data1)
-    await generateClasses(id, date.toString(), paymentNum, numOfClasses) // generates remaining 
+    await add(attendanceUrl, data2)
+    await generateClasses(id, termTable.term_id, date.toString(), numOfClasses) // generates remaining 
 
-    await edit(studentUrl, data2)
+    await edit(studentUrl, data3)
 }
 
-async function generateClasses(id: number, date: string, paymentNum: number, numOfClasses: number) {
+async function generateClasses(id: number, termId: number, date: string, numOfClasses: number) {
     // Generates remaining classes after the first one
     // Classes are 7 days apart
     for (let i = 2; i <= numOfClasses; i++) {
         const nextClassDate = dayjs(date).add(7*(i-1), 'days').toDate()
         const data = {
             student_id: id,
+            term_id: termId,
             class_number: i,
             date_expected: nextClassDate,
-            hours: 1,
-            payment_number: paymentNum
+            hours: 1
         }
 
         await add(attendanceUrl, data)
@@ -91,10 +99,13 @@ export async function getTotalClasses(studentId: number) {
     return student.total_classes
 }
 
-export async function addClass(paymentNum: number, id: number) {
+export async function addClass(tableNum: number, id: number) {
     const student = await getById(studentUrl, id)
-    const totalClasses = student.total_classes
-    const lastClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, paymentNum, id, totalClasses)
+    console.log("studenttt", student)
+    const termTable = await getTermTableByStudentIdAndTableNum(termUrl, id, tableNum)
+    console.log(termTable)
+    const lastClass = await getByTermIdAndStudentIdAndClassNumber(attendanceUrl, termTable.term_id, id, termTable.total_classes)
+    
 
     // Generate the new class 7 days apart from the last class
     const lastDate = lastClass.date_expected
@@ -102,33 +113,28 @@ export async function addClass(paymentNum: number, id: number) {
     console.log(nextClassDate)
     const data1 = {
         student_id: id,
-        class_number: totalClasses + 1,
+        term_id: termTable.term_id,
+        class_number: termTable.total_classes + 1,
         date_expected: nextClassDate,
-        hours: 1,
-        payment_number: paymentNum,
+        hours: 1
     }
 
     await add(attendanceUrl, data1)
 
     // Edit the student so that total classes += 1
+
     const data2 = {
+        term_id: termTable.term_id,
         student_id: id,
-        first_name: student.first_name,
-        last_name: student.last_name,
-        class_id: student.class_id,
-        day: student.day,
-        phone_number: student.phone_number,
-        time_expected: student.time_expected,
-        generate_notes: student.general_notes,
-        payment_number: student.payment_number,
-        class_number: student.class_number,
-        total_classes: totalClasses + 1,
-        class_hours: student.class_hours,
+        total_classes: termTable.total_classes + 1,
+        payment_notes: termTable.payment_notes,
+        term_notes: termTable.term_notes,
+        table_num: termTable.table_num
     }
 
-    await edit(studentUrl, data2)
+    await edit(termUrl, data2)
 
-    const toSend = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, paymentNum, id, totalClasses + 1)
+    const toSend = await getByTermIdAndStudentIdAndClassNumber(attendanceUrl, termTable.term_id, id, termTable.total_classes + 1)
     return toSend
 }
 

@@ -19,13 +19,12 @@ public class Term {
 	private String paymentNotes;
 	private String termNotes;
 	private Integer tableNum;
-	private String attendanceIds;
 	
 	public Term() {
 		
 	}	
 	public Term(Integer termId, Integer studentId, Integer totalClasses, String paymentNotes, String termNotes, 
-			Integer tableNum, String attendanceIds) {
+			Integer tableNum) {
 		super();
 		this.termId = termId;
 		this.studentId = studentId;
@@ -33,7 +32,6 @@ public class Term {
 		this.paymentNotes = paymentNotes;
 		this.termNotes = termNotes;
 		this.tableNum = tableNum;
-		this.attendanceIds = attendanceIds;
 	}
 	public Integer getTermId() {
 		return termId;
@@ -70,11 +68,5 @@ public class Term {
 	}
 	public void setTableNum(Integer tableNum) {
 		this.tableNum = tableNum;
-	}
-	public String getAttendanceIds() {
-		return attendanceIds;
-	}
-	public void setAttendanceIds(String attendanceIds) {
-		this.attendanceIds = attendanceIds;
 	}
 }

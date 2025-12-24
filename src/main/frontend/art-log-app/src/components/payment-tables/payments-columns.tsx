@@ -12,7 +12,7 @@ import { z } from "zod" // Used for input validation
 
 // Internal imports
 import { getTotalClasses, addClass, convertTo24Hour } from '@/components/payment-tables/payment-funcs'
-import { edit, getByPaymentNumberAndStudentIdAndClassNumber } from '@/restAPI/entities'
+import { edit, getByTermIdAndStudentIdAndClassNumber, getTermTableByStudentIdAndTableNum } from '@/restAPI/entities'
 
 // UI components
 import type { ColumnDef } from "@tanstack/react-table";
@@ -121,25 +121,25 @@ const attendanceCheckOptions = [
 export type Attendance = {
     id: number
     studentId: number
+    termId: number
     classNumber: number
-    paymentNumber: number
     classDate: string
     attendanceCheck: string
     attendedDate: string
     checkIn: string
     makeupMins: string
     checkOut: string
-    paymentNotes: string
-    termNotes: string
     notes: string
 }
 
 export const columns = ({
     onUpdate,
-    onAdded
+    onAdded,
+    tableNum
 }: {
     onUpdate: (updated: Attendance) => void,
     onAdded: (newClass: Attendance) => void
+    tableNum: number
 }): ColumnDef<Attendance>[] => [
     {
         accessorKey: "classNumber",
@@ -208,8 +208,6 @@ export const columns = ({
                     checkIn: attendance.checkIn ? attendance.checkIn : "",
                     makeupMins: attendance.makeupMins ? attendance.makeupMins : "",
                     checkOut: attendance.checkOut ? attendance.checkOut : "",
-                    paymentNotes: attendance.paymentNotes ? attendance.paymentNotes : "",
-                    termNotes: attendance.termNotes ? attendance.termNotes : "",
                     notes: attendance.notes ? attendance.notes : "",
                 },
             })
@@ -218,6 +216,7 @@ export const columns = ({
             async function editClass(values: z.infer<typeof editSchema>) {
                 // initializations
                 const attendanceUrl = "http://localhost:8080/attendance/"
+                const termUrl = "http://localhost:8080/term/"
 
                 const formattedDateExpected = dayjs(values.dateExpected.toString()).format("YYYY-MM-DD")
                 console.log("formatted date", formattedDateExpected)
@@ -230,24 +229,23 @@ export const columns = ({
                     console.log("case 1") // debug
                     const currClassNumber = attendance.classNumber
                     const lastClassNumber: number = await getTotalClasses(attendance.studentId)
+                    const termTable = await getTermTableByStudentIdAndTableNum(termUrl, attendance.studentId, tableNum)
                     for (let i = 0; i <= lastClassNumber - currClassNumber; i++) {
-                        const currClass = await getByPaymentNumberAndStudentIdAndClassNumber(attendanceUrl, attendance.paymentNumber, attendance.studentId, currClassNumber + i)
+                        const currClass = await getByTermIdAndStudentIdAndClassNumber(attendanceUrl, termTable.term_id, attendance.studentId, currClassNumber + i)
 
                         // First class is the one being edited, so there may be new values
                         if (i === 0) {            
                             const data = {
                                 attendance_id: currClass.attendance_id,
                                 student_id: attendance.studentId,
+                                term_id: attendance.termId,
                                 class_number: currClassNumber + i,
-                                payment_number: attendance.paymentNumber,
                                 date_expected: dayjs(formattedDateExpected).add(7*i, "days").toDate(),
                                 attendance_check: values.attendanceCheck,
                                 date_attended: values.dateAttended !== undefined ? dayjs(values.dateAttended?.toString()).toDate() : "",
                                 check_in: values.checkIn == "" ? null : convertTo24Hour(values.checkIn),
                                 hours: 0, // fix makeup minds and hours confusion
                                 check_out: values.checkOut == "" ? null : convertTo24Hour(values.checkOut),
-                                payment_notes: values.paymentNotes,
-                                term_notes: values.termNotes,
                                 notes: values.notes,
                             }
                             await edit(attendanceUrl, data)
@@ -255,16 +253,14 @@ export const columns = ({
                             const dataToUpdate: Attendance = {
                                 id: currClass.attendance_id,
                                 studentId: attendance.studentId,
+                                termId: attendance.termId,
                                 classNumber: currClassNumber + i,
-                                paymentNumber: attendance.paymentNumber,
                                 classDate: dayjs(formattedDateExpected).add(7*i, "days").format("MMMM D, YYYY"),
                                 attendanceCheck: values.attendanceCheck,
                                 attendedDate: values.dateAttended !== undefined ? dayjs(values.dateAttended?.toString()).format("MMMM D, YYYY") : "",
                                 checkIn: values.checkIn == undefined ? "" : values.checkIn,
                                 makeupMins: "", // fix makeup minds and hours confusion
                                 checkOut: values.checkOut == undefined ? "" : values.checkOut,
-                                paymentNotes: values.paymentNotes == undefined ? "" : values.paymentNotes,
-                                termNotes: values.termNotes == undefined ? "" : values.termNotes,
                                 notes: values.notes == undefined ? "" : values.notes,
                             }
                             onUpdate(dataToUpdate)
@@ -274,16 +270,14 @@ export const columns = ({
                             const data = {
                                 attendance_id: currClass.attendance_id,
                                 student_id: attendance.studentId,
+                                term_id: attendance.termId,
                                 class_number: currClassNumber + i,
-                                payment_number: attendance.paymentNumber,
                                 date_expected: dayjs(formattedDateExpected).add(7*i, "days").toDate(),
                                 attendance_check: "",
                                 date_attended: "",
                                 check_in: null,
                                 hours: 0, // fix makeup mins and hours confusion
                                 check_out: null,
-                                payment_notes: "",
-                                term_notes: "",
                                 notes: "",
                             }
                             await edit(attendanceUrl, data)
@@ -291,16 +285,14 @@ export const columns = ({
                             const dataToUpdate: Attendance = {
                                 id: currClass.attendance_id,
                                 studentId: attendance.studentId,
+                                termId: attendance.termId,
                                 classNumber: currClassNumber + i,
-                                paymentNumber: attendance.paymentNumber,
                                 classDate: dayjs(formattedDateExpected).add(7*i, "days").format("MMMM D, YYYY"),
                                 attendanceCheck: "",
                                 attendedDate: "",
                                 checkIn: "",
                                 makeupMins: "", // fix makeup minds and hours confusion
                                 checkOut: "",
-                                paymentNotes: "",
-                                termNotes: "",
                                 notes: "",
                             }
                             onUpdate(dataToUpdate)
@@ -309,20 +301,18 @@ export const columns = ({
 
                     // Check if holiday (will need to add a new class to the end of the list)
                     if ((values.attendanceCheck === "Holiday" || values.attendanceCheck === "Pushback") && values.attendanceCheck !== attendance.attendanceCheck) {
-                        const response = await addClass(attendance.paymentNumber, attendance.studentId)
+                        const response = await addClass(tableNum, attendance.studentId)
                         const dataToUpdate: Attendance = {
                             id: response.attendance_id,
                             studentId: response.student_id,
+                            termId: response.termId,
                             classNumber: response.class_number,
-                            paymentNumber: response.payment_number,
                             classDate: dayjs(response.date_expected).format("MMMM D, YYYY"),
                             attendanceCheck: "",
                             attendedDate: "",
                             checkIn: "",
                             makeupMins: "", // fix makeup minds and hours confusion
                             checkOut: "",
-                            paymentNotes: "",
-                            termNotes: "",
                             notes: "",
                         }
                         onAdded(dataToUpdate)
@@ -334,16 +324,14 @@ export const columns = ({
                     const data = {
                         attendance_id: attendance.id,
                         student_id: attendance.studentId,
+                        term_id: attendance.termId,
                         class_number: attendance.classNumber,
-                        payment_number: attendance.paymentNumber,
                         date_expected: dayjs(values.dateExpected.toString()).toDate(),
                         attendance_check: values.attendanceCheck,
                         date_attended: values.dateAttended?.toString() !== undefined ? dayjs(values.dateAttended?.toString()).toDate() : "",
                         check_in: values.checkIn == "" ? null : convertTo24Hour(values.checkIn),
                         hours: 0, // fix makeup minds and hours confusion
                         check_out: values.checkOut == "" ? null : convertTo24Hour(values.checkOut),
-                        payment_notes: values.paymentNotes,
-                        term_notes: values.termNotes,
                         notes: values.notes,
                     }
                     await edit(attendanceUrl, data)
@@ -357,20 +345,18 @@ export const columns = ({
                     // Check if holiday (will need to add a new class to the end of the list)
                     console.log("checking holiday", (values.attendanceCheck === "Holiday" || values.attendanceCheck === "Pushback")) // DEBUG
                     if ((values.attendanceCheck === "Holiday" || values.attendanceCheck === "Pushback") && values.attendanceCheck !== attendance.attendanceCheck) {
-                        const response = await addClass(attendance.paymentNumber, attendance.studentId)
+                        const response = await addClass(tableNum, attendance.studentId)
                         const dataToUpdate: Attendance = {
                             id: response.attendance_id,
                             studentId: response.student_id,
+                            termId: response.term_id,
                             classNumber: response.class_number,
-                            paymentNumber: response.payment_number,
                             classDate: dayjs(response.date_expected).format("MMMM D, YYYY"),
                             attendanceCheck: "",
                             attendedDate: "",
                             checkIn: "",
                             makeupMins: "", // fix makeup minds and hours confusion
                             checkOut: "",
-                            paymentNotes: "",
-                            termNotes: "",
                             notes: "",
                         }
                         onAdded(dataToUpdate)
@@ -379,16 +365,14 @@ export const columns = ({
                     const dataToUpdate: Attendance = {
                         id: attendance.id,
                         studentId: attendance.studentId,
+                        termId: attendance.termId,
                         classNumber: attendance.classNumber,
-                        paymentNumber: attendance.classNumber,
                         classDate: dayjs(values.dateExpected.toString()).format("MMMM D, YYYY"),
                         attendanceCheck: values.attendanceCheck,
                         attendedDate: values.dateAttended !== undefined ? dayjs(values.dateAttended?.toString()).format("MMMM D, YYYY") : "",
                         checkIn: values.checkIn == undefined ? "" : values.checkIn,
                         makeupMins: "", // fix makeup minds and hours confusion
                         checkOut: values.checkOut == undefined ? "" : values.checkOut,
-                        paymentNotes: values.paymentNotes == undefined ? "" : values.paymentNotes,
-                        termNotes: values.termNotes == undefined ? "" : values.termNotes,
                         notes: values.notes == undefined ? "" : values.notes,
                     }
                     onUpdate(dataToUpdate)

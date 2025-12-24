@@ -32,8 +32,7 @@ export function StudentsProvider({ children }: { children: React.ReactNode }) {
                 phone_number: s.phone_number,
                 class_id: s.class_id,
                 time_expected: s.time_expected,
-                class_hours: s.class_hours,
-                total_classes: s.total_classes
+                class_hours: s.class_hours
             })));
 
         } catch (error) {

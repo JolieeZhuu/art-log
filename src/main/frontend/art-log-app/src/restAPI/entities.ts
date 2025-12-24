@@ -73,7 +73,7 @@ export async function getByDayAndExpectedTime(url: string, day: string) {
 }
 
 // Attendance controller methods
-export async function getByStudentIdAndPaymentNumber(url: string, studentId: number, currTermId: number) {
+export async function getByStudentIdAndTermId(url: string, studentId: number, currTermId: number) {
     try {
         const response = await axiosInstance.get(url + "student/" + studentId + "/" + currTermId);
         return response.data;
@@ -82,7 +82,7 @@ export async function getByStudentIdAndPaymentNumber(url: string, studentId: num
     }
 }
 
-export async function getByPaymentNumberAndStudentIdAndClassNumber(url: string, currTermId: number, studentId: number, classNumber: number) { 
+export async function getByTermIdAndStudentIdAndClassNumber(url: string, currTermId: number, studentId: number, classNumber: number) { 
     try {
         const response = await axiosInstance.get(url + "class/" + currTermId + "/" + studentId + "/" + classNumber);
         return response.data;
@@ -100,7 +100,7 @@ export async function deleteByStudentId(url: string, studentId: number) {
     }
 }
 
-export async function getByDateExpectedAndStudentIdAndPaymentNumber(url: string, dateExpected: string, studentId: number, termId: number) {
+export async function getByDateExpectedAndStudentIdAndTermId(url: string, dateExpected: string, studentId: number, termId: number) {
     try {
         const response = await axiosInstance.get(url + "date", {
             params: {

@@ -6,7 +6,7 @@ import dayjs from "dayjs"
 // Internal imports
 import { type Checkout } from "@/components/checkout-tables/checkout-columns"
 import { type  Student } from "./student-columns"
-import { getById, getByDateExpectedAndStudentIdAndPaymentNumber, edit, getFirstAbsentWithinThirtyDays, } from "@/restAPI/entities"
+import { getById, getByDateExpectedAndStudentIdAndTermId, edit, getFirstAbsentWithinThirtyDays, getTermTableByStudentIdAndTableNum, } from "@/restAPI/entities"
 
 // UI components
 import {
@@ -97,6 +97,7 @@ export function DataTable<TData extends Student, TValue>({
             const checkoutResults = await Promise.all(selectedRowIndices.map(async (rowIndex) => {
                 const studentUrl = "http://localhost:8080/student/"
                 const attendanceUrl = "http://localhost:8080/attendance/"
+                const termUrl = "http://localhost:8080/term/"
 
                 const student = data[rowIndex] as Student
                 const studentForHours = await getById(studentUrl, student.id)
@@ -124,10 +125,11 @@ export function DataTable<TData extends Student, TValue>({
                 */
 
                 const tempStudent = await getById(studentUrl, student.id)
-                console.log(currentDOW === tempStudent.day && tempStudent.payment_number > 0)
-                if (currentDOW === tempStudent.day && tempStudent.payment_number > 0) {
+                console.log(currentDOW === tempStudent.day && tempStudent.curr_table > 0)
+                if (currentDOW === tempStudent.day && tempStudent.curr_table > 0) {
                     // Find the date within the current payment table
-                    const foundAttendance = await getByDateExpectedAndStudentIdAndPaymentNumber(attendanceUrl, currentDate, student.id, tempStudent.payment_number)
+                    const termTable = await getTermTableByStudentIdAndTableNum(termUrl, student.id, tempStudent.curr_table)
+                    const foundAttendance = await getByDateExpectedAndStudentIdAndTermId(attendanceUrl, currentDate, student.id, termTable.term_id)
                     console.log("foundattendance", foundAttendance)
                     if (foundAttendance === null) {
                         setAlertDialogOpen(true)
@@ -136,7 +138,7 @@ export function DataTable<TData extends Student, TValue>({
                         const data = {
                             attendance_id: foundAttendance.attendance_id,
                             student_id: foundAttendance.student_id,
-                            payment_number: foundAttendance.payment_number,
+                            term_id: foundAttendance.term_id,
                             class_number: foundAttendance.class_number,
                             date_expected: foundAttendance.date_expected,
                             attendance_check: "Yes",
@@ -145,8 +147,6 @@ export function DataTable<TData extends Student, TValue>({
                             hours: 1, // fix
                             //check_out: "7:00 AM", // fix back to checkOutTime
                             check_out: convertTo24Hour(checkOutTime), // fix back to checkOutTime
-                            payment_notes: foundAttendance.payment_notes,
-                            term_notes: foundAttendance.term_notes,
                             notes: foundAttendance.notes,
                         }
 
@@ -159,7 +159,7 @@ export function DataTable<TData extends Student, TValue>({
                         const data = {
                             attendance_id: foundAbsent.attendance_id,
                             student_id: foundAbsent.student_id,
-                            payment_number: foundAbsent.payment_number,
+                            term_id: foundAbsent.term_id,
                             class_number: foundAbsent.class_number,
                             date_expected: new Date(foundAbsent.date_expected),
                             attendance_check: "Makeup",
@@ -168,8 +168,6 @@ export function DataTable<TData extends Student, TValue>({
                             hours: 1, // fix
                             // check_out: "7:00 AM", // fix back to checkOutTime
                             check_out: convertTo24Hour(checkOutTime), // fix back to checkOutTime
-                            payment_notes: foundAbsent.payment_notes,
-                            term_notes: foundAbsent.term_notes,
                             notes: foundAbsent.notes,
                         }
                         

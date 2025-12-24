@@ -7,8 +7,8 @@ import { Link } from "react-router-dom"
 
 // Internal imports
 import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
-import { getById } from "@/restAPI/entities"
-import { getPaymentNum, addClass, convertTo12Hour } from "@/components/payment-tables/payment-funcs"
+import { getById, getTermTableByStudentIdAndTableNum } from "@/restAPI/entities"
+import { getTableNum, addClass, convertTo12Hour } from "@/components/payment-tables/payment-funcs"
 import PaymentTable from "@/components/payment-tables/payments-table-page"
 import EditableText from "@/components/form-features/editable-text"
 
@@ -39,6 +39,8 @@ import {
     SidebarInset,
     SidebarProvider,
 } from "@/components/ui/sidebar"
+import { Badge } from "@/components/ui/badge"
+
 
 type Student = {
     student_id: number
@@ -65,6 +67,7 @@ export function PaymentsPage() {
     const tableRefreshFunctions = useRef<{ [paymentNumber: number]: () => void }>({});
 
     const studentUrl = "http://localhost:8080/student/"
+    const termUrl = "http://localhost:8080/term/"
 
     useEffect(() => {
         getStudent()
@@ -79,33 +82,42 @@ export function PaymentsPage() {
     // Function to handle adding a class to a payment table
     // This function will be passed to the PaymentTable component
     // and will be called when a new class is added (so no page refresh is needed)
-    async function addClassHandler(paymentNumber: number) {    
-        await addClass(paymentNumber, id)
+    async function addClassHandler(tableNum: number) {
+        console.log("tablenum", tableNum) 
+        await addClass(tableNum, id)
 
-        if (tableRefreshFunctions.current[paymentNumber]) {
-            tableRefreshFunctions.current[paymentNumber]();
+        if (tableRefreshFunctions.current[tableNum]) {
+            tableRefreshFunctions.current[tableNum]();
         }
 
         getStudent()
         loadCards()
 
         // Add toaster
-        toast(`New class was created in Payment Table ${paymentNumber}`)
+        toast(`New class was created in Payment Table ${tableNum}`)
     }
 
-    const handleTableReady = (paymentNumber: number) => (refreshFn: () => void) => {
-        tableRefreshFunctions.current[paymentNumber] = refreshFn;
+    const handleTableReady = (tableNum: number) => (refreshFn: () => void) => {
+        tableRefreshFunctions.current[tableNum] = refreshFn;
     };
 
     async function loadCards() {
-        const num = await getPaymentNum(id)
+        const num = await getTableNum(id)
         const student = await getById(studentUrl, id)
+        console.log("student:", student)
+        const termTable = await getTermTableByStudentIdAndTableNum(termUrl, id, student.curr_table);
+        // [[payment, term], [payment, term]]
+        
         console.log(student)
         let tempNum;
+        let storeNotes;
         if (num >= 2) {
             tempNum = 2;
+            const termTable2 = await getTermTableByStudentIdAndTableNum(termUrl, id, student.curr_table - 1)
+            storeNotes = [[termTable.payment_notes, termTable.term_notes], [termTable2.payment_notes, termTable2.term_notes]]
         } else {
             tempNum = num;
+            storeNotes = [[termTable.payment_notes, termTable.term_notes]]
         }
         const cards = Array.from({length: tempNum}).map((_, index) => {
             return (
@@ -115,22 +127,16 @@ export function PaymentsPage() {
                             <CardTitle>Payment Table {num - index}</CardTitle>
                             <CardDescription>
                                 <div className="flex gap-2 mt-2">
+                                    <Badge variant="secondary" className="text-sm font-normal">{termTable.total_classes} classes</Badge>
                                     <EditableText
-                                        initialText={student.total_classes}
-                                        index={5}
-                                        optionalEnding=" classes"
-                                        id={id}
-                                        getStudent={getStudent}
-                                    />
-                                    <EditableText
-                                        initialText={student.payment_notes === undefined ? "Payment Notes" : student.term_notes}
+                                        initialText={storeNotes[index][0] === null ? "Payment Notes" : storeNotes[index][0]}
                                         index={6}
                                         optionalEnding=""
                                         id={id}
                                         getStudent={getStudent}
                                     />
                                     <EditableText
-                                        initialText={student.term_notes === undefined ? "Term Notes" : student.term_notes}
+                                        initialText={storeNotes[index][1] === null ? "Term Notes" : storeNotes[index][1]}
                                         index={7}
                                         optionalEnding=""
                                         id={id}
@@ -143,7 +149,7 @@ export function PaymentsPage() {
                             </CardAction>
                         </CardHeader>
                         <CardContent>
-                            <PaymentTable studentId={id} paymentNumber={num - index} onClassAdded={handleTableReady(num - index)}/>
+                            <PaymentTable studentId={id} tableNum={num - index} onClassAdded={handleTableReady(num - index)}/>
                         </CardContent>
                     </Card>
                 </div>
