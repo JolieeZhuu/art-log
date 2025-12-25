@@ -7,7 +7,7 @@ import { z } from "zod" // Used for input validation
 
 // Internal imports
 import { dayOptions, classIdOptions, timeExpectedOptions } from "./options";
-import { getById, edit, getByTermIdAndStudentIdAndClassNumber, getTermTableByStudentIdAndTableNum } from "@/restAPI/entities";
+import { getById, edit, getByTermIdAndStudentIdAndClassNumber } from "@/restAPI/entities";
 import { convertTo24Hour } from "../payment-tables/payment-funcs";
 
 // UI Components
@@ -63,7 +63,7 @@ function useOutsideAlerter(ref: any, setText: (value: React.SetStateAction<strin
 }
 
 
-export default function EditableText({ initialText, index, optionalEnding, id, getStudent }: { initialText: string, index: number, optionalEnding: string, id: number, getStudent: () => void }) {
+export default function EditableText({ initialText, index, optionalEnding, id, getStudent, termId }: { initialText: string, index: number, optionalEnding: string, id: number, getStudent: () => void, termId: number }) {
     const [isEditing, setIsEditing] = React.useState(false)
     const [text, setText] = React.useState<string | number>(initialText)
     const isNumberField = index === 2 || index === 5; // classHours and totalClasses
@@ -202,33 +202,35 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
             setText(values.inputNumber ?? 1);
         } else {
             console.log(student.payment_number, id, student.class_number)
-            const termTable = await getTermTableByStudentIdAndTableNum(termUrl, id, student.curr_table)
-            console.log("term table HERE:", termTable)
-            const storeClass = await getByTermIdAndStudentIdAndClassNumber(attendanceUrl, termTable.term_id, id, student.class_number)
+            const storeClass = await getByTermIdAndStudentIdAndClassNumber(attendanceUrl, termId, id, student.class_number)
+            const termTable = await getById(termUrl, termId)
             console.log(storeClass)
-            const data1 = {
-                student_id: id,
-                first_name: student.first_name,
-                last_name: student.last_name,
-                class_id: index == 3 ? values.input : student.class_id,
-                day: index == 0 ? values.input : student.day,
-                phone_number: index == 4 ? values.input: student.phone_number,
-                time_expected: index == 1 ? convertTo24Hour(values.input) : student.time_expected,
-                general_notes: index == 8 ? values.input : student.general_notes,
-                curr_table: student.curr_table,
-                curr_class: student.curr_class, 
-                class_hours: index == 5 ? values.inputNumber : student.class_hours, //
+            if (index == 6 || index == 7) {
+                const data2 = {
+                    term_id: termId,
+                    student_id: id,
+                    total_classes: termTable.total_classes,
+                    payment_notes: index == 6 ? values.input : termTable.payment_notes,
+                    term_notes: index == 7 ? values.input : termTable.term_notes,
+                    table_num: termTable.table_num
+                }
+                await edit(termUrl, data2)
+            } else {
+                const data1 = {
+                    student_id: id,
+                    first_name: student.first_name,
+                    last_name: student.last_name,
+                    class_id: index == 3 ? values.input : student.class_id,
+                    day: index == 0 ? values.input : student.day,
+                    phone_number: index == 4 ? values.input: student.phone_number,
+                    time_expected: index == 1 ? convertTo24Hour(values.input) : student.time_expected,
+                    general_notes: index == 8 ? values.input : student.general_notes,
+                    curr_table: student.curr_table,
+                    curr_class: student.curr_class, 
+                    class_hours: index == 5 ? values.inputNumber : student.class_hours, //
+                }
+                await edit(studentUrl, data1)
             }
-            const data2 = {
-                term_id: termTable.term_id,
-                student_id: id,
-                total_classes: termTable.total_classes,
-                payment_notes: index == 6 ? values.input : termTable.payment_notes,
-                term_notes: index == 7 ? values.input : termTable.term_notes,
-                table_num: termTable.table_num
-            }
-            await edit(studentUrl, data1)
-            await edit(termUrl, data2)
             console.log("Setting string:", values.input)
             setText(values.input ?? "");
         }

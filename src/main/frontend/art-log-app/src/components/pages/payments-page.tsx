@@ -110,14 +110,15 @@ export function PaymentsPage() {
         
         console.log(student)
         let tempNum;
-        let storeNotes;
+        let storeNotesAndIds;
         if (num >= 2) {
             tempNum = 2;
             const termTable2 = await getTermTableByStudentIdAndTableNum(termUrl, id, student.curr_table - 1)
-            storeNotes = [[termTable.payment_notes, termTable.term_notes], [termTable2.payment_notes, termTable2.term_notes]]
+            storeNotesAndIds = [[termTable.payment_notes, termTable.term_notes, termTable.term_id], 
+                                [termTable2.payment_notes, termTable2.term_notes, termTable2.term_id]]
         } else {
             tempNum = num;
-            storeNotes = [[termTable.payment_notes, termTable.term_notes]]
+            storeNotesAndIds = [[termTable.payment_notes, termTable.term_notes, termTable.term_id]]
         }
         const cards = Array.from({length: tempNum}).map((_, index) => {
             return (
@@ -129,18 +130,20 @@ export function PaymentsPage() {
                                 <div className="flex gap-2 mt-2">
                                     <Badge variant="secondary" className="text-sm font-normal">{termTable.total_classes} classes</Badge>
                                     <EditableText
-                                        initialText={storeNotes[index][0] === null ? "Payment Notes" : storeNotes[index][0]}
+                                        initialText={storeNotesAndIds[index][0] === null ? "Payment Notes" : storeNotesAndIds[index][0]}
                                         index={6}
                                         optionalEnding=""
                                         id={id}
                                         getStudent={getStudent}
+                                        termId={storeNotesAndIds[index][2]}
                                     />
                                     <EditableText
-                                        initialText={storeNotes[index][1] === null ? "Term Notes" : storeNotes[index][1]}
+                                        initialText={storeNotesAndIds[index][1] === null ? "Term Notes" : storeNotesAndIds[index][1]}
                                         index={7}
                                         optionalEnding=""
                                         id={id}
                                         getStudent={getStudent}
+                                        termId={storeNotesAndIds[index][2]}
                                     />
                                 </div>
                             </CardDescription>
@@ -200,6 +203,7 @@ export function PaymentsPage() {
                                     optionalEnding=""
                                     id={id}
                                     getStudent={getStudent}
+                                    termId={-1}
                                 />
                                 <EditableText
                                     initialText={convertTo12Hour(student?.time_expected)}
@@ -207,6 +211,7 @@ export function PaymentsPage() {
                                     optionalEnding=""
                                     id={id}
                                     getStudent={getStudent}
+                                    termId={-1}
                                 />
                                 <EditableText
                                     initialText={`${student?.class_hours}`}
@@ -214,6 +219,7 @@ export function PaymentsPage() {
                                     optionalEnding=" hr/class"
                                     id={id}
                                     getStudent={getStudent}
+                                    termId={-1}
                                 />
                                 <EditableText
                                     initialText={`${student?.class_id}`}
@@ -221,6 +227,7 @@ export function PaymentsPage() {
                                     optionalEnding=""
                                     id={id}
                                     getStudent={getStudent}
+                                    termId={-1}
                                 />
                                 <EditableText
                                     initialText={student?.phone_number ? `(${student.phone_number.slice(0, 3)})-${student.phone_number.slice(3, 6)}-${student.phone_number.slice(6)}` : ""}
@@ -228,6 +235,7 @@ export function PaymentsPage() {
                                     optionalEnding=""
                                     id={id}
                                     getStudent={getStudent}
+                                    termId={-1}
                                 />
                                 <EditableText
                                     initialText={student?.general_notes ? student.general_notes : "General Notes"}
@@ -235,6 +243,7 @@ export function PaymentsPage() {
                                     optionalEnding=""
                                     id={id}
                                     getStudent={getStudent}
+                                    termId={-1}
                                 />
                             </div>
                             <div className="flex gap-4">
