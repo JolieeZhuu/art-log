@@ -1,16 +1,54 @@
-> This project is currently a work in progress!
 # Art Log: An Attendance and Payment Tracker
 Art Log is a full-stack web application I developed on my own that efficiently manages student attendances and class payments for an art studio.
 
-## Overview
+## 🔍 Overview
 Art Log is a project I initially took up as my IB HL CS IA, but I decided I should remake it and add many more features so that it was functional for a local art studio business. Originally, they were using Google spreadsheets with complex formulas and some code to track all of their students' attendances, missed classes, and payment deadlines. However, they came across latency and efficiency issues, and errors would always appear from time to time. I was hoping I could fix these issues by building a web app dedicated for these needs, which is why I am **currently** building Art Log!
 
-## Tech Stack
+## 📚 Tech Stack
 - Frontend: React, Vite, Typescript, TailwindCSS, ShadCN, Axios, zod
 - Backend: Spring Boot, Java, REST API, gTTS4j, Spring Security, JWT Tokens
 - Database: Supabase (Postgres), Flyway Migration
 
-## Features
+## 🚀 Running the Application
+> Please note that this project is currently in its testing phase, and will also experience regular updates as more features are added.
+
+You will need Docker Desktop installed.
+### 1. Clone the repository in your terminal
+   ```bash
+   git clone https://github.com/JolieeZhuu/art-log.git
+   cd art-log
+   ```
+### 2. Create a .env file (sample format provided in .env.example)
+   ```
+   SPRING_DATASOURCE_URL=jdbc:postgresql://<SUPABASE_HOST>:<PORT_NUMBER>/<DB_NAME>?prepareThreshold=0
+   SPRING_DATASOURCE_USERNAME=<USER>
+   SPRING_DATASOURCE_PASSWORD=<PASSWORD>
+   JWT_SECRET_KEY=<KEY>
+   SUPPORT_EMAIL=<EMAIL>
+   APP_PASSWORD=<PASSWORD>
+   ```
+   You can generate these by creating a Supabase database and a Google App Password from your Google Account. Or you could ask me for them (I'll see what I can do?).
+### 3. Start the application through Docker
+   ```bash
+   docker compose -f docker-compose.prod.yml up
+   ```
+   or if you want to run in detached mode (no output in terminal)
+   ```bash
+   docker compose -f docker-compose.prod.yml up -d
+   ```
+### 4. Access the application
+  Go to port 8080 on your web browser: ```http://localhost:8080```
+### 5. Stopping the application
+  You can stop the application either by
+    ```
+    Ctrl + C
+    ```
+  or, if you are running in detached mode:
+  ```bash
+  docker compose -f docker-compose.prod.yml down -d
+  ```
+
+## ✨ Features
 ### Current
 - **Authentication:** Users can login or sign up through email verification and OTP, and all routes are secured.
 - **Attendance tracking:** Users can click the checkbox beside each student in the student table when they come for class. Automatically, their name will be displayed in the Checkout Table, and when it is their time to finish class, the frontend will call the text-to-speech (TTS) API and tell the student to "check out". This will also automatically mark students as "Attended" or "Absent" or "Makeup" for their class. Checkboxes are robust so that students who attend class on their expected days are distinguished from students who take make-up classes.
@@ -18,12 +56,13 @@ Art Log is a project I initially took up as my IB HL CS IA, but I decided I shou
 - **Navigation:** Users can access the Summary page, all the days of the week (which contains the students attending each day), and the Settings page through the sidebar.
 - **Form validation:** Forms to create or delete students/payment tables are validated using zod validation schemas.
 - **Time slot schedule:** Users will be able to see a visualization of how many students are expected to have class at specific time intervals (15 mins each) every day, helping admins see if the studio is full or vacant.
+- **JSON data transfer:** Currently I have a simple form that accepts and validates JSON data of students and their classes, so it is easier for the testing/development phase when I need to create data in bulk.
+- **UI/UX:** Users can double click to edit. Colour choice is yet to be determined.
 ### Planned
 - **History:** I would like users to be able to see who made changes and what those were. Version history would be my aim for this feature.
 - **Payments:** I would like users to be alerted about which students are reaching a payment deadline (or a new payment for a new set of classes).
 - **Holidays:** I would like users to be able to add their own list of holidays which would automatically update all students' classes who occur on those particular days. Implementing a calendar is an option too.
-- **Data transfer:** I would like the admins to be able to data transfer from spreadsheets into the web app so no information is being lost.
-- **UI/UX:** Based on what the admins would like, I will need to change colours and font for readability and usability. For now, I need to allow users to have an easier time to edit students/classes by double clicking, rather than clicking the triple dots.
+- **CSV data transfer:** I would like the admins to be able to transfer data from spreadsheets into the web app so no information is being lost.
 
-## Goal
-I hope to complete this by the end of next month (October) and deploy it!
+## 👩‍💻 Author
+Jolie Zhu :)
