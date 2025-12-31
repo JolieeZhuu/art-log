@@ -1,11 +1,16 @@
 .env
 HELP.md
+
+### Gradle ###
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
-!**/src/test/**/build/
+!**/src/test/**/build
+
+### Ignore build folders ###
 **/node_modules/
+src/main/resources/static/*
 
 ### STS ###
 .apt_generated

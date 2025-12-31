@@ -1,0 +1,7 @@
+services:
+  app:
+    image: j3llyf15h/art-log:latest
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
