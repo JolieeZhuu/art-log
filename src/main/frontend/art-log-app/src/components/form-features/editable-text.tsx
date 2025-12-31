@@ -31,14 +31,10 @@ const editSchema = z.object({
     }).optional(),
 })
 
-/**
- * Hook that alerts clicks outside of the passed ref
-*/
+// Hook that alerts clicks outside of the passed ref
 function useOutsideAlerter(ref: any, setText: (value: React.SetStateAction<string | number>) => void, initialText: string | number, setIsEditing: (value: React.SetStateAction<boolean>) => void) {
     React.useEffect(() => {
-        /**
-         * Alert if clicked on outside of element
-         */
+        // Alert if clicked on outside of element
         function handleClickOutside(event: any) {
             if (ref.current && !ref.current.contains(event.target)) {
                 const isDropdownClick = event.target.closest('[role="option"]') || 
