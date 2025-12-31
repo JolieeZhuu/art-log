@@ -32,6 +32,7 @@ public class SecurityConfiguration {
 					//.requestMatchers("/attendance/**").permitAll()
 					.requestMatchers("/auth/**").permitAll()
 					.requestMatchers("/user/**").permitAll()
+					.requestMatchers("/", "/index.html", "/js/**", "/css/**", "/vite.svg").permitAll()
 					.anyRequest().authenticated()
 			) // authorize all HTTP requests
 			.sessionManagement(session -> session

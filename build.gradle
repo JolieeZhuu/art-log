@@ -67,21 +67,25 @@ tasks.named("bootJar") {
 
 // Task to install React dependencies
 tasks.register("installReact", Exec) {
-    workingDir = file("src/main/frontend")
+    workingDir = file("src/main/frontend/art-log-app")
+    environment "PATH", System.getenv("PATH")
     commandLine "/usr/local/bin/npm", "install"
 }
 
 // Task to build React
 tasks.register("buildReact", Exec) {
     dependsOn "installReact"
-    workingDir = file("src/main/frontend")
+    workingDir = file("src/main/frontend/art-log-app")
+    environment "PATH", System.getenv("PATH")
     commandLine "/usr/local/bin/npm", "run", "build"
 }
 
 // Task to copy React build to Spring Boot static folder
 tasks.register("copyReactBuild", Copy) {
     dependsOn "buildReact"
-    from "src/main/frontend/build"
+    from("src/main/frontend/art-log-app/dist") {
+        include "**/*" // copy all files recursively
+    }
     into "src/main/resources/static"
 }
 

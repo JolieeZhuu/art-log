@@ -1,0 +1,16 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: build/libs/artLog.jar
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL
+      - SPRING_DATASOURCE_USERNAME
+      - SPRING_DATASOURCE_PASSWORD
+      - JWT_SECRET_KEY
+      - SUPPORT_EMAIL
+      - APP_PASSWORD

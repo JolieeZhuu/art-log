@@ -1,0 +1,19 @@
+# Gradle / Maven files
+build/*
+!build/libs/*.jar
+.gradle/
+*.iml
+
+# IDE configs
+.idea/
+.vscode/
+
+# Node modules if you have frontend
+node_modules/
+
+# Git
+.git
+.gitignore
+
+# Environment files (never include secrets)
+.env
