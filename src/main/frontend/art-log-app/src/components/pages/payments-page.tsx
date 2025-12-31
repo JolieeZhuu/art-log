@@ -6,14 +6,14 @@ import { useParams } from "react-router-dom"
 import { Link } from "react-router-dom"
 
 // Internal imports
-import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
-import { getById, getTermTableByStudentIdAndTableNum } from "@/restAPI/entities"
-import { getTableNum, addClass, convertTo12Hour } from "@/components/payment-tables/payment-funcs"
-import PaymentTable from "@/components/payment-tables/payments-table-page"
-import EditableText from "@/components/form-features/editable-text"
+import { ModeToggle } from "../../components/dark-light-mode/mode-toggle"
+import { getById, getTermTableByStudentIdAndTableNum } from "../../restAPI/entities"
+import { getTableNum, addClass, convertTo12Hour } from "../../components/payment-tables/payment-funcs"
+import PaymentTable from "../../components/payment-tables/payments-table-page"
+import EditableText from "../../components/form-features/editable-text"
 
 // UI components
-import { AppSidebar } from "@/components/navbar/app-sidebar"
+import { AppSidebar } from "../../components/navbar/app-sidebar"
 import {
     Card,
     CardDescription,
@@ -21,9 +21,9 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { DialogPaymentForm } from "@/components/form-features/dialog-payment-form"
+} from "../../components/ui/card"
+import { Button } from "../../components/ui/button"
+import { DialogPaymentForm } from "../../components/form-features/dialog-payment-form"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -31,15 +31,15 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Toaster } from '@/components/ui/sonner'
+} from "../../components/ui/breadcrumb"
+import { Toaster } from '../../components/ui/sonner'
 import { toast } from "sonner"
 import { Separator } from "../ui/separator"
 import {
     SidebarInset,
     SidebarProvider,
-} from "@/components/ui/sidebar"
-import { Badge } from "@/components/ui/badge"
+} from "../../components/ui/sidebar"
+import { Badge } from "../../components/ui/badge"
 
 
 type Student = {

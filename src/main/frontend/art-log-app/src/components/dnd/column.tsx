@@ -2,7 +2,7 @@
 import { useDroppable } from "@dnd-kit/core";
 
 // Internal imports
-import type { Column as ColumnType, Student } from "@/components/dnd/types";
+import type { Column as ColumnType, Student } from "../../components/dnd/types";
 import { StudentCard } from "./student-card";
 
 type ColumnProps = {

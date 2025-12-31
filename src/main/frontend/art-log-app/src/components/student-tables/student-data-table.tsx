@@ -4,9 +4,9 @@ import * as React from "react"
 import dayjs from "dayjs"
 
 // Internal imports
-import { type Checkout } from "@/components/checkout-tables/checkout-columns"
+import { type Checkout } from "../../components/checkout-tables/checkout-columns"
 import { type  Student } from "./student-columns"
-import { getById, getByDateExpectedAndStudentIdAndTermId, edit, getFirstAbsentWithinThirtyDays, getTermTableByStudentIdAndTableNum, } from "@/restAPI/entities"
+import { getById, getByDateExpectedAndStudentIdAndTermId, edit, getFirstAbsentWithinThirtyDays, getTermTableByStudentIdAndTableNum, } from "../../restAPI/entities"
 
 // UI components
 import {
@@ -17,7 +17,7 @@ import {
     getFilteredRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-import { Input } from "@/components/ui/input"
+import { Input } from "../../components/ui/input"
 import {
     Table,
     TableBody,
@@ -25,9 +25,9 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { DialogStudentForm } from "@/components/form-features/dialog-student-form"
+} from "../../components/ui/table"
+import { ScrollArea } from "../../components/ui/scroll-area"
+import { DialogStudentForm } from "../../components/form-features/dialog-student-form"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,7 +36,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "../../components/ui/alert-dialog"
 import { convertTo24Hour } from "../payment-tables/payment-funcs"
 
 

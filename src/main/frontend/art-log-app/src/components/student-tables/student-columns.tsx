@@ -10,12 +10,12 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
 
 // Internal imports
-import { getById, edit, deleteById, deleteByStudentId, getTermTableByStudentIdAndTableNum } from "@/restAPI/entities";
+import { getById, edit, deleteById, deleteByStudentId, getTermTableByStudentIdAndTableNum } from "../../restAPI/entities";
 
 // UI components
 import type { ColumnDef } from "@tanstack/react-table";
 import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -23,7 +23,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "../../components/ui/dropdown-menu"
 import {
     Dialog,
     DialogClose,
@@ -32,8 +32,8 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+} from "../../components/ui/dialog"
+import { Input } from "../../components/ui/input"
 import {
     Form,
     FormControl,
@@ -41,8 +41,8 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { Checkbox } from "@/components/ui/checkbox";
+} from "../../components/ui/form"
+import { Checkbox } from "../../components/ui/checkbox";
 
 // Define expected valid types for the form fields
 // Also defines error messages if input is invalid

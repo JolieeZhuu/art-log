@@ -1,9 +1,9 @@
 import * as React from "react"
 
 // Internal imports
-import { columns, type Attendance } from "@/components/payment-tables/payments-columns"
-import { DataTable } from "@/components/payment-tables/payments-data-table"
-import { getByStudentIdAndTermId, getTermTableByStudentIdAndTableNum } from "@/restAPI/entities"
+import { columns, type Attendance } from "../../components/payment-tables/payments-columns"
+import { DataTable } from "../../components/payment-tables/payments-data-table"
+import { getByStudentIdAndTermId, getTermTableByStudentIdAndTableNum } from "../../restAPI/entities"
 import { convertTo12Hour } from "./payment-funcs"
 
 // Define the props for the PaymentTable component

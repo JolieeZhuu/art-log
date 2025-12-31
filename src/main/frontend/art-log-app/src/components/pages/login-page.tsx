@@ -2,14 +2,14 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
-import authService from "@/authService"
+import authService from "../../authService"
 
 // Internal imports
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 
 // UI components
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import {
     Card,
     CardContent,
@@ -17,8 +17,8 @@ import {
     CardHeader,
     CardTitle,
     CardFooter,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+} from "../../components/ui/card"
+import { Input } from "../../components/ui/input"
 import {
     Form,
     FormControl,
@@ -26,7 +26,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
+} from "../../components/ui/form"
 
 
 // visit https://zod.dev/ for documentation

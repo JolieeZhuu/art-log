@@ -9,7 +9,7 @@ import {
     getFilteredRowModel,
     useReactTable,
 } from "@tanstack/react-table"
-import { Input } from "@/components/ui/input"
+import { Input } from "../../components/ui/input"
 import {
     Table,
     TableBody,
@@ -17,8 +17,8 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
-import { ScrollArea } from "@/components/ui/scroll-area"
+} from "../../components/ui/table"
+import { ScrollArea } from "../../components/ui/scroll-area"
 
 // Define the props for the DataTable component (easier to read)
 interface DataTableProps<TData, TValue> {

@@ -7,15 +7,15 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "../../components/ui/card"
 
-import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
+import { ModeToggle } from "../../components/dark-light-mode/mode-toggle"
 
-import { getById } from "@/restAPI/entities"
+import { getById } from "../../restAPI/entities"
 
-import PaymentTable from "@/components/payment-tables/payments-table-page"
+import PaymentTable from "../../components/payment-tables/payments-table-page"
 
-import { getTableNum } from "@/components/payment-tables/payment-funcs"
+import { getTableNum } from "../../components/payment-tables/payment-funcs"
 
 import { Link } from "react-router-dom"
 import {
@@ -25,14 +25,14 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
+} from "../../components/ui/breadcrumb"
 
 import { Separator } from "../ui/separator"
-import { AppSidebar } from "@/components/navbar/app-sidebar"
+import { AppSidebar } from "../../components/navbar/app-sidebar"
 import {
     SidebarInset,
     SidebarProvider,
-} from "@/components/ui/sidebar"
+} from "../../components/ui/sidebar"
 
 type Student = {
     student_id: number

@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "../../components/ui/sidebar"
 import DataButton from "../data-transfer/data-button"
 
 // Sidebar items

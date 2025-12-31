@@ -1,7 +1,7 @@
 // StudentsContext.tsx
 import React, { createContext, useContext, useState, useEffect } from "react"
-import { getAll } from "@/restAPI/entities"
-import type { Student } from "@/components/dnd/types"
+import { getAll } from "../restAPI/entities"
+import type { Student } from "../components/dnd/types"
 
 type ContextType = {
   students: Student[];

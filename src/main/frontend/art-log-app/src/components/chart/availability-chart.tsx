@@ -1,12 +1,12 @@
 import React from "react"
 
 // Internal imports
-import { getByDay } from "@/restAPI/entities"
+import { getByDay } from "../../restAPI/entities"
 import { convertTo12Hour } from "../payment-tables/payment-funcs"
 
 // UI Components
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Card } from "@/components/ui/card"
+import { ScrollArea, ScrollBar } from "../../components/ui/scroll-area"
+import { Card } from "../../components/ui/card"
 
 const weekendTimes = [
     "9:15 AM-9:30 AM", "9:30 AM-9:45 AM", "9:45 AM-10:00 AM", "10:00 AM-10:15 AM", "10:15 AM-10:30 AM",

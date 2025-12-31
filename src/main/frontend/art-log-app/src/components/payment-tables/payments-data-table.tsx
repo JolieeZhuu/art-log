@@ -16,8 +16,8 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
-import { ScrollArea } from "@/components/ui/scroll-area"
+} from "../../components/ui/table"
+import { ScrollArea } from "../../components/ui/scroll-area"
 
 // Define the props for the DataTable component
 interface DataTableProps<TData, TValue> {

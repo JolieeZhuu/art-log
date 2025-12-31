@@ -1,8 +1,8 @@
 import * as React from "react"
 
 // Internal imports
-import { columns, type Checkout } from "@/components/checkout-tables/checkout-columns"
-import { DataTable } from "@/components/checkout-tables/checkout-data-table"
+import { columns, type Checkout } from "../../components/checkout-tables/checkout-columns"
+import { DataTable } from "../../components/checkout-tables/checkout-data-table"
 
 export default function CheckoutTable({ checkoutData } : { checkoutData: Checkout[] }) {
 

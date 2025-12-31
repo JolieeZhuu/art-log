@@ -1,12 +1,12 @@
 import './App.css'
 
 // UI Components
-import { ThemeProvider } from '@/components/dark-light-mode/theme-provider'
-import { LoginPage } from '@/components/pages/login-page'
-import { Summary } from '@/components/pages/summary-page'
-import { DayPage } from '@/components/pages/day-page'
-import { Settings } from '@/components/pages/settings-page'
-import { Students } from '@/components/pages/students-page'
+import { ThemeProvider } from './components/dark-light-mode/theme-provider'
+import { LoginPage } from './components/pages/login-page'
+import { Summary } from './components/pages/summary-page'
+import { DayPage } from './components/pages/day-page'
+import { Settings } from './components/pages/settings-page'
+import { Students } from './components/pages/students-page'
 import { PaymentsPage } from './components/pages/payments-page'
 import { Archives } from './components/pages/archives-page'
 import { HomePage } from './components/pages/home-page'

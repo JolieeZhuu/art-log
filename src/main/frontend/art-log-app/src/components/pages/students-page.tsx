@@ -4,19 +4,19 @@ import React from "react"
 import { DndContext, type DragEndEvent } from "@dnd-kit/core"
 
 // Internal imports
-import { getById, edit, getAll } from "@/restAPI/entities"
-import type { Student } from "@/components/dnd/types"
-import { COLUMNS } from "@/components/dnd/data"
-import { Column } from "@/components/dnd/column"
+import { getById, edit, getAll } from "../../restAPI/entities"
+import type { Student } from "../../components/dnd/types"
+import { COLUMNS } from "../../components/dnd/data"
+import { Column } from "../../components/dnd/column"
 
 // UI Components
-import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
+import { ModeToggle } from "../../components/dark-light-mode/mode-toggle"
 import { useStudents } from "../student-context"
-import { AppSidebar } from "@/components/navbar/app-sidebar"
+import { AppSidebar } from "../../components/navbar/app-sidebar"
 import {
     SidebarInset,
     SidebarProvider,
-} from "@/components/ui/sidebar"
+} from "../../components/ui/sidebar"
 
 export function Students() {
     const { students, setStudents, refresh } = useStudents();

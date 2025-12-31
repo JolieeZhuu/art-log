@@ -1,12 +1,12 @@
 // UI Components
-import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
-import { AvailabilityChart } from "@/components/chart/availability-chart"
-import { Card } from "@/components/ui/card"
-import { AppSidebar } from "@/components/navbar/app-sidebar"
+import { ModeToggle } from "../../components/dark-light-mode/mode-toggle"
+import { AvailabilityChart } from "../../components/chart/availability-chart"
+import { Card } from "../../components/ui/card"
+import { AppSidebar } from "../../components/navbar/app-sidebar"
 import {
     SidebarInset,
     SidebarProvider,
-} from "@/components/ui/sidebar"
+} from "../../components/ui/sidebar"
 
 export function Summary() {
     

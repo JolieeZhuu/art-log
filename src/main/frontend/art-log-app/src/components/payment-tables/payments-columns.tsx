@@ -11,12 +11,12 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
 
 // Internal imports
-import { getTotalClasses, addClass, convertTo24Hour } from '@/components/payment-tables/payment-funcs'
-import { edit, getByTermIdAndStudentIdAndClassNumber, getTermTableByStudentIdAndTableNum } from '@/restAPI/entities'
+import { getTotalClasses, addClass, convertTo24Hour } from '../../components/payment-tables/payment-funcs'
+import { edit, getByTermIdAndStudentIdAndClassNumber, getTermTableByStudentIdAndTableNum } from '../../restAPI/entities'
 
 // UI components
 import type { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,7 +24,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "../../components/ui/dropdown-menu"
 import {
     Dialog,
     DialogClose,
@@ -33,7 +33,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"
+} from "../../components/ui/dialog"
 import {
     Form,
     FormControl,
@@ -41,15 +41,15 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { Calendar } from "@/components/ui/calendar"
+} from "../../components/ui/form"
+import { Calendar } from "../../components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { ComboboxOptions } from "@/components/form-features/combobox-options"
-import { Input } from "@/components/ui/input"
+} from "../../components/ui/popover"
+import { ComboboxOptions } from "../../components/form-features/combobox-options"
+import { Input } from "../../components/ui/input"
 
 // Define expected valid types for the form fields
 // Also defines error messages if input is invalid

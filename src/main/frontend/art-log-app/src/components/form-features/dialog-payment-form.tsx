@@ -8,10 +8,10 @@ import { z } from "zod" // Used for input validation
 import dayjs from 'dayjs'
 
 // Internal imports
-import { addTableNum, addNewPaymentTable } from "@/components/payment-tables/payment-funcs"
+import { addTableNum, addNewPaymentTable } from "../../components/payment-tables/payment-funcs"
 
 // UI components
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -21,7 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "../../components/ui/dialog"
 import {
     Form,
     FormControl,
@@ -29,14 +29,14 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { Calendar } from "@/components/ui/calendar"
+} from "../../components/ui/form"
+import { Calendar } from "../../components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Input } from "@/components/ui/input"
+} from "../../components/ui/popover"
+import { Input } from "../../components/ui/input"
 import { toast } from "sonner"
 
 // Schema with expected input types and error messages if input is invalid

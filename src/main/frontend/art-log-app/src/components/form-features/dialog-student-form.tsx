@@ -6,12 +6,12 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
 
 // Internal imports
-import { add } from "@/restAPI/entities"
+import { add } from "../../restAPI/entities"
 import { convertTo24Hour } from "../payment-tables/payment-funcs"
 import { dayOptions, classIdOptions, timeExpectedOptions } from "./options";
 
 // UI components
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -21,8 +21,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
+} from "../../components/ui/dialog"
+import { Input } from "../../components/ui/input"
 import {
     Form,
     FormControl,
@@ -30,8 +30,8 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
-import { ComboboxOptions } from "@/components/form-features/combobox-options"
+} from "../../components/ui/form"
+import { ComboboxOptions } from "../../components/form-features/combobox-options"
 import { toast } from "sonner"
 
 // Schema with expected input types and error messages if input is invalid
@@ -91,6 +91,7 @@ export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudent
     async function onSubmit(values: z.infer<typeof studentSchema>) {
         console.log("hello")
         console.log("Submitted values:", values)
+        console.log(dayOfWeek)
 
         const data = {
             first_name: values.firstName,

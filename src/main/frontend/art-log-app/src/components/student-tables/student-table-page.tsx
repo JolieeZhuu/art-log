@@ -1,10 +1,10 @@
 import * as React from "react"
 
 // Internal imports
-import { columns, type Student } from "@/components/student-tables/student-columns"
-import { DataTable } from "@/components/student-tables/student-data-table"
-import { getByDayAndExpectedTime, getTermTableByStudentIdAndTableNum } from "@/restAPI/entities"
-import { type Checkout } from "@/components/checkout-tables/checkout-columns"
+import { columns, type Student } from "../../components/student-tables/student-columns"
+import { DataTable } from "../../components/student-tables/student-data-table"
+import { getByDayAndExpectedTime, getTermTableByStudentIdAndTableNum } from "../../restAPI/entities"
+import { type Checkout } from "../../components/checkout-tables/checkout-columns"
 
 export default function StudentTable({ dayOfWeek, setSelectedStudents, selectedStudents } : { dayOfWeek: string; setSelectedStudents: (selected: Checkout[]) => void; selectedStudents: Checkout[] }) {
 

@@ -7,12 +7,12 @@ import { z } from "zod" // Used for input validation
 
 // Internal imports
 import { dayOptions, classIdOptions, timeExpectedOptions } from "./options";
-import { getById, edit, getByTermIdAndStudentIdAndClassNumber } from "@/restAPI/entities";
+import { getById, edit, getByTermIdAndStudentIdAndClassNumber } from "../../restAPI/entities";
 import { convertTo24Hour } from "../payment-tables/payment-funcs";
 
 // UI Components
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "../../components/ui/input";
+import { Badge } from "../../components/ui/badge";
 import { ComboboxOptions } from "./combobox-options";
 import {
     Form,
@@ -20,7 +20,7 @@ import {
     FormField,
     FormItem,
     FormMessage,
-} from "@/components/ui/form"
+} from "../../components/ui/form"
 
 const editSchema = z.object({
     input: z.string().min(1, {

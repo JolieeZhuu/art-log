@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 // Internal imports
 import type { Student } from "./types"
-import { getById } from "@/restAPI/entities";
+import { getById } from "../../restAPI/entities";
 import { convertTo12Hour } from "../payment-tables/payment-funcs";
 
 // UI Components
@@ -14,8 +14,8 @@ import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { Button } from "@/components/ui/button";
+} from "../../components/ui/hover-card"
+import { Button } from "../../components/ui/button";
 
 type StudentCardProps = {
     student: Student;

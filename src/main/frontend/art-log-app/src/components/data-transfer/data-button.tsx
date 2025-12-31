@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
 
 // Internal imports
-import { add } from "@/restAPI/entities"
+import { add } from "../../restAPI/entities"
 
 // UI imports
 import { Button } from "../ui/button"
-import { Textarea } from "@/components/ui/textarea"
+import { Textarea } from "../../components/ui/textarea"
 import {
     Dialog,
     DialogClose,
@@ -19,7 +19,7 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
+} from "../../components/ui/dialog"
 import {
     Form,
     FormControl,
@@ -27,7 +27,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
+} from "../../components/ui/form"
 import { toast } from "sonner"
 
 // Schema with expected input types and error messages if input is invalid

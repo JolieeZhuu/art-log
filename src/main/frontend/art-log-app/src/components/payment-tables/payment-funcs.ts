@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 
 // Internal imports
-import { getById, edit, add, getByTermIdAndStudentIdAndClassNumber, getTermTableByStudentIdAndTableNum } from '@/restAPI/entities'
+import { getById, edit, add, getByTermIdAndStudentIdAndClassNumber, getTermTableByStudentIdAndTableNum } from '../../restAPI/entities'
 
 // Initializations
 const studentUrl = "http://localhost:8080/student/"

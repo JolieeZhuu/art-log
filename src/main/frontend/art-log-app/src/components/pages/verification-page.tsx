@@ -8,19 +8,19 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { useState } from "react"
 
 // UI Components
-import { Button } from "@/components/ui/button"
+import { Button } from "../../components/ui/button"
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "../../components/ui/card"
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp"
+} from "../../components/ui/input-otp"
 import { REGEXP_ONLY_DIGITS } from "input-otp"
 import {
   Form,
@@ -28,7 +28,7 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from "@/components/ui/form"
+} from "../../components/ui/form"
 
 const verificationSchema = z.object({
     pin: z.string().length(6, {

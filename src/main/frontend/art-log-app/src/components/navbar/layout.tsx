@@ -1,5 +1,5 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/navbar/app-sidebar"
+import { SidebarProvider } from "../../components/ui/sidebar"
+import { AppSidebar } from "../../components/navbar/app-sidebar"
 
 // Sidebar trigger skipped due to an error
 

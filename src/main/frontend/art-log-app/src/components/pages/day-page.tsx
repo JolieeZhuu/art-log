@@ -5,10 +5,10 @@ import { useParams } from "react-router-dom"
 import axios from "axios"
 
 // Internal imports
-import { ModeToggle } from "@/components/dark-light-mode/mode-toggle"
-import { type Checkout } from "@/components/checkout-tables/checkout-columns"
-import CheckoutTable from "@/components/checkout-tables/checkout-table-page"
-import StudentTable from "@/components/student-tables/student-table-page"
+import { ModeToggle } from "../../components/dark-light-mode/mode-toggle"
+import { type Checkout } from "../../components/checkout-tables/checkout-columns"
+import CheckoutTable from "../../components/checkout-tables/checkout-table-page"
+import StudentTable from "../../components/student-tables/student-table-page"
 
 // UI components
 import {
@@ -16,15 +16,15 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import { Toaster } from "@/components/ui/sonner"
+} from "../../components/ui/card"
+import { Toaster } from "../../components/ui/sonner"
 import { AvailabilitySlots } from "../chart/availability-chart"
 
-import { AppSidebar } from "@/components/navbar/app-sidebar"
+import { AppSidebar } from "../../components/navbar/app-sidebar"
 import {
     SidebarInset,
     SidebarProvider,
-} from "@/components/ui/sidebar"
+} from "../../components/ui/sidebar"
 
 export function DayPage() {
 
