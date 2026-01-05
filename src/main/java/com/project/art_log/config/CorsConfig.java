@@ -38,7 +38,7 @@ public class CorsConfig {
 		var urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource(); // Maps URL patterns to CORS configurations
         var corsConfiguration = new CorsConfiguration(); // Object that developer can customize settings with
         corsConfiguration.setAllowCredentials(true); // Required; allows cookies, authorization headers, and client certificates
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173")); // Specifies domains that can make requests to the server (Vite+React)
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost")); // Specifies domains that can make requests to the server (Vite+React)
         
         // specifies HTTP headers/methods that can be requested (allowed) and accessed (exposed)
         corsConfiguration.setAllowedHeaders(List.of("*")); // Simplified
