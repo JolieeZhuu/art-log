@@ -1,11 +1,23 @@
+version: "3.9"
+
 services:
-  app:
+  backend:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        JAR_FILE: build/libs/artLog.jar
     ports:
       - "8080:8080"
     env_file:
       - .env
+    depends_on: []
+  
+  frontend:
+    build:
+      context: ./src/main/frontend/art-log-app
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8080
+    ports:
+      - "80:80" # we access frontend through http://localhost
+    depends_on:
+      - backend

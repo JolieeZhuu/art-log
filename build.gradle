@@ -65,7 +65,7 @@ tasks.named("bootJar") {
     archiveFileName.set("artLog.jar") // Change to your desired name
 }
 
-// Task to install React dependencies
+/*// Task to install React dependencies
 tasks.register("installReact", Exec) {
     workingDir = file("src/main/frontend/art-log-app")
     environment "PATH", System.getenv("PATH")
@@ -84,11 +84,11 @@ tasks.register("buildReact", Exec) {
 tasks.register("copyReactBuild", Copy) {
     dependsOn "buildReact"
     from("src/main/frontend/art-log-app/dist") {
-        include "**/*" // copy all files recursively
+        include "**" // copy all files recursively
     }
     into "src/main/resources/static"
 }
 
 tasks.named("processResources") {
     dependsOn "copyReactBuild"
-}
+}*/
