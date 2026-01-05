@@ -12,41 +12,7 @@ Art Log is a project I initially took up as my IB HL CS IA, but I decided I shou
 ## 🚀 Running the Application
 > Please note that this project is currently in its testing phase, and will also experience regular updates as more features are added.
 
-You will need Docker Desktop installed.
-### 1. Clone the repository in your terminal
-   ```bash
-   git clone https://github.com/JolieeZhuu/art-log.git
-   cd art-log
-   ```
-### 2. Create a .env file (sample format provided in .env.example)
-   ```
-   SPRING_DATASOURCE_URL=jdbc:postgresql://<SUPABASE_HOST>:<PORT_NUMBER>/<DB_NAME>?prepareThreshold=0
-   SPRING_DATASOURCE_USERNAME=<USER>
-   SPRING_DATASOURCE_PASSWORD=<PASSWORD>
-   JWT_SECRET_KEY=<KEY>
-   SUPPORT_EMAIL=<EMAIL>
-   APP_PASSWORD=<PASSWORD>
-   ```
-   You can generate these by creating a Supabase database and a Google App Password from your Google Account. Or you could ask me for them (I'll see what I can do?).
-### 3. Start the application through Docker
-   ```bash
-   docker compose -f docker-compose.prod.yml up
-   ```
-   or if you want to run in detached mode (no output in terminal)
-   ```bash
-   docker compose -f docker-compose.prod.yml up -d
-   ```
-### 4. Access the application
-  Go to port 8080 on your web browser: ```http://localhost:8080```
-### 5. Stopping the application
-  You can stop the application either by
-    ```
-    Ctrl + C
-    ```
-  or, if you are running in detached mode:
-  ```bash
-  docker compose -f docker-compose.prod.yml down -d
-  ```
+To learn how to run this project through Docker, please see [DOCKER_SETUP.md](https://github.com/JolieeZhuu/art-log/blob/master/DOCKER_SETUP.md).
 
 ## ✨ Features
 ### Current
