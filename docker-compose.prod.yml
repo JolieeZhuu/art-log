@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   backend:
-    image: j3llyf15h/art-log-backend:latest
+    image: j3llyf15h/art-log-backend:v3.0
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,7 +13,7 @@ services:
     restart: always
     
   frontend:
-    image: j3llyf15h/art-log-frontend:latest
+    image: j3llyf15h/art-log-frontend:v3.0
     build:
       context: ./src/main/frontend/art-log-app
       dockerfile: Dockerfile
