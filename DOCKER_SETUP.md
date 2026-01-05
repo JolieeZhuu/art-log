@@ -30,7 +30,7 @@ docker-compose -f docker-compose.prod.yml up
 You will see that the frontend and backend containers are running. Optionally, you can add the `-d` tag (detached mode) at the end if you are experienced with Docker (so the logs don't fill up your terminal).
 
 ### Step 4: Accessing the application
-Open your browser to access the application at http://localhost:8080
+Open your browser to access the application at http://localhost
 
 ### Step 5: Stopping the application
 In your terminal, simply enter `Ctrl+C` to stop the container from running. If you ran the container in detached mode, then prompt the shell with this:
