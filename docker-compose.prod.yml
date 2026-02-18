@@ -3,9 +3,6 @@ version: "3.9"
 services:
   backend:
     image: j3llyf15h/art-log-backend:v3.0
-    build:
-      context: .
-      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     env_file:
@@ -14,11 +11,6 @@ services:
     
   frontend:
     image: j3llyf15h/art-log-frontend:v3.0
-    build:
-      context: ./src/main/frontend/art-log-app
-      dockerfile: Dockerfile
-      args:
-        VITE_API_URL: http://localhost:8080
     ports:
       - "80:80" # we access frontend through http://localhost
     environment:
