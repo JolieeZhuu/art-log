@@ -21,7 +21,7 @@ export function Summary() {
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>
-                    <div className="max-w-3xl">
+                    <div className="flex-1 shrink md:shrink-0">
                         <Card>
                             <div className="space-y-5 pl-5 pr-5">
                                 <AvailabilityChart type="Weekday"/>

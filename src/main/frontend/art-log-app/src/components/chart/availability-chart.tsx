@@ -177,59 +177,62 @@ export function AvailabilityChart({ type }: { type: string }) {
                     </div>
 
                     { /* Second column for time slots and boxes */}
-                    <div className="flex-1">
-                        <ScrollArea className="w-140">
-                            { /* Time slots */}
-                            <div className="flex pt-1 mb-2 min-w-max">
-                                {
-                                    type.toLowerCase() === "weekend" ? (
-                                        <>
-                                            {
-                                                weekendTimes.map((slot: string, index: number) => (
-                                                    <div key={index} className="w-16 font-medium text-center font-medium text-sm text-gray-600 py-3 border-t border-b flex-shrink-0 bg-secondary">
-                                                        <div>
-                                                            {slot.split('-')[0].split(' ')[0]}
+                    <div className="flex-1 min-w-0">
+                        <div className="flex">
+                            <ScrollArea className="w-1 flex-1">
+                                { /* Time slots */}
+                                <div className="flex pt-1 mb-2">
+                                    {
+                                        type.toLowerCase() === "weekend" ? (
+                                            <>
+                                                {
+                                                    weekendTimes.map((slot: string, index: number) => (
+                                                        <div key={index} className="w-16 font-medium text-center font-medium text-sm text-gray-600 py-3 border-t border-b flex-shrink-0 bg-secondary">
+                                                            <div>
+                                                                {slot.split('-')[0].split(' ')[0]}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                ))
-                                            }
-                                        </>
-                                        ) : (
-                                        <>
-                                            {
-                                                weekdayTimes.map((slot: string, index: number) => (
-                                                    <div key={index} className="w-16 font-medium text-center text-sm text-gray-600 py-3 border-t border-b flex-shrink-0 bg-secondary">
-                                                        <div>
-                                                            {slot.split('-')[0].split(' ')[0]}
+                                                    ))
+                                                }
+                                            </>
+                                            ) : (
+                                            <>
+                                                {
+                                                    weekdayTimes.map((slot: string, index: number) => (
+                                                        <div key={index} className="w-16 font-medium text-center text-sm text-gray-600 py-3 border-t border-b flex-shrink-0 bg-secondary">
+                                                            <div>
+                                                                {slot.split('-')[0].split(' ')[0]}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                ))
-                                            }
-                                        </>
+                                                    ))
+                                                }
+                                            </>
+                                            
+                                        )
                                         
-                                    )
-                                    
-                                }
-                            </div>
-                            { /* Availability counter */}
-                            <div>
-                                {
-                                    availability.map((row, index) => (
-                                        <div key={index} className="flex min-w-max">
-                                            {
-                                                row.map(({ slot, numOfStudents }: { slot: string, numOfStudents: number}) => (
-                                                    <div key={slot} className="w-16 text-center text-sm font-medium text-gray-600 py-2 flex-shrink-0">
-                                                        {numOfStudents}
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                            
-                            <ScrollBar orientation="horizontal"/>
-                        </ScrollArea>
+                                    }
+                                </div>
+                                { /* Availability counter */}
+                                <div>
+                                    {
+                                        availability.map((row, index) => (
+                                            <div key={index} className="flex min-w-0">
+                                                {
+                                                    row.map(({ slot, numOfStudents }: { slot: string, numOfStudents: number}) => (
+                                                        <div key={slot} className="w-16 text-center text-sm font-medium text-gray-600 py-2 flex-shrink-0">
+                                                            {numOfStudents}
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                                
+                                <ScrollBar orientation="horizontal" className="w-full"/>
+                            </ScrollArea>
+
+                        </div>
                     </div>
                 </div>
 
