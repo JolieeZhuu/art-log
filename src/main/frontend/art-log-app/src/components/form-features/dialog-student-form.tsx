@@ -87,12 +87,12 @@ export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudent
         },
     })
 
+    function resetForm() {
+        form.reset();
+    }
+
     // Define submit handler
     async function onSubmit(values: z.infer<typeof studentSchema>) {
-        console.log("hello")
-        console.log("Submitted values:", values)
-        console.log(dayOfWeek)
-
         const data = {
             first_name: values.firstName,
             last_name: values.lastName,
@@ -117,7 +117,7 @@ export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudent
         <div>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button variant="outline">Create Student</Button>
+                    <Button variant="outline" onClick={resetForm}>Create Student</Button>
                 </DialogTrigger>
                     <DialogContent className="sm:max-w-[450px]">
                     <Form {...form}>
@@ -205,7 +205,7 @@ export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudent
                                                     value={field.value?.toString() || ""}
                                                     onChange={(e) => {
                                                         const value = e.target.value
-                                                        field.onChange(value === "" ? "" : Number(value.split))
+                                                        field.onChange(value === "" ? "" : Number(value))
                                                     }}
                                                     type="number" 
                                                     step="any" 

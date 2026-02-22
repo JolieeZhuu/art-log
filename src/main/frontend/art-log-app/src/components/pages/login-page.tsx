@@ -57,7 +57,6 @@ export function LoginPage() {
 
     // Define submit handler, parameter values are the form values
     async function onSubmit(values: z.infer<typeof loginSchema>) {
-        console.log(values)
         setSubmitError("") // Reset error message
 
         const result = await authService.login({ 
@@ -65,11 +64,8 @@ export function LoginPage() {
             password: values.password 
         });
 
-        console.log("Login result:", result); // Add this line to debug
-
         if (result.success) {
             navigate("/summary");
-            console.log("Login successful");
         } else {
             setSubmitError(result.message || "Login failed");
         }

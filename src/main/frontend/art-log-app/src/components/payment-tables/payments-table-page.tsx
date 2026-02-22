@@ -23,7 +23,6 @@ export default function PaymentTable({ studentId, tableNum, onClassAdded }: Paym
     const getData = React.useCallback(async (): Promise<void> => { // Changed return type to void
         // Fetch data from API here.
         const termTable = await getTermTableByStudentIdAndTableNum(termUrl, studentId, tableNum)
-        console.log("termid:", termTable)
         const attendances = await getByStudentIdAndTermId(attendanceUrl, studentId, termTable.term_id)
         attendances.sort((a: any, b: any) => (a.class_number - b.class_number)) // a-b = lowest to highest, b-a = highest to lowest
 
@@ -47,8 +46,6 @@ export default function PaymentTable({ studentId, tableNum, onClassAdded }: Paym
                 notes: notes,
             }
         })
-
-        console.log(attendanceValuesList)
         
         setData(attendanceValuesList) // Update state directly
     }, [studentId, tableNum])

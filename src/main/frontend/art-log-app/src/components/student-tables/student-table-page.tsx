@@ -17,7 +17,6 @@ export default function StudentTable({ dayOfWeek, setSelectedStudents, selectedS
         try {
             // Fetch data from API
             const studentList = await getByDayAndExpectedTime(studentUrl, dayOfWeek)
-            console.log("studentList:", studentList)
 
             if (!Array.isArray(studentList)) {
                 console.error("Data fetched is not an array:", studentList)
@@ -26,7 +25,6 @@ export default function StudentTable({ dayOfWeek, setSelectedStudents, selectedS
             // Store values to be used during editMode
             const studentValuesList: Student[] = await Promise.all(studentList.map(async ({ student_id, first_name, last_name, general_notes, phone_number, curr_table } : { student_id: number, first_name: string, last_name: string, general_notes: string, phone_number: string, curr_table: number }) => {
                 const termTable = await getTermTableByStudentIdAndTableNum(termUrl, student_id, curr_table)
-                console.log(`${first_name}`, termTable.payment_notes) // DEBUG
                 return {
                     id: student_id,
                     name: `${first_name} ${last_name}`,
@@ -36,8 +34,6 @@ export default function StudentTable({ dayOfWeek, setSelectedStudents, selectedS
                     checkIn: "",
                 }
             }))
-            console.log(studentValuesList)
-            
 
             return studentValuesList
 

@@ -43,7 +43,6 @@ function useOutsideAlerter(ref: any, setText: (value: React.SetStateAction<strin
                                        event.target.closest('.cmdk-list');
                 
                 if (!isDropdownClick) {
-                    console.log("in hook", initialText)
                     setText(initialText);
                     setIsEditing(false);
                 }
@@ -116,7 +115,6 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
 
     // Handle combobox selection and auto-submit
     function handleComboboxChange(value: string) {
-        console.log("in comboboxchange", value)
         form.setValue("input", value);
         onSubmit(form.getValues())
         setText(value);
@@ -146,25 +144,24 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
             // Get the current form values
             // Check because of aync issues
             const currentValues = form.getValues();
-            console.log("Current form values:", currentValues);
             
             // Validate and submit
             const isValid = form.formState.isValid;
-            console.log("Form is valid:", isValid);
+            console.log("Form is valid:", isValid); // DEBUG
             
             if (isNumberField) {
                 const numValue = currentValues.inputNumber;
                 if (numValue && numValue >= 1) {
                     onSubmit(currentValues);
                 } else {
-                    console.log("Invalid number value:", numValue);
+                    console.log("Invalid number value:", numValue); // DEBUG
                 }
             } else {
                 const stringValue = currentValues.input;
                 if (stringValue && stringValue.trim() !== '') {
                     onSubmit(currentValues);
                 } else {
-                    console.log("Invalid string value:", stringValue);
+                    console.log("Invalid string value:", stringValue); // DEBUG
                 }
             }
         }
@@ -176,7 +173,6 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
     }
 
     async function onSubmit(values: z.infer<typeof editSchema>) {
-        console.log(values)
         const student = await getById(studentUrl, id)
         
         if (isNumberField) {
@@ -194,13 +190,10 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
                 class_hours: index == 2 ? values.inputNumber : student.class_hours, //
             }
             await edit(studentUrl, data)
-            console.log("Setting number:", values.inputNumber)
             setText(values.inputNumber ?? 1);
         } else {
-            console.log(student.payment_number, id, student.class_number)
             const storeClass = await getByTermIdAndStudentIdAndClassNumber(attendanceUrl, termId, id, student.class_number)
             const termTable = await getById(termUrl, termId)
-            console.log(storeClass)
             if (index == 6 || index == 7) {
                 const data2 = {
                     term_id: termId,
@@ -227,7 +220,6 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
                 }
                 await edit(studentUrl, data1)
             }
-            console.log("Setting string:", values.input)
             setText(values.input ?? "");
         }
         getStudent()

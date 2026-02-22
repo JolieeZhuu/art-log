@@ -125,12 +125,10 @@ export function DataTable<TData extends Student, TValue>({
                 */
 
                 const tempStudent = await getById(studentUrl, student.id)
-                console.log(currentDOW === tempStudent.day && tempStudent.curr_table > 0)
                 if (currentDOW === tempStudent.day && tempStudent.curr_table > 0) {
                     // Find the date within the current payment table
                     const termTable = await getTermTableByStudentIdAndTableNum(termUrl, student.id, tempStudent.curr_table)
                     const foundAttendance = await getByDateExpectedAndStudentIdAndTermId(attendanceUrl, currentDate, student.id, termTable.term_id)
-                    console.log("foundattendance", foundAttendance)
                     if (foundAttendance === null) {
                         setAlertDialogOpen(true)
                         return null
@@ -154,7 +152,6 @@ export function DataTable<TData extends Student, TValue>({
                     }
                 } else {
                     const foundAbsent = await getFirstAbsentWithinThirtyDays(attendanceUrl)
-                    console.log("foundabsent", foundAbsent)
                     if (foundAbsent !== null) {
                         const data = {
                             attendance_id: foundAbsent.attendance_id,
@@ -174,8 +171,6 @@ export function DataTable<TData extends Student, TValue>({
                         await edit(attendanceUrl, data)
                     } else {
                         setAlertDialogOpen(true)
-                        console.log("they don't match lol")
-                        console.log("payment table not created?")
                         return null
                     }
                 }

@@ -54,16 +54,10 @@ export function AvailabilityChart({ type }: { type: string }) {
         const storeResults = await Promise.all(
             myArr.map(async (dayOfWeek) => {
                 const studentsByDay = await getByDay(studentUrl, dayOfWeek)
-                console.log("hello")
-
-                console.log("studentsByDay:", studentsByDay)
-                console.log("Type:", typeof studentsByDay)
-                console.log("Is array:", Array.isArray(studentsByDay))
 
                 if (studentsByDay.length !== 0) {
                     const formattedData: [] = studentsByDay.map(({ student_id, first_name, last_name, time_expected, class_hours }: { student_id: number, first_name: string, last_name: string, time_expected: string, class_hours: number }) => {
                         const [formattedTime] = convertTo12Hour(time_expected).split(" ")
-                        console.log(formattedTime)
                         
                         const tempMap = new Map()
                         tempMap.set("student_id", student_id)

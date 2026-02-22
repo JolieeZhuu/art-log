@@ -100,17 +100,13 @@ export async function getTotalClasses(studentId: number) {
 }
 
 export async function addClass(tableNum: number, id: number) {
-    const student = await getById(studentUrl, id)
-    console.log("studenttt", student)
     const termTable = await getTermTableByStudentIdAndTableNum(termUrl, id, tableNum)
-    console.log(termTable)
     const lastClass = await getByTermIdAndStudentIdAndClassNumber(attendanceUrl, termTable.term_id, id, termTable.total_classes)
     
 
     // Generate the new class 7 days apart from the last class
     const lastDate = lastClass.date_expected
     const nextClassDate = dayjs(lastDate).add(7, 'days').toDate()
-    console.log(nextClassDate)
     const data1 = {
         student_id: id,
         term_id: termTable.term_id,

@@ -59,12 +59,10 @@ export default function DataButton() {
     })
 
     async function onSubmit(values: z.infer<typeof dataSchema>) {
-        console.log(values.student_data); // debug
         const studentData = values.student_data;
         const attendanceData = values.attendance_data;
         const jsonStudentList = studentData.split("\n");
         const jsonAttendaceList = attendanceData.split("\n");
-        console.log(jsonStudentList) // debug
 
         let currMessage = `All data was added.`;
 
@@ -72,9 +70,7 @@ export default function DataButton() {
             try {
                 // for student data
                 if (jsonString.trim() != "") {
-                    console.log(jsonString) // debug
                     const jsonBody = JSON.parse(jsonString);
-                    console.log(jsonBody) // debug
                     await add(studentUrl, jsonBody);
                 }
             } catch (Error) {
@@ -85,10 +81,8 @@ export default function DataButton() {
         jsonAttendaceList.forEach(async (jsonString: string) => {
             try {
                 // for attendance data
-                console.log(jsonString) // debug
                 if (jsonString.trim() != "") {
                     const jsonBody = JSON.parse(jsonString);
-                    console.log(jsonBody) // debug
                     await add(attendanceUrl, jsonBody);
                 }
             } catch (Error) {

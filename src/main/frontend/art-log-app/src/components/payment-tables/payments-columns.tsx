@@ -219,14 +219,9 @@ export const columns = ({
                 const termUrl = "http://localhost:8080/term/"
 
                 const formattedDateExpected = dayjs(values.dateExpected.toString()).format("YYYY-MM-DD")
-                console.log("formatted date", formattedDateExpected)
-                console.log("edit clicked")
-                console.log("values", values)
-                console.log("attendance", attendance)
 
                 // Case 1: if they change class date, every class # from that point and onwards must be changed as well
                 if (formattedDateExpected !== attendance.classDate) {
-                    console.log("case 1") // debug
                     const currClassNumber = attendance.classNumber
                     const lastClassNumber: number = await getTotalClasses(attendance.studentId)
                     const termTable = await getTermTableByStudentIdAndTableNum(termUrl, attendance.studentId, tableNum)
@@ -319,7 +314,6 @@ export const columns = ({
                     }
                 } else {
                     // Case 2: if they do not change class date, then only the values of the class being edited will be changed
-                    console.log("case 2") // debug
                     
                     const data = {
                         attendance_id: attendance.id,
@@ -343,7 +337,6 @@ export const columns = ({
                     */
 
                     // Check if holiday (will need to add a new class to the end of the list)
-                    console.log("checking holiday", (values.attendanceCheck === "Holiday" || values.attendanceCheck === "Pushback")) // DEBUG
                     if ((values.attendanceCheck === "Holiday" || values.attendanceCheck === "Pushback") && values.attendanceCheck !== attendance.attendanceCheck) {
                         const response = await addClass(tableNum, attendance.studentId)
                         const dataToUpdate: Attendance = {
@@ -378,7 +371,6 @@ export const columns = ({
                     onUpdate(dataToUpdate)
                 }
                 setIsEditDialogOpen(false)
-                console.log("edited")
             }
         
             return (

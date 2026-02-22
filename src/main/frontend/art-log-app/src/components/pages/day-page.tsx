@@ -29,24 +29,23 @@ import {
 export function DayPage() {
 
     const { day } = useParams<{ day?: string }>()
-    // Validate the day parameter
-    if (!day) {
-        return <div>Invalid day parameter.</div>
-    }
 
-    // Whenever page refreshes, fetch:
+    // validate the day parameter
+    if (!day)
+        return <div>Invalid day parameter.</div>
+
+    // LOCAL STORAGE -----------------------------------------------------------------------------------------------
     const [selectedStudents, setSelectedStudents] = React.useState<Checkout[]>(() => {
+        // localStorage.removeItem("selectedStudents") // for debugging
         const saved = localStorage.getItem("selectedStudents")
         return saved ? JSON.parse(saved) : []
     })
-
     const [checkoutData, setCheckoutData] = React.useState<Checkout[]>(() => {
-        const savedCheckoutData = localStorage.getItem("checkoutData") // Fetch from localStorage if it exists
+        const savedCheckoutData = localStorage.getItem("checkoutData") // fetch from localStorage if it exists
         if (savedCheckoutData) {
             return JSON.parse(savedCheckoutData)
         }
-        
-        // If no saved data, create from selected students
+        // if no saved data, create from selected students
         const sortedStudents = selectedStudents.sort((a, b) => {
             function timeToMinutes(timeStr: string) {
                 let [hours, minutes] = timeStr.split(":").map(Number)
@@ -78,7 +77,7 @@ export function DayPage() {
     React.useEffect(() => { // Update checkoutData whenever selectedMorningStudents or selectedAfternoonStudents change
         const sortedStudents = selectedStudents.sort((a, b) => {
             function timeToMinutes(timeStr: string) {
-                let [hours, minutes] = timeStr.split(":").map(Number)
+                let [hours, minutes] = timeStr.split(":").map(Number) // HEREEEEEEEEE
                 return hours * 60 + minutes
                 /*
                 const [time, ampm] = timeStr.split(" ")
@@ -118,15 +117,15 @@ export function DayPage() {
                 const lastClearedDate = localStorage.getItem("lastCleared")
                 const today = new Date().toDateString()
 
-                if (lastClearedDate !== today) { // Only clears once per day
-                   clearSelection()
-                   localStorage.setItem("lastCleared", today) // Store to check when the next day comes
-                }
+                // if (lastClearedDate !== today) { // Only clears once per day
+                //    clearSelection()
+                //    localStorage.setItem("lastCleared", today) // Store to check when the next day comes
+                // }
 
                 // below code for testing purposes; must remove above if statement to work
-                // clearSelection()
-                // localStorage.setItem("lastCleared", today)
-                // await playTTS("Checkmarks cleared at 7:00 PM")
+                clearSelection()
+                localStorage.setItem("lastCleared", today)
+                await playTTS("Checkmarks cleared at 7:00 PM")
             }
         }
         const interval = setInterval(checkTimeAndClear, 60 * 1000) // since parameters are in milliseconds, check every minute
@@ -138,7 +137,6 @@ export function DayPage() {
 
         async function callCheckouts() {
             const studentNames = checkTimeAndCross()
-            console.log("studentNames", studentNames) // debug
             if (studentNames !== "") {
                 await playTTS(`${studentNames} can pack up now.`)
             }
@@ -146,10 +144,7 @@ export function DayPage() {
         }
 
         function checkTimeAndCross() {
-            console.log("checkoutdata", checkoutData) // debug
-            console.log(selectedStudents) // debug
             const filteredStudents = checkoutData.filter(student => !student.crossedOut) // Filter out students that are already crossed out
-            console.log("filteredStudents", filteredStudents) // debug
 
             let studentNames = "" // concatenates names of students who can pack up
             let hasUpdates = false // Manage updates instead of page reload

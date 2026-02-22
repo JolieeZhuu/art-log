@@ -83,7 +83,6 @@ export function PaymentsPage() {
     // This function will be passed to the PaymentTable component
     // and will be called when a new class is added (so no page refresh is needed)
     async function addClassHandler(tableNum: number) {
-        console.log("tablenum", tableNum) 
         await addClass(tableNum, id)
 
         if (tableRefreshFunctions.current[tableNum]) {
@@ -104,11 +103,9 @@ export function PaymentsPage() {
     async function loadCards() {
         const num = await getTableNum(id)
         const student = await getById(studentUrl, id)
-        console.log("student:", student)
         const termTable = await getTermTableByStudentIdAndTableNum(termUrl, id, student.curr_table);
         // [[payment, term], [payment, term]]
         
-        console.log(student)
         let tempNum;
         let storeNotesAndIds;
         if (num >= 2) {

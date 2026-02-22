@@ -138,7 +138,6 @@ export const columns = ({
         header: "Payment Notes",
         cell: ({ row }) => {
             const phrase = row.getValue("paymentNotes") as string
-            console.log("phrase", phrase)
             if (phrase !== undefined && phrase !== null) {
                 if (phrase.substring(0, 2) === "np") {
                     return <div>{phrase}</div>
@@ -211,8 +210,6 @@ export const columns = ({
                 const storeStudent = await getById(studentUrl, student.id)
                 const storeTerm = await getTermTableByStudentIdAndTableNum(termUrl, student.id, storeStudent.curr_table)
 
-                console.log("edit clicked")
-                console.log(values)
                 const data1 = {
                     student_id: student.id,
                     first_name: values.firstName,
