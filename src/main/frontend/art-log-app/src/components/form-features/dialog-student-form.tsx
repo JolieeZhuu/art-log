@@ -4,11 +4,12 @@ import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
+import { useWatch } from "react-hook-form"
 
 // Internal imports
 import { add } from "../../restAPI/entities"
 import { convertTo24Hour } from "../payment-tables/payment-funcs"
-import { dayOptions, classIdOptions, timeExpectedOptions } from "./options";
+import { dayOptions, classIdOptions, weekendTimeExpectedOptions, weekdayTimeExpectedOptions } from "./options";
 
 // UI components
 import { Button } from "../../components/ui/button"
@@ -72,7 +73,6 @@ export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudent
     const studentUrl = "http://localhost:8080/student/"
 
     const [open, setOpen] = React.useState(false)
-    
     // Define form
     const form = useForm<z.infer<typeof studentSchema>>({
         resolver: zodResolver(studentSchema),
@@ -86,6 +86,16 @@ export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudent
             hoursOfClass: 1,
         },
     })
+    
+    const day = useWatch({
+        control: form.control,
+        name: "day",
+        defaultValue: dayOfWeek,
+    }) // watches over the day field value and reactivates automatically every time it changes
+
+    React.useEffect(() => {
+        form.setValue("timeExpected", "");
+    }, [day]);
 
     function resetForm() {
         form.reset();
@@ -171,28 +181,55 @@ export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudent
                                     </FormItem>
                                 )}
                             />
+                            
                             <div className="flex gap-5">
-                                <FormField
-                                    control={form.control}
-                                    name="timeExpected"
-                                    render={({ field }) => (
-                                        <FormItem className="flex-1">
-                                            <FormLabel>Expected Time</FormLabel>
-                                            <FormControl>
-                                                <ComboboxOptions
-                                                    options={timeExpectedOptions}
-                                                    value={String(field.value)} 
-                                                    onChange={field.onChange} 
-                                                    selectPhrase="Select..."
-                                                    commandEmpty="Selection not found."
-                                                />
-                                            </FormControl>
-                                            <div className="h-3">
-                                                <FormMessage />
-                                            </div>
-                                        </FormItem>
-                                    )}
-                                />
+                                {
+                                    day.toLowerCase() == "sunday" || day.toLowerCase() == "saturday" ? (
+                                        <FormField
+                                            control={form.control}
+                                            name="timeExpected"
+                                            render={({ field }) => (
+                                                <FormItem className="flex-1">
+                                                    <FormLabel>Expected Time</FormLabel>
+                                                    <FormControl>
+                                                        <ComboboxOptions
+                                                            options={weekendTimeExpectedOptions}
+                                                            value={String(field.value)} 
+                                                            onChange={field.onChange} 
+                                                            selectPhrase="Select..."
+                                                            commandEmpty="Selection not found."
+                                                        />
+                                                    </FormControl>
+                                                    <div className="h-3">
+                                                        <FormMessage />
+                                                    </div>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    ) : (
+                                        <FormField
+                                            control={form.control}
+                                            name="timeExpected"
+                                            render={({ field }) => (
+                                                <FormItem className="flex-1">
+                                                    <FormLabel>Expected Time</FormLabel>
+                                                    <FormControl>
+                                                        <ComboboxOptions
+                                                            options={weekdayTimeExpectedOptions}
+                                                            value={String(field.value)} 
+                                                            onChange={field.onChange} 
+                                                            selectPhrase="Select..."
+                                                            commandEmpty="Selection not found."
+                                                        />
+                                                    </FormControl>
+                                                    <div className="h-3">
+                                                        <FormMessage />
+                                                    </div>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    )
+                                }
                                 <FormField 
                                     control={form.control}
                                     name="hoursOfClass"

@@ -74,7 +74,7 @@ export const classIdOptions = [
   },
 ]
 
-export const timeExpectedOptions = [
+export const weekendTimeExpectedOptions = [
   { value: "9:15 AM", label: "9:15 AM", },
   { value: "9:30 AM", label: "9:30 AM", },
   { value: "9:45 AM", label: "9:45 AM", },
@@ -100,6 +100,26 @@ export const timeExpectedOptions = [
   { value: "2:45 PM", label: "2:45 PM", },
   { value: "3:00 PM", label: "3:00 PM", },
   { value: "3:15 PM", label: "3:15 PM", },
+  { value: "3:30 PM", label: "3:30 PM", },
+  { value: "3:45 PM", label: "3:45 PM", },
+  { value: "4:00 PM", label: "4:00 PM", },
+  { value: "4:15 PM", label: "4:15 PM", },
+  { value: "4:30 PM", label: "4:30 PM", },
+  { value: "4:45 PM", label: "4:45 PM", },
+  { value: "5:00 PM", label: "5:00 PM", },
+  { value: "5:15 PM", label: "5:15 PM", },
+  { value: "5:30 PM", label: "5:30 PM", },
+  { value: "5:45 PM", label: "5:45 PM", },
+  { value: "6:00 PM", label: "6:00 PM", },
+  { value: "6:15 PM", label: "6:15 PM", },
+  { value: "6:30 PM", label: "6:30 PM", },
+  { value: "6:45 PM", label: "6:45 PM", },
+  { value: "7:00 PM", label: "7:00 PM", },
+  { value: "7:15 PM", label: "7:15 PM", },
+  { value: "7:30 PM", label: "7:30 PM", },
+]
+
+export const weekdayTimeExpectedOptions = [
   { value: "3:30 PM", label: "3:30 PM", },
   { value: "3:45 PM", label: "3:45 PM", },
   { value: "4:00 PM", label: "4:00 PM", },

@@ -194,6 +194,7 @@ export function PaymentsPage() {
                     <div>
                         <div className="flex justify-between items-center gap-4">
                             <div className="flex gap-2 flex-wrap">
+                                {/* Changing day of week */}
                                 <EditableText
                                     initialText={`${student?.day[0]}${student?.day.substring(1)}`}
                                     index={0}
@@ -202,6 +203,7 @@ export function PaymentsPage() {
                                     getStudent={getStudent}
                                     termId={-1}
                                 />
+                                {/* Changing expected time */}
                                 <EditableText
                                     initialText={convertTo12Hour(student?.time_expected)}
                                     index={1}
@@ -210,6 +212,7 @@ export function PaymentsPage() {
                                     getStudent={getStudent}
                                     termId={-1}
                                 />
+                                {/* Changing hours of class */}
                                 <EditableText
                                     initialText={`${student?.class_hours}`}
                                     index={2}
@@ -218,6 +221,7 @@ export function PaymentsPage() {
                                     getStudent={getStudent}
                                     termId={-1}
                                 />
+                                {/* Changing class ID */}
                                 <EditableText
                                     initialText={`${student?.class_id}`}
                                     index={3}
@@ -226,6 +230,7 @@ export function PaymentsPage() {
                                     getStudent={getStudent}
                                     termId={-1}
                                 />
+                                {/* Changing phone number */}
                                 <EditableText
                                     initialText={student?.phone_number ? `(${student.phone_number.slice(0, 3)})-${student.phone_number.slice(3, 6)}-${student.phone_number.slice(6)}` : ""}
                                     index={4}
@@ -234,6 +239,7 @@ export function PaymentsPage() {
                                     getStudent={getStudent}
                                     termId={-1}
                                 />
+                                {/* Changing general notes */}
                                 <EditableText
                                     initialText={student?.general_notes ? student.general_notes : "General Notes"}
                                     index={8}

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod" // Used for input validation
 
 // Internal imports
-import { dayOptions, classIdOptions, timeExpectedOptions } from "./options";
+import { dayOptions, classIdOptions, weekendTimeExpectedOptions, weekdayTimeExpectedOptions } from "./options";
 import { getById, edit, getByTermIdAndStudentIdAndClassNumber } from "../../restAPI/entities";
 import { convertTo24Hour } from "../payment-tables/payment-funcs";
 
@@ -62,6 +62,7 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
     const [isEditing, setIsEditing] = React.useState(false)
     const [text, setText] = React.useState<string | number>(initialText)
     const isNumberField = index === 2 || index === 5; // classHours and totalClasses
+    // const [day, setDay] = React.useState<string>("");
     
     const studentUrl = "http://localhost:8080/student/"
     const attendanceUrl = "http://localhost:8080/attendance/"
@@ -90,6 +91,10 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
             form.setValue("input", stringValue);
         }
     }, [initialText, form, isNumberField]);
+
+    // React.useEffect(() => {
+    //     getStudent()
+    // }, [day]);
 
 
     // Helper function to check if a value is numeric
@@ -272,7 +277,7 @@ export default function EditableText({ initialText, index, optionalEnding, id, g
                             <FormItem>
                                 <FormControl>
                                     <ComboboxOptions
-                                        options={timeExpectedOptions}
+                                        options={weekendTimeExpectedOptions}
                                         value={String(field.value)} 
                                         onChange={handleComboboxChange} 
                                         selectPhrase="Select..."
