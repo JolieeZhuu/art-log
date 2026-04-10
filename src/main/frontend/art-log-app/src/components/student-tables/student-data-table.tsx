@@ -29,53 +29,50 @@ import {
 import { ScrollArea } from "../../components/ui/scroll-area"
 import { DialogStudentForm } from "../../components/form-features/dialog-student-form"
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from "../../components/ui/alert-dialog"
 import { convertTo24Hour } from "../payment-tables/payment-funcs"
 
 
 // Define the type for the student data
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  dayOfWeek: string
-  onSelectionChange: (selected: Checkout[]) => void
-  selectedStudents: Checkout[]
-  onStudentCreated: () => void
+    columns: ColumnDef<TData, TValue>[]
+    data: TData[]
+    dayOfWeek: string
+    onSelectionChange: (selected: Checkout[]) => void
+    selectedStudents: Checkout[]
+    onStudentCreated: () => void
 }
 
 export function DataTable<TData extends Student, TValue>({
-  columns,
-  data,
-  dayOfWeek,
-  onSelectionChange,
-  selectedStudents,
-  onStudentCreated,
+    columns,
+    data,
+    dayOfWeek,
+    onSelectionChange,
+    selectedStudents,
+    onStudentCreated,
 }: DataTableProps<TData, TValue>) {
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
-    
-    const [alertDialogOpen, setAlertDialogOpen] = React.useState(false)
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+    const [alertDialogOpen, setAlertDialogOpen] = React.useState(false);
 
-    // Convert selectedIds array to the format TanStack Table expects
-    // So rather than passing an array of numbers, it passes a map like {"0": true, "1": true}
+    // convert selectedIds array to the format TanStack Table expects
+    // so rather than passing an array of numbers, it passes a map like {"0": true, "1": true}
     const rowSelection = React.useMemo(() => {
-        const selection: Record<string, boolean> = {} // Format of TanStack Table
+        const selection: Record<string, boolean> = {}; // format of TanStack Table
         selectedStudents.forEach(student => {
-            const rowIndex = data.findIndex(item => item.id === student.id)
+            const rowIndex = data.findIndex(item => item.id === student.id);
             if (rowIndex !== -1) {
-                selection[rowIndex.toString()] = true
+                selection[rowIndex.toString()] = true;
             }
         })
-        return selection
-    }, [selectedStudents, data]) // Only when selectedIds or data changes
+        return selection;
+    }, [selectedStudents, data]); // only when selectedIds or data changes
 
     const table = useReactTable({
         data,
@@ -85,34 +82,34 @@ export function DataTable<TData extends Student, TValue>({
         getFilteredRowModel: getFilteredRowModel(),
         enableRowSelection: true,
         onRowSelectionChange: async (updater) => {
-            // Handle the row selection change (used instead of a useEffect function)
-            const newSelection = typeof updater === 'function' ? updater(rowSelection) : updater
+            // handle the row selection change (used instead of a useEffect function)
+            const newSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
             
-            // Get currently selected row indices
+            // get currently selected row indices
             const selectedRowIndices = Object.keys(newSelection)
                 .filter(key => newSelection[key])
-                .map(key => parseInt(key))
+                .map(key => parseInt(key));
             
-            // Create new Checkout array
+            // create new Checkout array
             const checkoutResults = await Promise.all(selectedRowIndices.map(async (rowIndex) => {
-                const studentUrl = "http://localhost:8080/student/"
-                const attendanceUrl = "http://localhost:8080/attendance/"
-                const termUrl = "http://localhost:8080/term/"
+                const studentUrl = "http://localhost:8080/student/";
+                const attendanceUrl = "http://localhost:8080/attendance/";
+                const termUrl = "http://localhost:8080/term/";
 
-                const student = data[rowIndex] as Student
-                const studentForHours = await getById(studentUrl, student.id)
-                const classHours = Math.floor(studentForHours.class_hours)
-                let classMinutes = 0
+                const student = data[rowIndex] as Student;
+                const studentForHours = await getById(studentUrl, student.id);
+                const classHours = Math.floor(studentForHours.class_hours);
+                let classMinutes = 0;
                 if (studentForHours.class_hours % 1 !== 0) {
-                    classMinutes = 30 // assume 30 minutes
+                    classMinutes = 30; // assume 30 minutes
                 }
                 
-                // Check if this student was already selected
-                const existingCheckout = selectedStudents.find(c => c.id === student.id)
-                const currentDate = dayjs().format('YYYY-MM-DD')
-                const currentDOW = dayjs().format("dddd")
-                const checkInTime = dayjs().format('hh:mm A')
-                const checkOutTime = dayjs(currentDate + " " + checkInTime).add(classHours, 'hours').add(classMinutes, 'minutes').format('hh:mm A') // assume 1 hour
+                // check if this student was already selected
+                const existingCheckout = selectedStudents.find(c => c.id === student.id);
+                const currentDate = dayjs().format('YYYY-MM-DD');
+                const currentDOW = dayjs().format("dddd");
+                const checkInTime = dayjs().format('hh:mm A');
+                const checkOutTime = dayjs(currentDate + " " + checkInTime).add(classHours, 'hours').add(classMinutes, 'minutes').format('hh:mm A');
 
                 /* 
                 to update student attendance check:
@@ -124,14 +121,25 @@ export function DataTable<TData extends Student, TValue>({
                         else create a popup message
                 */
 
-                const tempStudent = await getById(studentUrl, student.id)
-                if (currentDOW === tempStudent.day && tempStudent.curr_table > 0) {
+                console.log(currentDate); // debug
+                console.log(currentDOW); // debug
+                const tempStudent = await getById(studentUrl, student.id);
+
+                console.log(currentDOW == tempStudent.day); // debug
+
+                if (currentDOW != tempStudent.day) {
+                    setAlertDialogOpen(true);
+                    return null;
+                }
+                console.log(tempStudent.curr_table > 0); // debug
+
+                if (tempStudent.curr_table > 0) { // they have a class!
                     // Find the date within the current payment table
-                    const termTable = await getTermTableByStudentIdAndTableNum(termUrl, student.id, tempStudent.curr_table)
-                    const foundAttendance = await getByDateExpectedAndStudentIdAndTermId(attendanceUrl, currentDate, student.id, termTable.term_id)
+                    const termTable = await getTermTableByStudentIdAndTableNum(termUrl, student.id, tempStudent.curr_table);
+                    const foundAttendance = await getByDateExpectedAndStudentIdAndTermId(attendanceUrl, currentDate, student.id, termTable.term_id);
                     if (foundAttendance === null) {
-                        setAlertDialogOpen(true)
-                        return null
+                        setAlertDialogOpen(true);
+                        return null;
                     } else {
                         const data = {
                             attendance_id: foundAttendance.attendance_id,
@@ -142,17 +150,17 @@ export function DataTable<TData extends Student, TValue>({
                             attendance_check: "Yes",
                             date_attended: currentDate,
                             check_in: convertTo24Hour(checkInTime),
-                            hours: 1, // fix
+                            hours: foundAttendance.class_hours, // fix
                             //check_out: "7:00 AM", // fix back to checkOutTime
                             check_out: convertTo24Hour(checkOutTime), // fix back to checkOutTime
                             notes: foundAttendance.notes,
-                        }
-
-                        await edit(attendanceUrl, data)
+                        };
+                        await edit(attendanceUrl, data);
                     }
                 } else {
-                    const foundAbsent = await getFirstAbsentWithinThirtyDays(attendanceUrl)
-                    if (foundAbsent !== null) {
+                    const foundAbsent = await getFirstAbsentWithinThirtyDays(attendanceUrl);
+
+                    if (foundAbsent !== null && foundAbsent.length !== 0) {
                         const data = {
                             attendance_id: foundAbsent.attendance_id,
                             student_id: foundAbsent.student_id,
@@ -162,16 +170,15 @@ export function DataTable<TData extends Student, TValue>({
                             attendance_check: "Makeup",
                             date_attended: new Date(currentDate),
                             check_in: convertTo24Hour(checkInTime),
-                            hours: 1, // fix
+                            hours: foundAbsent.class_hours, // fix
                             // check_out: "7:00 AM", // fix back to checkOutTime
                             check_out: convertTo24Hour(checkOutTime), // fix back to checkOutTime
                             notes: foundAbsent.notes,
-                        }
-                        
-                        await edit(attendanceUrl, data)
+                        };
+                        await edit(attendanceUrl, data);
                     } else {
-                        setAlertDialogOpen(true)
-                        return null
+                        setAlertDialogOpen(true);
+                        return null;
                     }
                 }
 
@@ -186,7 +193,7 @@ export function DataTable<TData extends Student, TValue>({
                         name: student.name,
                         checkIn: checkInTime,
                         // checkOut: "7:00 AM", // fix back to checkOutTime
-                        check_out: checkOutTime, // fix back to checkOutTime
+                        checkOut: checkOutTime, // fix back to checkOutTime
                         classId: studentDetails.class_id,
                         day: studentDetails.day,
                         crossedOut: false, // default value
@@ -195,7 +202,7 @@ export function DataTable<TData extends Student, TValue>({
             }))
 
             const newSelected: Checkout[] = checkoutResults.filter((checkout): checkout is Checkout => checkout !== null) // filters out null checkouts (so they aren't checked)
-            onSelectionChange(newSelected)
+            onSelectionChange(newSelected);
         },
         state: {
             columnFilters,

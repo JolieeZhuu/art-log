@@ -28,58 +28,83 @@ import {
 
 export function DayPage() {
 
-    const { day } = useParams<{ day?: string }>()
+    const { day } = useParams<{ day?: string }>();
 
     // validate the day parameter
     if (!day)
         return <div>Invalid day parameter.</div>
 
     // LOCAL STORAGE -----------------------------------------------------------------------------------------------
+    // students who have been checkmarked (unchecked gets removed from this list)
     const [selectedStudents, setSelectedStudents] = React.useState<Checkout[]>(() => {
-        // localStorage.removeItem("selectedStudents") // for debugging
-        const saved = localStorage.getItem("selectedStudents")
-        return saved ? JSON.parse(saved) : []
-    })
+        // localStorage.removeItem("selectedStudents"); // debug
+        const saved = localStorage.getItem("selectedStudents");
+        return saved ? JSON.parse(saved) : [];
+    });
+
+    // the data to be displayed in checkout table, initialized/updated by selectedStudents
     const [checkoutData, setCheckoutData] = React.useState<Checkout[]>(() => {
-        const savedCheckoutData = localStorage.getItem("checkoutData") // fetch from localStorage if it exists
+        const savedCheckoutData = localStorage.getItem("checkoutData") // fetch from localStorage
         if (savedCheckoutData) {
-            return JSON.parse(savedCheckoutData)
+            return JSON.parse(savedCheckoutData);
         }
-        // if no saved data, create from selected students
+        if (!selectedStudents || selectedStudents.length === 0) return [];
+        // if no saved data exists, create from selected students
         const sortedStudents = selectedStudents.sort((a, b) => {
             function timeToMinutes(timeStr: string) {
-                let [hours, minutes] = timeStr.split(":").map(Number)
-                return hours * 60 + minutes
+                let [hours, minutes] = timeStr.split(":").map(Number);
+                return hours * 60 + minutes;
+                
                 /*
-                const [time, ampm] = timeStr.split(" ")
-                let [hours, minutes] = time.split(":").map(Number)
+                // I think this was morning/afternoon logic
+                const [time, ampm] = timeStr.split(" ");
+                let [hours, minutes] = time.split(":").map(Number);
                 if (ampm === "AM" && hours === 12) {
-                    hours = 0
+                    hours = 0;
                 } else if (ampm === "PM" && hours !== 12) {
-                    hours += 12
+                    hours += 12;
                 }
-                return hours * 60 + minutes*/
+                return hours * 60 + minutes;
+                */
             }
-            return timeToMinutes(a.checkOut) - timeToMinutes(b.checkOut) // Sort by checkOut time (by converting the time to minutes)
+            return timeToMinutes(a.checkOut) - timeToMinutes(b.checkOut); // sort by checkOut time (by converting the time to minutes)
         })
-        return sortedStudents ? sortedStudents : [] // Return an empty array if no students are selected
-    })
+        return sortedStudents ? sortedStudents : [];
+    });
 
-    // Whenever the selected students change, update/save to localStorage
+    // whenever the selected students change, update/save to localStorage
     React.useEffect(() => {
-        localStorage.setItem("selectedStudents", JSON.stringify(selectedStudents))
-    }, [selectedStudents])
+        localStorage.setItem("selectedStudents", JSON.stringify(selectedStudents));
+    }, [selectedStudents]);
     
     React.useEffect(() => {
-        localStorage.setItem("checkoutData", JSON.stringify(checkoutData))
-    }, [checkoutData])
+        localStorage.setItem("checkoutData", JSON.stringify(checkoutData));
+    }, [checkoutData]);
 
-    React.useEffect(() => { // Update checkoutData whenever selectedMorningStudents or selectedAfternoonStudents change
+    React.useEffect(() => { // update checkoutData whenever selectedStudents change
+        if (!selectedStudents || selectedStudents.length === 0) return; // in case selectedStudents is empty
+
+        // I don't think I need this
+        // const deselectedStudents = checkoutData.filter(
+        //     existing => !selectedStudents.find(s => s.id === existing.id) // find students in checkouData that are no longer selected
+        // );
+
+        // if (deselectedStudents.length > 0) {
+        //     setCheckoutData(prev => prev.map(student =>
+        //         deselectedStudents.find(s => s.id === student.id)
+        //             ? { ...student, crossedOut: true}
+        //             : student
+        //     ));
+        //     return;
+        // } // set all unchecked to be crossed out
+
         const sortedStudents = selectedStudents.sort((a, b) => {
             function timeToMinutes(timeStr: string) {
-                let [hours, minutes] = timeStr.split(":").map(Number) // HEREEEEEEEEE
-                return hours * 60 + minutes
+                if (!timeStr) return 0; // in case timeStr is empty
+                let [hours, minutes] = timeStr.split(":").map(Number);
+                return hours * 60 + minutes;
                 /*
+                // I think this was morning/afternoon logic
                 const [time, ampm] = timeStr.split(" ")
                 let [hours, minutes] = time.split(":").map(Number)
                 if (ampm === "AM" && hours === 12) {
@@ -89,77 +114,87 @@ export function DayPage() {
                 }
                 return hours * 60 + minutes*/
             }
-            return timeToMinutes(a.checkOut) - timeToMinutes(b.checkOut)
-        })
+            return timeToMinutes(a.checkOut) - timeToMinutes(b.checkOut);
+        });
         
         // Preserve crossedOut status when updating
         const updatedStudents = sortedStudents.map(student => {
-            const existingStudent = checkoutData.find(existing => existing.id === student.id)
-            return existingStudent ? { ...student, crossedOut: existingStudent.crossedOut } : student
-        })
+            const existingStudent = checkoutData.find(existing => existing.id === student.id);
+            return existingStudent ? { ...student, crossedOut: existingStudent.crossedOut } : student;
+        });
         
-        setCheckoutData(updatedStudents)
-    }, [selectedStudents])
+        setCheckoutData(updatedStudents);
+    }, [selectedStudents]);
 
     React.useEffect(() => {
         function clearSelection() { // Called when the time of day arrives
             // Page will update accordingly since there are useEffect functions for each student list
-            setSelectedStudents([])
-            localStorage.removeItem("selectedStudents")
-            console.log("checkmarks cleared at 7:00 PM") // Debug
+            setSelectedStudents([]);
+            localStorage.removeItem("selectedStudents");
+            console.log("checkmarks cleared at 7:00 PM"); // Debug
         }
         async function checkTimeAndClear() {
-            const now = new Date()
-            const currentHour = now.getHours()
-            const currentMinute = now.getMinutes()
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
 
             if (currentHour >= 8 && currentMinute >= 0) {
-                const lastClearedDate = localStorage.getItem("lastCleared")
-                const today = new Date().toDateString()
+                const lastClearedDate = localStorage.getItem("lastCleared");
+                const today = new Date().toDateString();
 
-                // if (lastClearedDate !== today) { // Only clears once per day
-                //    clearSelection()
-                //    localStorage.setItem("lastCleared", today) // Store to check when the next day comes
-                // }
+                if (lastClearedDate !== today) { // Only clears once per day
+                    clearSelection();
+                    localStorage.removeItem("checkoutData"); // not sure if this should be debug or not
+                    setCheckoutData([]);
+                    localStorage.setItem("lastCleared", today); // Store to check when the next day comes
+                }
 
                 // below code for testing purposes; must remove above if statement to work
-                clearSelection()
-                localStorage.setItem("lastCleared", today)
-                await playTTS("Checkmarks cleared at 7:00 PM")
+                localStorage.setItem("lastCleared", today);
+                // await playTTS("Checkmarks cleared at 7:00 PM"); // seems to always be running
             }
         }
-        const interval = setInterval(checkTimeAndClear, 60 * 1000) // since parameters are in milliseconds, check every minute
+        // clearSelection();
+        // localStorage.removeItem("checkoutData");
+        // setCheckoutData([]);
+        const interval = setInterval(checkTimeAndClear, 60 * 1000); // since parameters are in milliseconds, check every minute
 
-        return () => clearInterval(interval)
-    }, [])
+        return () => clearInterval(interval);
+    }, []);
 
     React.useEffect(() => {
 
         async function callCheckouts() {
-            const studentNames = checkTimeAndCross()
+            const studentNames = checkTimeAndCross();
             if (studentNames !== "") {
-                await playTTS(`${studentNames} can pack up now.`)
+                // await playTTS(`${studentNames} can pack up now.`); // seems to always be running
             }
             // Name1, Name2, Name3,...NameN can pack up now
         }
 
         function checkTimeAndCross() {
-            const filteredStudents = checkoutData.filter(student => !student.crossedOut) // Filter out students that are already crossed out
+            const filteredStudents = checkoutData.filter(student => !student.crossedOut); // filter out students that are already crossed out
 
-            let studentNames = "" // concatenates names of students who can pack up
-            let hasUpdates = false // Manage updates instead of page reload
+            let studentNames = ""; // concatenates names of students who can pack up
+            let hasUpdates = false; // manage updates instead of page reload
             
-            // Create a new array with updated students
+            // create a new array with updated students
             const updatedCheckoutData = checkoutData.map(student => {
-                if (student.crossedOut) return student // Already crossed out
+                if (student.crossedOut) return student; // already crossed out
+
+                console.log(student); // debug
                 
                 const now = new Date();
-                const currentHour = now.getHours()
-                const currentMinute = now.getMinutes()
+                const currentHour = now.getHours();
+                const currentMinute = now.getMinutes();
 
-                let [hours, minutes] = student.checkOut.split(":").map(Number)
+                let [hours, minutes] = student.checkOut.split(" ")[0].split(":").map(Number); // another issue here
+                console.log(currentHour, currentMinute);
+                console.log(student.checkOut);
+                console.log(hours, minutes);
 
                 /*
+                // I think this was morning/afternoon logic
                 const [time, ampm] = student.checkOut.split(" ")
                 let [hours, minutes] = time.split(":").map(Number)
                 if (ampm === "AM" && hours === 12) {
@@ -167,46 +202,46 @@ export function DayPage() {
                 } else if (ampm === "PM" && hours !== 12) {
                     hours += 12
                 }*/
-
+                console.log(currentHour > hours || (currentHour === hours && currentMinute >= minutes));
                 if (currentHour > hours || (currentHour === hours && currentMinute >= minutes)) {
-                    studentNames += student.name + ", "
-                    hasUpdates = true
-                    return { ...student, crossedOut: true } // Return new object
+                    studentNames += student.name + ", ";
+                    hasUpdates = true;
+                    return { ...student, crossedOut: true };
                 }
                 
-                return student // No change
+                return student // no change
             })
+            console.log(updatedCheckoutData);
 
-            // Only update state if there were changes
+            // only update state if there were changes
             if (hasUpdates) {
-                setCheckoutData(updatedCheckoutData) // State setter
+                setCheckoutData(updatedCheckoutData); // state setter
             }
-
-            return studentNames
+            return studentNames;
 
         }
-        const interval = setInterval(callCheckouts, 60 * 1000) // Since parameters are in milliseconds, check every minute
+        const interval = setInterval(callCheckouts, 60 * 1000); // since parameters are in milliseconds, check every minute
 
-        return () => clearInterval(interval)
-    }, [])
+        return () => clearInterval(interval);
+    }, []);
 
     async function playTTS(text: string, lang = 'en') {
         try {
             // HTTP GET request to the TTS API
-            // Ensure the text is URL-encoded to handle special characters
+            // ensure the text is URL-encoded to handle special characters
             const response = await axios.get(
                 `http://localhost:8080/speak?text=${encodeURIComponent(text)}&lang=${lang}`,
-                { responseType: 'blob' } // Tells axios to expect a binary data response
+                { responseType: 'blob' } // tells axios to expect a binary data response
                 // Binary Large Object = blob
-            )
+            );
             
-            const audioUrl = URL.createObjectURL(response.data) // Creates a temporary URL that points to the binary data
-            const audio = new Audio(audioUrl) // URLs can be played directly in audio elements
-            await audio.play()
+            const audioUrl = URL.createObjectURL(response.data); // creates a temporary URL that points to the binary data
+            const audio = new Audio(audioUrl); // URLs can be played directly in audio elements
+            await audio.play();
             
-            audio.onended = () => URL.revokeObjectURL(audioUrl) // Event handler that releases the blob URL from memory after playback ends
+            audio.onended = () => URL.revokeObjectURL(audioUrl); // event handler that releases the blob URL from memory after playback ends
         } catch (error) {
-            console.error('TTS Error:', error)
+            console.error('TTS Error:', error);
         } 
     }
 
@@ -237,6 +272,7 @@ export function DayPage() {
                             </div>
                         </div>
 
+                        {/* Display checkout list */}
                         <div className="shrink md:shrink-0 min-w-0">
                             <Card>
                                 <CardHeader className="justify-items-start">

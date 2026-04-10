@@ -181,7 +181,7 @@ export function AvailabilityChart({ type }: { type: string }) {
                                             <>
                                                 {
                                                     weekendTimes.map((slot: string, index: number) => (
-                                                        <div key={index} className="w-16 font-medium text-center font-medium text-sm text-gray-600 py-3 border-t border-b flex-shrink-0 bg-secondary">
+                                                        <div key={index} className="w-16 text-center font-medium availability-chart py-3 border-t border-b flex-shrink-0 bg-secondary">
                                                             <div>
                                                                 {slot.split('-')[0].split(' ')[0]}
                                                             </div>
@@ -193,7 +193,7 @@ export function AvailabilityChart({ type }: { type: string }) {
                                             <>
                                                 {
                                                     weekdayTimes.map((slot: string, index: number) => (
-                                                        <div key={index} className="w-16 font-medium text-center text-sm text-gray-600 py-3 border-t border-b flex-shrink-0 bg-secondary">
+                                                        <div key={index} className="w-16 text-center font-medium availability-chart py-3 border-t border-b flex-shrink-0 bg-secondary">
                                                             <div>
                                                                 {slot.split('-')[0].split(' ')[0]}
                                                             </div>
@@ -213,7 +213,7 @@ export function AvailabilityChart({ type }: { type: string }) {
                                             <div key={index} className="flex min-w-0">
                                                 {
                                                     row.map(({ slot, numOfStudents }: { slot: string, numOfStudents: number}) => (
-                                                        <div key={slot} className="w-16 text-center text-sm font-medium text-gray-600 py-2 flex-shrink-0">
+                                                        <div key={slot} className="w-16 text-center font-medium availability-chart py-2 flex-shrink-0">
                                                             {numOfStudents}
                                                         </div>
                                                     ))
@@ -370,7 +370,7 @@ export function AvailabilitySlots({ dayOfWeek, header }: { dayOfWeek: string, he
                                 <div className="flex flex-col gap-3">
                                     {
                                         availability.map(({ slot, numOfStudents }: { slot: string, numOfStudents: number}) => (
-                                            <div key={slot} className="w-16 text-sm text-gray-600">
+                                            <div key={slot} className="w-16 text-sm availability-chart">
                                                 {numOfStudents}
                                             </div>
                                         ))

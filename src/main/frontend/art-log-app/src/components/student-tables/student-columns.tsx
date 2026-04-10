@@ -44,8 +44,8 @@ import {
 } from "../../components/ui/form"
 import { Checkbox } from "../../components/ui/checkbox";
 
-// Define expected valid types for the form fields
-// Also defines error messages if input is invalid
+// defines expected valid types for the form fields
+// also defines error messages if input is invalid
 const editSchema = z.object({
     firstName: z.string().min(1, {
         error: "First name field cannot be empty.",
@@ -58,8 +58,8 @@ const editSchema = z.object({
     phoneNumber: z.string().length(10)
 })
 
-// Define expected valid types for the form fields
-// Also defines error messages if input is invalid
+// defines expected valid types for the form fields
+// also defines error messages if input is invalid
 const deleteSchema = z.object({
     confirmation: z.string()
         .refine(val => val === "delete student", {
@@ -178,7 +178,7 @@ export const columns = ({
             const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
             const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
-            // Define form and default values
+            // define form and default values
             const editForm = useForm<z.infer<typeof editSchema>>({
                 resolver: zodResolver(editSchema),
                 defaultValues: {
@@ -190,7 +190,7 @@ export const columns = ({
                 },
             })
             
-            // Define form and default values
+            // define form and default values
             const deleteForm = useForm<z.infer<typeof deleteSchema>>({
                 resolver: zodResolver(deleteSchema),
                 defaultValues: {
@@ -202,9 +202,9 @@ export const columns = ({
                 if (isDeleteDialogOpen) {
                     deleteForm.reset({ confirmation: "" });
                 }
-            }, [isDeleteDialogOpen, deleteForm]); // Reset form when user opens dialog again
+            }, [isDeleteDialogOpen, deleteForm]); // reset form when user opens dialog again
 
-            // Edit student handler
+            // edit student handler
             async function editStudent(values: z.infer<typeof editSchema>) {
 
                 const storeStudent = await getById(studentUrl, student.id)

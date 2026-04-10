@@ -106,7 +106,7 @@ export async function getByDateExpectedAndStudentIdAndTermId(url: string, dateEx
             params: {
                 dateExpected: dateExpected,
                 studentId: studentId.toString(),
-                paymentNumber: termId.toString()
+                termId: termId.toString()
             }
         });
         return response.data || [];
