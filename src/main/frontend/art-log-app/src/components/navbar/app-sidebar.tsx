@@ -89,14 +89,14 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                 {
                     data.map((item) => (
                         <SidebarGroup key={item.title}>
-                            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+                            <SidebarGroupLabel className="sidebar-title">{item.title}</SidebarGroupLabel>
                             <SidebarGroupContent>
                                 <SidebarMenu>
                                     {
                                         item.items.map((item) => (
                                             <SidebarMenuItem key={item.title}>
-                                                <SidebarMenuButton asChild>
-                                                    <a href={item.url}>{item.title}</a>
+                                                <SidebarMenuButton className="sidebar" asChild>
+                                                    <a  href={item.url}>{item.title}</a>
                                                 </SidebarMenuButton>
                                             </SidebarMenuItem>
                                         ))
@@ -107,10 +107,10 @@ export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
                     ))
                 }
                 <SidebarGroup>
-                    <SidebarGroupLabel>Data</SidebarGroupLabel>
+                    <SidebarGroupLabel className="sidebar-title">Data</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            <SidebarMenuItem>
+                            <SidebarMenuItem className="ml-2">
                                 <SidebarMenuButton asChild>
                                     <DataButton/>
                                 </SidebarMenuButton>

@@ -293,7 +293,7 @@ export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudent
                                 <DialogClose asChild>
                                     <Button variant="outline">Cancel</Button>
                                 </DialogClose>
-                                <Button type="submit">Create Student</Button>
+                                <Button type="submit" variant="coloured">Create Student</Button>
                             </DialogFooter>
                         </form>
                     </Form>

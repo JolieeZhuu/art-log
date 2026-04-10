@@ -98,7 +98,7 @@ export default function DataButton() {
         <>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                    <Button>Add Data</Button>
+                    <Button variant="outline">Add Data</Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
@@ -147,7 +147,7 @@ export default function DataButton() {
                                 <DialogClose asChild>
                                     <Button variant="outline">Cancel</Button>
                                 </DialogClose>
-                                <Button type="submit">Add Data</Button>
+                                <Button type="submit" variant="coloured">Add Data</Button>
                             </DialogFooter>
                         </form>
                     </Form>

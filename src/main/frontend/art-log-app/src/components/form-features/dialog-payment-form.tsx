@@ -157,7 +157,7 @@ export function DialogPaymentForm({ id, onPaymentAdded }: { id: number, onPaymen
                                 <DialogClose asChild>
                                     <Button variant="outline">Cancel</Button>
                                 </DialogClose>
-                                <Button type="submit">Add Payment</Button>
+                                <Button type="submit" variant="coloured">Add Payment</Button>
                             </DialogFooter>
                         </form>
                     </Form>
