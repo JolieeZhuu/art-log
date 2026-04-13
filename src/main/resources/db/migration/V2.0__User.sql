@@ -5,5 +5,9 @@ CREATE TABLE IF NOT EXISTS artlog.user (
     password TEXT NOT NULL,
     enabled BOOLEAN DEFAULT FALSE,
     verification_code TEXT,
-    verification_code_expiration TIMESTAMP 
+    verification_code_expiration TIMESTAMP,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );

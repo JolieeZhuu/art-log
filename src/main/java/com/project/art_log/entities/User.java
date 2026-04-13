@@ -4,17 +4,22 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "user")
 public class User implements UserDetails { // integrates with Spring Security through implementation
 	private static final long serialVersionUID = 1L;
@@ -32,15 +37,26 @@ public class User implements UserDetails { // integrates with Spring Security th
 	private String verificationCode;
 	@Column(name = "verification_expiration")
 	private LocalDateTime verificationCodeExpiresAt;
+//	
+//	private String firstName;
+//	private String lastName;
+//
+//    @CreatedDate
+//    private LocalDateTime createdAt;
+//    
+//    @LastModifiedDate
+//	private LocalDateTime updatedAt;
 	
 	public User() {
 		
 	} // Empty constructor
 
-	public User(String username, String email, String password) {
+	public User(String username, String email, String password) { // will need to fix to add first and last name
 		this.username = username;
 		this.email = email;
 		this.password = password;
+//		this.firstName = firstName;
+//		this.lastName = lastName;
 	}
 	
 	@Override
@@ -119,5 +135,21 @@ public class User implements UserDetails { // integrates with Spring Security th
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+
+//	public String getFirstName() {
+//		return firstName;
+//	}
+//
+//	public void setFirstName(String firstName) {
+//		this.firstName = firstName;
+//	}
+//
+//	public String getLastName() {
+//		return lastName;
+//	}
+//
+//	public void setLastName(String lastName) {
+//		this.lastName = lastName;
+//	}
 	
 }

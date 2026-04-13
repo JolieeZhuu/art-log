@@ -11,5 +11,7 @@ CREATE TABLE IF NOT EXISTS artlog.student (
     general_notes TEXT DEFAULT 'General Notes',
     curr_table INTEGER,
     curr_class INTEGER,
-    class_hours FLOAT
+    class_hours FLOAT,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );

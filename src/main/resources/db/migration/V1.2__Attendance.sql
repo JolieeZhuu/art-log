@@ -9,5 +9,7 @@ CREATE TABLE IF NOT EXISTS artlog.attendance (
 	check_in TIME,
 	hours INTEGER,
 	check_out TIME,
-	notes TEXT DEFAULT 'Notes'
+	notes TEXT DEFAULT 'Notes',
+	created_at TIMESTAMP,
+	updated_at TIMESTAMP
 );
