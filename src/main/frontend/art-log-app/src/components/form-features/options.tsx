@@ -138,3 +138,21 @@ export const weekdayTimeExpectedOptions = [
   { value: "7:15 PM", label: "7:15 PM", },
   { value: "7:30 PM", label: "7:30 PM", },
 ]
+
+export const roles = [
+    {
+        value: "IT Support",
+        label: "IT Support",
+        //role_desc: "Manages the entire application, with the ability to change permissions and view server-side activities."
+    },
+    {
+        value: "Admin",
+        label: "Admin",
+        //role_desc: "Manages the entire application."
+    },
+    {
+        value: "Front-desk",
+        label: "Front-desk",
+        //role_desc: "Restricted to managing students and their attendance tables."
+    },
+]

@@ -46,7 +46,7 @@ public class AuthenticationService {
 	        throw new RuntimeException("Email already registered");
 	    }
 	    
-	    User user = new User(input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
+	    User user = new User(input.getUsername(), input.getFirstName(), input.getLastName(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
 	    user.setVerificationCode(generateVerificationCode());
 	    user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(15));
 	    user.setEnabled(false);

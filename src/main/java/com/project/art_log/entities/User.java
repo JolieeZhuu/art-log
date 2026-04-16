@@ -28,6 +28,13 @@ public class User implements UserDetails { // integrates with Spring Security th
 	private Integer userId;
 	@Column(unique = true, nullable = false)
 	private String username;
+	
+	// here
+	//@Column(unique = true, nullable = false)
+	private String firstName;
+	//@Column(unique = true, nullable = false)
+	private String lastName;
+	
 	@Column(unique = true, nullable = false)
 	private String email;
 	@Column(nullable = false)
@@ -37,26 +44,25 @@ public class User implements UserDetails { // integrates with Spring Security th
 	private String verificationCode;
 	@Column(name = "verification_expiration")
 	private LocalDateTime verificationCodeExpiresAt;
-//	
-//	private String firstName;
-//	private String lastName;
-//
-//    @CreatedDate
-//    private LocalDateTime createdAt;
-//    
-//    @LastModifiedDate
-//	private LocalDateTime updatedAt;
+
+	// here
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    @Column(insertable = false)
+	private LocalDateTime updatedAt;
 	
 	public User() {
 		
 	} // Empty constructor
 
-	public User(String username, String email, String password) { // will need to fix to add first and last name
+	public User(String username, String firstName, String lastName, String email, String password) { // will need to fix to add first and last name
 		this.username = username;
 		this.email = email;
 		this.password = password;
-//		this.firstName = firstName;
-//		this.lastName = lastName;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 	
 	@Override
@@ -136,20 +142,20 @@ public class User implements UserDetails { // integrates with Spring Security th
 		this.enabled = enabled;
 	}
 
-//	public String getFirstName() {
-//		return firstName;
-//	}
-//
-//	public void setFirstName(String firstName) {
-//		this.firstName = firstName;
-//	}
-//
-//	public String getLastName() {
-//		return lastName;
-//	}
-//
-//	public void setLastName(String lastName) {
-//		this.lastName = lastName;
-//	}
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 	
 }

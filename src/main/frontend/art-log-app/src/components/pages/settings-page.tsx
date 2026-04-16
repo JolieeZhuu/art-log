@@ -6,6 +6,10 @@ import {
     SidebarProvider,
 } from "../../components/ui/sidebar"
 
+// internal imports
+import { DialogRoleForm } from "../form-features/dialog-role-form"
+import { DialogUserForm } from "../form-features/dialog-user-form"
+
 export function Settings() {
     return (
          <SidebarProvider>
@@ -18,8 +22,9 @@ export function Settings() {
                     <div className="absolute top-4 right-4">
                         <ModeToggle/>
                     </div>
-                    <div>
-                        Nothing to see here!
+                    <div className="flex-y space-y-4">
+                        <DialogRoleForm/>
+                        <DialogUserForm/> 
                     </div>
                 </div>
             </SidebarInset>

@@ -70,9 +70,9 @@ interface DialogStudentFormProps {
 export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudentFormProps) {
 
     // Variable initializations
-    const studentUrl = "http://localhost:8080/student/"
+    const studentUrl = "http://localhost:8080/student/";
 
-    const [open, setOpen] = React.useState(false)
+    const [open, setOpen] = React.useState(false);
     // Define form
     const form = useForm<z.infer<typeof studentSchema>>({
         resolver: zodResolver(studentSchema),
@@ -129,7 +129,7 @@ export function DialogStudentForm({ onStudentCreated, dayOfWeek }: DialogStudent
                 <DialogTrigger asChild>
                     <Button variant="outline" onClick={resetForm}>Create Student</Button>
                 </DialogTrigger>
-                    <DialogContent className="sm:max-w-[450px]">
+                <DialogContent className="sm:max-w-[450px]">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 w-full">
                             <DialogHeader>
