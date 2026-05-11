@@ -61,14 +61,14 @@ public abstract class AbstractController<T, ID> {
         return ResponseEntity.ok().body("Deleted student successfully");
     }
     
-    // debug
-    @PostMapping("/debug")
-    public ResponseEntity<String> debugRaw(@RequestBody String raw) {
-        System.out.println("=== RAW BODY RECEIVED ===");
-        System.out.println(raw);
-        System.out.println("=========================");
-        return ResponseEntity.ok("Got raw: " + raw);
-    }
+//    // debug
+//    @PostMapping("/debug")
+//    public ResponseEntity<String> debugRaw(@RequestBody String raw) {
+//        System.out.println("=== RAW BODY RECEIVED ===");
+//        System.out.println(raw);
+//        System.out.println("=========================");
+//        return ResponseEntity.ok("Got raw: " + raw);
+//    }
 }
 
 /*
